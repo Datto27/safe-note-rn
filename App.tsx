@@ -5,19 +5,19 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Text,
-  View,
   useColorScheme,
 } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import DrawerNavigator from './src/routes/DrawerNavigator';
+import { colorsDark, colorsLight } from './src/constants/colors';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     flex: 1,
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode
+      ? colorsDark.background2
+      : colorsLight.background2,
   };
 
   return (
