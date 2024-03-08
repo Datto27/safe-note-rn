@@ -1,16 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { NoteI } from '../interfaces/note';
 import { colorsDark } from '../constants/colors';
 
 type Props = {
   item: NoteI;
+  onPress: () => void
 };
 
-const NoteItem = ({ item }: Props) => {
+const NoteItem = ({ item, onPress }: Props) => {
   const createdAt = new Date(item.updatedAt);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={() => onPress()}>
       <View style={styles.containerLeft}>
         <Text style={styles.title}>{item.title}</Text>
         <Text numberOfLines={2} style={styles.info}>
@@ -24,7 +25,7 @@ const NoteItem = ({ item }: Props) => {
           {createdAt.getHours()}:{createdAt.getMinutes()}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

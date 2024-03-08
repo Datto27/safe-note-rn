@@ -14,9 +14,7 @@ export const saveData = async (key: string, value: any) => {
 export const getData = async (key: string) => {
   try {
     const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value != null ? JSON.parse(value) : null;
-    }
+    return value != null ? JSON.parse(value) : null;
   } catch (err) {
     console.error(err);
     return 'fail';
@@ -30,5 +28,16 @@ export const removeData = async (key: string) => {
   } catch (err) {
     console.error(err);
     return 'fail';
+  }
+};
+
+export const getAll = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const items = await AsyncStorage.multiGet(keys);
+
+    return items;
+  } catch (error) {
+    console.log(error, 'problemo');
   }
 };

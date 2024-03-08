@@ -1,25 +1,35 @@
 import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import { getData, saveData } from '../../utils/storage';
 import { NoteI } from '../../interfaces/note';
 
+export type EditorModeT = 'create' | 'update';
+
 type Props = {
-  noteId?: string;
-  mode: 'create' | 'update';
+  item?: NoteI;
+  mode: EditorModeT;
   visible: boolean;
-  setVisible: Dispatch<React.SetStateAction<boolean>>;
+  setVisible: (val: boolean) => void;
+  cb: () => void;
 };
 
-const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
+const NoteEditor = ({ item, mode, visible, setVisible, cb }: Props) => {
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
     field: '',
     msg: '',
   });
+
+  useEffect(() => {
+    if (mode === 'update' && item) {
+      setTitle(item.title);
+      setInfo(item.info);
+    }
+  }, [item]);
 
   const handleClose = () => {
     setTitle('');
@@ -33,7 +43,7 @@ const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
       return setError({ field: 'title', msg: 'Title is required!' });
     }
 
-    if ('create') {
+    if (mode === 'create') {
       const id = Math.random().toString(16).slice(2);
       const note: NoteI = {
         id,
@@ -42,14 +52,39 @@ const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const notes = await getData('notes');
+
+      let notes = await getData('notes');
+      if (!notes || notes.length === 0) {
+        notes = {};
+      }
+
       notes[id] = note;
       saveData('notes', notes).then(res => {
         if (res === 'ok') {
           handleClose();
         }
       });
+    } else {
+      const note: NoteI = {
+        ...item,
+        title,
+        info,
+        updatedAt: new Date(),
+      };
+
+      let notes = await getData('notes');
+      if (!notes || notes.length === 0) {
+        notes = {};
+      }
+
+      notes[item.id] = note;
+      saveData('notes', notes).then(res => {
+        if (res === 'ok') {
+          handleClose();
+        }
+      });
     }
+    cb();
   };
 
   return (

@@ -2,39 +2,65 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../constants/colors';
-import NoteEditor from '../components/Modals/NoteEditor';
+import NoteEditor, { EditorModeT } from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
 import { getData } from '../utils/storage';
 import { FlatList } from 'react-native-gesture-handler';
 import NoteItem from '../components/NoteItem';
 
+type EditorInfoT = {
+  show: boolean;
+  mode: EditorModeT;
+  item: undefined | NoteI;
+};
+
 const HomeScreen = () => {
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});
-  const [showNoteEditor, setShowNoteEditor] = useState(false);
+  const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
+    show: false,
+    mode: 'create',
+    item: undefined,
+  });
 
   useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = () => {
     getData('notes').then(res => {
       setNotes(res);
     });
-  }, []);
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
         data={notes ? Object.keys(notes) : []}
         renderItem={({ item, index }) => (
-          <NoteItem key={index} item={notes[item]} />
+          <NoteItem
+            key={index}
+            item={notes[item]}
+            onPress={() => {
+              setEditorInfo({ show: true, mode: 'update', item: notes[item] });
+            }}
+          />
         )}
       />
       <TouchableOpacity
         style={styles.addBtn}
-        onPress={() => setShowNoteEditor(true)}>
+        onPress={() =>
+          setEditorInfo({ show: true, mode: 'create', item: undefined })
+        }>
         <FeatherIcon name="plus" size={32} color={colorsDark.text1} />
       </TouchableOpacity>
       <NoteEditor
-        mode="create"
-        visible={showNoteEditor}
-        setVisible={setShowNoteEditor}
+        mode={editorInfo.mode}
+        item={editorInfo.item}
+        visible={editorInfo.show}
+        setVisible={val =>
+          setEditorInfo(state => ({ ...state, show: val, item: undefined }))
+        }
+        cb={fetchNotes}
       />
     </View>
   );
@@ -46,6 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colorsDark.background1,
+    paddingTop: 5,
   },
   addBtn: {
     position: 'absolute',
