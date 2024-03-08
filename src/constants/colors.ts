@@ -11,7 +11,7 @@ export const colorsDark = {
   background2: 'rgba(3, 10, 18, 1)',
   text1: 'white',
   text2: 'rgba(153, 153, 153, 1)',
-  text3: 'rgabe(61, 61, 61, 1)',
+  text3: 'rgba(70, 70, 70, 1)',
 };
 
 export const colorsLight = {
@@ -24,5 +24,5 @@ export const colorsLight = {
   background2: 'rgba(3, 10, 18, 1)',
   text1: 'white',
   text2: 'rgba(153, 153, 153, 1)',
-  text3: 'rgabe(61, 61, 61, 1)',
+  text3: 'rgba(20, 20, 20, 1)',
 };

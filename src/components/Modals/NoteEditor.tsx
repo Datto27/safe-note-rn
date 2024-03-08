@@ -1,5 +1,5 @@
 import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -21,6 +21,13 @@ const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
     msg: '',
   });
 
+  const handleClose = () => {
+    setTitle('');
+    setInfo('');
+    setError({ field: '', msg: '' });
+    setVisible(false);
+  };
+
   const saveNote = async () => {
     if (!title) {
       return setError({ field: 'title', msg: 'Title is required!' });
@@ -39,7 +46,7 @@ const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
       notes[id] = note;
       saveData('notes', notes).then(res => {
         if (res === 'ok') {
-          setVisible(false);
+          handleClose();
         }
       });
     }
@@ -49,9 +56,7 @@ const NoteEditor = ({ noteId, visible, setVisible }: Props) => {
     <Modal visible={visible} animationType="slide">
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.cancelBtn}
-            onPress={() => setVisible(false)}>
+          <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
             <Text style={styles.cancelTxt}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.saveBtn} onPress={saveNote}>
