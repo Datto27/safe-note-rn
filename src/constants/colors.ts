@@ -9,6 +9,7 @@ export const colorsDark = {
   tertiary: '#061831',
   background1: 'rgba(3, 10, 22, 1)',
   background2: 'rgba(3, 10, 18, 1)',
+  background2_09: 'rgba(3, 10, 18, 0.9)',
   text1: 'white',
   text2: 'rgba(153, 153, 153, 1)',
   text3: 'rgba(70, 70, 70, 1)',

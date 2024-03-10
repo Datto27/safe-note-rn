@@ -65,6 +65,10 @@ const NoteEditor = ({ item, mode, visible, setVisible, cb }: Props) => {
         }
       });
     } else {
+      if (!item) {
+        return;
+      }
+
       const note: NoteI = {
         ...item,
         title,

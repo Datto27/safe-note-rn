@@ -1,17 +1,24 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { NoteI } from '../interfaces/note';
 import { colorsDark } from '../constants/colors';
 
 type Props = {
   item: NoteI;
-  onPress: () => void
+  onPress: () => void;
+  onLongPress: (id: string) => void;
 };
 
-const NoteItem = ({ item, onPress }: Props) => {
+const NoteItem = ({ item, onPress, onLongPress }: Props) => {
+  const [pressed, setPressed] = useState(false);
   const createdAt = new Date(item.updatedAt);
   return (
-    <TouchableOpacity style={styles.container} onPress={() => onPress()}>
+    <TouchableOpacity
+      style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
+      onPress={() => onPress()}
+      onLongPress={() => onLongPress(item.id)}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}>
       <View style={styles.containerLeft}>
         <Text style={styles.title}>{item.title}</Text>
         <Text numberOfLines={2} style={styles.info}>

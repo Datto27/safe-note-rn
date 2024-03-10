@@ -1,12 +1,13 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../constants/colors';
 import NoteEditor, { EditorModeT } from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
-import { getData } from '../utils/storage';
+import { getData, saveData } from '../utils/storage';
 import { FlatList } from 'react-native-gesture-handler';
 import NoteItem from '../components/NoteItem';
+import DeleteModal from '../components/Modals/DeleteModal';
 
 type EditorInfoT = {
   show: boolean;
@@ -21,15 +22,38 @@ const HomeScreen = () => {
     mode: 'create',
     item: undefined,
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const idForDelete = useRef<string | null>(null);
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
   const fetchNotes = () => {
-    getData('notes').then(res => {
-      setNotes(res);
+    getData('notes').then((res: { [key: string]: NoteI }) => {
+      const items = Object.values(res)
+        .filter(obj => obj.deleted !== true)
+        .reduce((obj, cur) => ({ ...obj, [cur.id]: cur }), {});
+      setNotes(items);
     });
+  };
+
+  const deleteItem = () => {
+    if (idForDelete) {
+      // delete notes[`${idForDelete.current}`];
+      notes[`${idForDelete.current}`].deleted = true;
+      saveData('notes', notes).then(() => {
+        fetchNotes();
+      });
+    }
+
+    idForDelete.current = null;
+    setShowDeleteModal(false);
+  };
+
+  const cancelDeletion = () => {
+    idForDelete.current = null;
+    setShowDeleteModal(false);
   };
 
   return (
@@ -42,6 +66,10 @@ const HomeScreen = () => {
             item={notes[item]}
             onPress={() => {
               setEditorInfo({ show: true, mode: 'update', item: notes[item] });
+            }}
+            onLongPress={id => {
+              idForDelete.current = id;
+              setShowDeleteModal(true);
             }}
           />
         )}
@@ -61,6 +89,12 @@ const HomeScreen = () => {
           setEditorInfo(state => ({ ...state, show: val, item: undefined }))
         }
         cb={fetchNotes}
+      />
+      <DeleteModal
+        visible={showDeleteModal}
+        text="Do you want to delete this note?"
+        deleteCb={deleteItem}
+        cancelCb={cancelDeletion}
       />
     </View>
   );
