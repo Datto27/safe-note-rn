@@ -1,6 +1,5 @@
 import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import TextButton from '../Buttons/TextButton';
 import { colorsDark } from '../../constants/colors';
@@ -57,5 +56,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  }
+  },
 });
