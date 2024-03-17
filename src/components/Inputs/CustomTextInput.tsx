@@ -34,7 +34,7 @@ const CustomTextInput = ({
   error,
 }: Props) => {
   const inputRef = useRef<TextInput | null>(null);
-  const [showEntry, setShowEntry] = useState(type === 'text');
+  const [showEntry, setShowEntry] = useState(type === 'password');
 
   return (
     <TouchableOpacity
