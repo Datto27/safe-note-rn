@@ -6,11 +6,13 @@ import {
   TextStyle,
   TouchableOpacity,
 } from 'react-native';
-import React, { Dispatch, useRef } from 'react';
+import React, { Dispatch, useRef, useState } from 'react';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../../constants/colors';
 
 type Props = {
   placeholder: string;
+  type?: 'password' | 'text';
   multiline?: boolean;
   numberOfLines?: number;
   value: string;
@@ -21,6 +23,7 @@ type Props = {
 };
 
 const CustomTextInput = ({
+  type = 'text',
   value,
   setValue,
   placeholder,
@@ -31,6 +34,7 @@ const CustomTextInput = ({
   error,
 }: Props) => {
   const inputRef = useRef<TextInput | null>(null);
+  const [showEntry, setShowEntry] = useState(type === 'text');
 
   return (
     <TouchableOpacity
@@ -39,6 +43,7 @@ const CustomTextInput = ({
       onPress={() => inputRef.current?.focus()}>
       <TextInput
         ref={inputRef}
+        secureTextEntry={showEntry}
         style={[styles.input, textStyles]}
         multiline={multiline}
         numberOfLines={numberOfLines}
@@ -46,6 +51,17 @@ const CustomTextInput = ({
         value={value}
         onChangeText={setValue}
       />
+      {type === 'password' ? (
+        showEntry ? (
+          <TouchableOpacity onPress={() => setShowEntry(false)}>
+            <FeatherIcon name="eye" color={colorsDark.text2} size={22} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => setShowEntry(true)}>
+            <FeatherIcon name="eye-off" color={colorsDark.text2} size={22} />
+          </TouchableOpacity>
+        )
+      ) : null}
     </TouchableOpacity>
   );
 };
@@ -54,6 +70,9 @@ export default CustomTextInput;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: colorsDark.secondary04,
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -65,7 +84,9 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   input: {
+    flex: 1,
     fontSize: 16,
     backgroundColor: 'transparent',
+    marginRight: 5,
   },
 });

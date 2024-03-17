@@ -93,7 +93,8 @@ const styles = StyleSheet.create({
     backgroundColor: colorsDark.primary05,
     padding: 20,
     borderRadius: 20,
-    margin: 10,
+    marginVertical: 20,
+    marginHorizontal: 10,
   },
   profileIconContainer: {
     justifyContent: 'center',
