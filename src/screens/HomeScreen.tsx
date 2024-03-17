@@ -89,6 +89,11 @@ const HomeScreen = () => {
           setEditorInfo(state => ({ ...state, show: val, item: undefined }))
         }
         cb={fetchNotes}
+        showDeleteModal={(id: string) => {
+          idForDelete.current = id;
+          setEditorInfo(state => ({ ...state, show: false, item: undefined }));
+          setShowDeleteModal(true);
+        }}
       />
       <DeleteModal
         visible={showDeleteModal}

@@ -1,10 +1,18 @@
-import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import {
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import { getData, saveData } from '../../utils/storage';
 import { NoteI } from '../../interfaces/note';
+import TextButton from '../Buttons/TextButton';
 
 export type EditorModeT = 'create' | 'update';
 
@@ -13,10 +21,18 @@ type Props = {
   mode: EditorModeT;
   visible: boolean;
   setVisible: (val: boolean) => void;
+  showDeleteModal: (id: string) => void;
   cb: () => void;
 };
 
-const NoteEditor = ({ item, mode, visible, setVisible, cb }: Props) => {
+const NoteEditor = ({
+  item,
+  mode,
+  visible,
+  setVisible,
+  showDeleteModal,
+  cb,
+}: Props) => {
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
@@ -98,9 +114,13 @@ const NoteEditor = ({ item, mode, visible, setVisible, cb }: Props) => {
           <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
             <Text style={styles.cancelTxt}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.saveBtn} onPress={saveNote}>
-            <Text style={styles.saveTxt}>Save Note</Text>
-          </TouchableOpacity>
+          {mode === 'update' && item && (
+            <TextButton
+              text="Delete"
+              color="red"
+              onPress={() => showDeleteModal(item.id)}
+            />
+          )}
         </View>
         <CustomTextInput
           placeholder="Title"
@@ -116,13 +136,11 @@ const NoteEditor = ({ item, mode, visible, setVisible, cb }: Props) => {
           numberOfLines={20}
           value={info}
           setValue={setInfo}
-          containerStyles={{
-            flex: 1,
-            marginHorizontal: 5,
-            marginVertical: 10,
-            borderRadius: 25,
-          }}
+          containerStyles={styles.inputContainer}
         />
+        <TouchableOpacity style={styles.saveBtn} onPress={saveNote}>
+          <FeatherIcon name="save" color={colorsDark.text1} size={30} />
+        </TouchableOpacity>
       </SafeAreaView>
     </Modal>
   );
@@ -154,17 +172,24 @@ const styles = StyleSheet.create({
   cancelTxt: {
     color: colorsDark.secondary,
   },
-  saveBtn: {
-    backgroundColor: colorsDark.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
+  inputContainer: {
+    flex: 1,
     marginHorizontal: 5,
-    borderRadius: 20,
+    marginVertical: 10,
+    borderRadius: 25,
+  },
+  saveBtn: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    backgroundColor: colorsDark.primary,
+    padding: 15,
+    borderRadius: 50,
     borderWidth: 1,
     borderColor: colorsDark.secondary,
-  },
-  saveTxt: {
-    color: colorsDark.text1,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
   },
 });

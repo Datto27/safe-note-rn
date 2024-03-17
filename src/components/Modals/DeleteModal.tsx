@@ -1,5 +1,6 @@
 import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import TextButton from '../Buttons/TextButton';
 import { colorsDark } from '../../constants/colors';
@@ -17,6 +18,9 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>{text}</Text>
+          <View style={styles.iconContainer}>
+            <FeatherIcons name="trash-2" color="red" size={40} />
+          </View>
           <View style={styles.actionBtns}>
             <SecondaryButton text="Cancel" onPress={() => cancelCb()} />
             <TextButton text="Delete" color="red" onPress={() => deleteCb()} />
@@ -37,6 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalContainer: {
+    alignItems: 'center',
     backgroundColor: colorsDark.background2,
     paddingVertical: 40,
     paddingHorizontal: 20,
@@ -47,14 +52,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    textAlign: 'center',
     color: colorsDark.text1,
     marginBottom: 20,
+  },
+  iconContainer: {
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    paddingVertical: 20,
+    backgroundColor: 'rgba(244, 0, 0, 0.2)',
+    borderRadius: 10,
   },
   actionBtns: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 10,
   },
 });
