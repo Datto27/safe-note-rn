@@ -13,8 +13,7 @@ import CustomTextInput from '../Inputs/CustomTextInput';
 import { getData, saveData } from '../../utils/storage';
 import { NoteI } from '../../interfaces/note';
 import TextButton from '../Buttons/TextButton';
-
-export type EditorModeT = 'create' | 'update';
+import { EditorModeT } from '../../interfaces/editor-info.type';
 
 type Props = {
   item?: NoteI;

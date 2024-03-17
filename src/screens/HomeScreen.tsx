@@ -2,18 +2,13 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../constants/colors';
-import NoteEditor, { EditorModeT } from '../components/Modals/NoteEditor';
+import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
 import { FlatList } from 'react-native-gesture-handler';
 import NoteItem from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
-
-type EditorInfoT = {
-  show: boolean;
-  mode: EditorModeT;
-  item: undefined | NoteI;
-};
+import { EditorInfoT } from '../interfaces/editor-info.type';
 
 const HomeScreen = () => {
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});

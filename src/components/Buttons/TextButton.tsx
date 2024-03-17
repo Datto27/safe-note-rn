@@ -1,16 +1,19 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextStyle, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { colorsDark } from '../../constants/colors';
 
 type Props = {
   text: string;
   color?: string;
+  style?: TextStyle;
   onPress: () => void;
 };
 
-const TextButton = ({ text, color, onPress }: Props) => {
+const TextButton = ({ text, color, style, onPress }: Props) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={style ? style : styles.container}
+      onPress={onPress}>
       <Text style={[styles.text, color ? { color } : {}]}>{text}</Text>
     </TouchableOpacity>
   );
