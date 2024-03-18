@@ -26,6 +26,9 @@ const HomeScreen = () => {
 
   const fetchNotes = () => {
     getData('notes').then((res: { [key: string]: NoteI }) => {
+      if (!res) {
+        return;
+      }
       const items = Object.values(res)
         .filter(obj => obj.deleted !== true)
         .reduce((obj, cur) => ({ ...obj, [cur.id]: cur }), {});

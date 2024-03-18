@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
   hint: {
     fontSize: 12,
     color: colorsDark.text3,
+    marginTop: 2,
+    marginLeft: 10,
   },
   authBtn: {
     alignSelf: 'center',

@@ -27,8 +27,8 @@ const DrawerNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: 'My Notes',
-          drawerLabel: 'My Notes',
+          headerTitle: 'Safe Notes',
+          drawerLabel: 'Safe Notes',
         }}
       />
       <Drawer.Screen

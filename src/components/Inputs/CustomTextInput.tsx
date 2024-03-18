@@ -41,16 +41,26 @@ const CustomTextInput = ({
       activeOpacity={1}
       style={[styles.container, containerStyles, error ? styles.error : {}]}
       onPress={() => inputRef.current?.focus()}>
-      <TextInput
-        ref={inputRef}
-        secureTextEntry={showEntry}
-        style={[styles.input, textStyles]}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        placeholder={placeholder}
-        value={value}
-        onChangeText={setValue}
-      />
+      {multiline ? (
+        <TextInput
+          ref={inputRef}
+          style={[styles.textarea, textStyles]}
+          multiline={true}
+          numberOfLines={numberOfLines}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={setValue}
+        />
+      ) : (
+        <TextInput
+          ref={inputRef}
+          secureTextEntry={showEntry}
+          style={[styles.input, textStyles]}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={setValue}
+        />
+      )}
       {type === 'password' ? (
         showEntry ? (
           <TouchableOpacity onPress={() => setShowEntry(false)}>
@@ -74,7 +84,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: colorsDark.secondary04,
-    paddingVertical: 10,
+    paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 20,
     borderWidth: 1,
@@ -83,9 +93,18 @@ const styles = StyleSheet.create({
   error: {
     borderColor: 'red',
   },
+  textarea: {
+    flex: 1,
+    alignSelf: 'flex-start',
+    textAlignVertical: 'top',
+    backgroundColor: 'transparent',
+    fontSize: 16,
+  },
   input: {
     flex: 1,
     fontSize: 16,
+    fontWeight: '500',
+    paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
   },
