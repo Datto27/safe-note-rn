@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
 import { NoteI } from '../interfaces/note';
 import { colorsDark } from '../constants/colors';
+import { parseTime } from '../utils/time';
 
 type Props = {
   item: NoteI;
@@ -12,6 +13,7 @@ type Props = {
 const NoteItem = ({ item, onPress, onLongPress }: Props) => {
   const [pressed, setPressed] = useState(false);
   const createdAt = new Date(item.updatedAt);
+
   return (
     <TouchableOpacity
       style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
@@ -26,10 +28,10 @@ const NoteItem = ({ item, onPress, onLongPress }: Props) => {
         </Text>
       </View>
       <View style={styles.containerRight}>
-        <Text>Updated At:</Text>
+        <Text style={styles.date}>Updated At:</Text>
         <Text style={styles.date}>{createdAt.toLocaleDateString('en-US')}</Text>
         <Text style={styles.date}>
-          {createdAt.getHours()}:{createdAt.getMinutes()}
+          {parseTime(createdAt.getHours())}:{parseTime(createdAt.getMinutes())}
         </Text>
       </View>
     </TouchableOpacity>
@@ -69,5 +71,6 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     fontWeight: '300',
+    color: colorsDark.text2,
   },
 });
