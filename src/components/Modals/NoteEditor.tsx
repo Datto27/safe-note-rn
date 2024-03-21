@@ -5,8 +5,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -19,6 +20,7 @@ type Props = {
   item?: NoteI;
   mode: EditorModeT;
   visible: boolean;
+  notes: { [key: string]: NoteI };
   setVisible: (val: boolean) => void;
   showDeleteModal: (id: string) => void;
   cb: () => void;
@@ -28,16 +30,21 @@ const NoteEditor = ({
   item,
   mode,
   visible,
+  notes,
   setVisible,
   showDeleteModal,
   cb,
 }: Props) => {
+  const id = useRef(
+    item ? item.id : Math.random().toString(16).slice(2),
+  ).current;
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
     field: '',
     msg: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (mode === 'update' && item) {
@@ -45,6 +52,23 @@ const NoteEditor = ({
       setInfo(item.info);
     }
   }, [item]);
+
+  useEffect(() => {
+    let to: NodeJS.Timeout;
+
+    console.log(title !== '' && info !== '');
+
+    if (title !== '' && info !== '') {
+      setIsLoading(true);
+      to = setTimeout(() => {
+        saveNote();
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(to);
+    };
+  }, [title, info]);
 
   const handleClose = () => {
     setTitle('');
@@ -59,7 +83,6 @@ const NoteEditor = ({
     }
 
     if (mode === 'create') {
-      const id = Math.random().toString(16).slice(2);
       const note: NoteI = {
         id,
         title,
@@ -68,17 +91,12 @@ const NoteEditor = ({
         updatedAt: new Date(),
       };
 
-      let notes = await getData('notes');
-      if (!notes || notes.length === 0) {
+      if (!notes || Object.keys(notes).length === 0) {
         notes = {};
       }
 
       notes[id] = note;
-      saveData('notes', notes).then(res => {
-        if (res === 'ok') {
-          handleClose();
-        }
-      });
+      await saveData('notes', notes);
     } else {
       if (!item) {
         return;
@@ -97,12 +115,9 @@ const NoteEditor = ({
       }
 
       notes[item.id] = note;
-      saveData('notes', notes).then(res => {
-        if (res === 'ok') {
-          handleClose();
-        }
-      });
+      await saveData('notes', notes);
     }
+    setIsLoading(false);
     cb();
   };
 
@@ -137,8 +152,17 @@ const NoteEditor = ({
           setValue={setInfo}
           containerStyles={styles.inputContainer}
         />
-        <TouchableOpacity style={styles.saveBtn} onPress={saveNote}>
-          <FeatherIcon name="save" color={colorsDark.text1} size={30} />
+        <TouchableOpacity
+          style={styles.saveBtn}
+          onPress={async () => {
+            await saveNote();
+            handleClose();
+          }}>
+          {isLoading ? (
+            <ActivityIndicator size={32} color={colorsDark.secondary} />
+          ) : (
+            <FeatherIcon name="save" color={colorsDark.text1} size={30} />
+          )}
         </TouchableOpacity>
       </SafeAreaView>
     </Modal>

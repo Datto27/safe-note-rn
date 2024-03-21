@@ -1,40 +1,68 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState } from 'react';
+import {
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { NoteI } from '../interfaces/note';
 import { colorsDark } from '../constants/colors';
 import { parseTime } from '../utils/time';
 
 type Props = {
   item: NoteI;
+  animationDelay?: number | null;
   onPress: () => void;
   onLongPress: (id: string) => void;
 };
 
-const NoteItem = ({ item, onPress, onLongPress }: Props) => {
+const NoteItem = ({
+  item,
+  animationDelay = null,
+  onPress,
+  onLongPress,
+}: Props) => {
   const [pressed, setPressed] = useState(false);
   const createdAt = new Date(item.updatedAt);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (animationDelay) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        delay: animationDelay,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [fadeAnim]);
 
   return (
-    <TouchableOpacity
-      style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
-      onPress={() => onPress()}
-      onLongPress={() => onLongPress(item.id)}
-      onPressIn={() => setPressed(true)}
-      onPressOut={() => setPressed(false)}>
-      <View style={styles.containerLeft}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text numberOfLines={2} style={styles.info}>
-          {item.info}
-        </Text>
-      </View>
-      <View style={styles.containerRight}>
-        <Text style={styles.date}>Updated At:</Text>
-        <Text style={styles.date}>{createdAt.toLocaleDateString('en-US')}</Text>
-        <Text style={styles.date}>
-          {parseTime(createdAt.getHours())}:{parseTime(createdAt.getMinutes())}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <Animated.View style={{ opacity: fadeAnim }}>
+      <TouchableOpacity
+        style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
+        onPress={() => onPress()}
+        onLongPress={() => onLongPress(item.id)}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}>
+        <View style={styles.containerLeft}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text numberOfLines={2} style={styles.info}>
+            {item.info}
+          </Text>
+        </View>
+        <View style={styles.containerRight}>
+          <Text style={styles.date}>Updated At:</Text>
+          <Text style={styles.date}>{createdAt.toLocaleDateString('en-US')}</Text>
+          <Text style={styles.date}>
+            {parseTime(createdAt.getHours())}:{parseTime(createdAt.getMinutes())}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 

@@ -62,6 +62,7 @@ const HomeScreen = () => {
           <NoteItem
             key={index}
             item={notes[item]}
+            animationDelay={200 * (index + 1)}
             onPress={() => {
               setEditorInfo({ show: true, mode: 'update', item: notes[item] });
             }}
@@ -83,6 +84,7 @@ const HomeScreen = () => {
         mode={editorInfo.mode}
         item={editorInfo.item}
         visible={editorInfo.show}
+        notes={notes}
         setVisible={val =>
           setEditorInfo(state => ({ ...state, show: val, item: undefined }))
         }
