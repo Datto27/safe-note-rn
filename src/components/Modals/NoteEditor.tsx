@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Modal,
   SafeAreaView,
@@ -35,9 +36,7 @@ const NoteEditor = ({
   showDeleteModal,
   cb,
 }: Props) => {
-  const id = useRef(
-    item ? item.id : Math.random().toString(16).slice(2),
-  ).current;
+  const idRef = useRef('');
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
@@ -45,6 +44,10 @@ const NoteEditor = ({
     msg: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    idRef.current = item ? item.id : Math.random().toString(16).slice(2);
+  }, [visible]);
 
   useEffect(() => {
     if (mode === 'update' && item) {
@@ -55,8 +58,6 @@ const NoteEditor = ({
 
   useEffect(() => {
     let to: NodeJS.Timeout;
-
-    console.log(title !== '' && info !== '');
 
     if (title !== '' && info !== '') {
       setIsLoading(true);
@@ -79,12 +80,12 @@ const NoteEditor = ({
 
   const saveNote = async () => {
     if (!title) {
-      return setError({ field: 'title', msg: 'Title is required!' });
+      return { field: 'title', msg: 'Title is required!' };
     }
 
     if (mode === 'create') {
       const note: NoteI = {
-        id,
+        id: idRef.current,
         title,
         info,
         createdAt: new Date(),
@@ -95,7 +96,7 @@ const NoteEditor = ({
         notes = {};
       }
 
-      notes[id] = note;
+      notes[idRef.current] = note;
       await saveData('notes', notes);
     } else {
       if (!item) {
@@ -155,8 +156,12 @@ const NoteEditor = ({
         <TouchableOpacity
           style={styles.saveBtn}
           onPress={async () => {
-            await saveNote();
-            handleClose();
+            const res = await saveNote();
+            if (res?.field) {
+              setError(res);
+            } else {
+              handleClose();
+            }
           }}>
           {isLoading ? (
             <ActivityIndicator size={32} color={colorsDark.secondary} />

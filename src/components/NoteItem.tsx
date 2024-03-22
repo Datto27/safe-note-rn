@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { NoteI } from '../interfaces/note';
 import { colorsDark } from '../constants/colors';
 import { parseTime } from '../utils/time';
@@ -14,19 +15,30 @@ import { parseTime } from '../utils/time';
 type Props = {
   item: NoteI;
   animationDelay?: number | null;
+  deleteMode?: boolean;
   onPress: () => void;
   onLongPress: (id: string) => void;
+  handleCheckboxMark: (id: string, action: 'add' | 'remove') => void;
 };
 
 const NoteItem = ({
   item,
   animationDelay = null,
+  deleteMode = false,
   onPress,
   onLongPress,
+  handleCheckboxMark,
 }: Props) => {
   const [pressed, setPressed] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const createdAt = new Date(item.updatedAt);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!deleteMode) {
+      setIsChecked(false);
+    }
+  }, [deleteMode]);
 
   useEffect(() => {
     if (animationDelay) {
@@ -45,7 +57,10 @@ const NoteItem = ({
       <TouchableOpacity
         style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
         onPress={() => onPress()}
-        onLongPress={() => onLongPress(item.id)}
+        onLongPress={() => {
+          setIsChecked(true);
+          onLongPress(item.id);
+        }}
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}>
         <View style={styles.containerLeft}>
@@ -55,11 +70,31 @@ const NoteItem = ({
           </Text>
         </View>
         <View style={styles.containerRight}>
-          <Text style={styles.date}>Updated At:</Text>
-          <Text style={styles.date}>{createdAt.toLocaleDateString('en-US')}</Text>
-          <Text style={styles.date}>
-            {parseTime(createdAt.getHours())}:{parseTime(createdAt.getMinutes())}
-          </Text>
+          {deleteMode ? (
+            <View style={styles.checkboxContainer}>
+              <BouncyCheckbox
+                size={32}
+                fillColor={colorsDark.secondary}
+                iconStyle={{ right: -10 }}
+                isChecked={isChecked}
+                onPress={() => {
+                  setIsChecked(!isChecked);
+                  handleCheckboxMark(item.id, isChecked ? 'remove' : 'add');
+                }}
+              />
+            </View>
+          ) : (
+            <>
+              <Text style={styles.date}>Updated At:</Text>
+              <Text style={styles.date}>
+                {createdAt.toLocaleDateString('en-US')}
+              </Text>
+              <Text style={styles.date}>
+                {parseTime(createdAt.getHours())}:
+                {parseTime(createdAt.getMinutes())}
+              </Text>
+            </>
+          )}
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -100,5 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '300',
     color: colorsDark.text2,
+  },
+  checkboxContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
 });

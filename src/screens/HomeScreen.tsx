@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark } from '../constants/colors';
 import NoteEditor from '../components/Modals/NoteEditor';
@@ -17,8 +17,9 @@ const HomeScreen = () => {
     mode: 'create',
     item: undefined,
   });
+  const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const idForDelete = useRef<string | null>(null);
+  const [deleteArr, setDeleteArr] = useState<string[]>([]);
 
   useEffect(() => {
     fetchNotes();
@@ -31,27 +32,45 @@ const HomeScreen = () => {
       }
       const items = Object.values(res)
         .filter(obj => obj.deleted !== true)
+        .sort(
+          (a, b) =>
+            new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+        )
         .reduce((obj, cur) => ({ ...obj, [cur.id]: cur }), {});
       setNotes(items);
     });
   };
 
-  const deleteItem = () => {
-    if (idForDelete) {
-      // delete notes[`${idForDelete.current}`];
-      notes[`${idForDelete.current}`].deleted = true;
+  const markDeleteItem = (id: string, action: 'add' | 'remove') => {
+    if (action === 'add') {
+      setDeleteArr(state => [...new Set([...state, id])]);
+    } else {
+      setDeleteArr(state => state.filter(item => item !== id));
+    }
+  };
+
+  const deleteItems = () => {
+    if (deleteArr.length > 0) {
+      Object.values(notes).forEach((note: NoteI) => {
+        if (deleteArr.includes(note.id)) {
+          notes[note.id].deleted = true;
+        }
+      });
+
       saveData('notes', notes).then(() => {
         fetchNotes();
       });
     }
 
-    idForDelete.current = null;
     setShowDeleteModal(false);
+    setDeleteArr([]);
+    setDeleteMode(false);
   };
 
   const cancelDeletion = () => {
-    idForDelete.current = null;
     setShowDeleteModal(false);
+    setDeleteArr([]);
+    setDeleteMode(false);
   };
 
   return (
@@ -62,24 +81,42 @@ const HomeScreen = () => {
           <NoteItem
             key={index}
             item={notes[item]}
-            animationDelay={200 * (index + 1)}
+            animationDelay={150 * (index + 1)}
+            deleteMode={deleteMode}
+            handleCheckboxMark={markDeleteItem}
             onPress={() => {
               setEditorInfo({ show: true, mode: 'update', item: notes[item] });
             }}
-            onLongPress={id => {
-              idForDelete.current = id;
-              setShowDeleteModal(true);
+            onLongPress={(id: string) => {
+              setDeleteMode(true);
+              setDeleteArr([id]);
             }}
           />
         )}
       />
-      <TouchableOpacity
-        style={styles.addBtn}
-        onPress={() =>
-          setEditorInfo({ show: true, mode: 'create', item: undefined })
-        }>
-        <FeatherIcon name="plus" size={32} color={colorsDark.text1} />
-      </TouchableOpacity>
+      {deleteMode ? (
+        deleteArr.length > 0 ? (
+          <TouchableOpacity
+            style={styles.floatingBtn}
+            onPress={() => setShowDeleteModal(true)}>
+            <FeatherIcon name="trash" size={32} color={'red'} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.floatingBtn}
+            onPress={() => setDeleteMode(false)}>
+            <FeatherIcon name="slash" size={32} color={colorsDark.secondary} />
+          </TouchableOpacity>
+        )
+      ) : (
+        <TouchableOpacity
+          style={styles.floatingBtn}
+          onPress={() =>
+            setEditorInfo({ show: true, mode: 'create', item: undefined })
+          }>
+          <FeatherIcon name="plus" size={32} color={colorsDark.text1} />
+        </TouchableOpacity>
+      )}
       <NoteEditor
         mode={editorInfo.mode}
         item={editorInfo.item}
@@ -90,15 +127,15 @@ const HomeScreen = () => {
         }
         cb={fetchNotes}
         showDeleteModal={(id: string) => {
-          idForDelete.current = id;
           setEditorInfo(state => ({ ...state, show: false, item: undefined }));
+          setDeleteArr([id]);
           setShowDeleteModal(true);
         }}
       />
       <DeleteModal
         visible={showDeleteModal}
         text="Do you want to delete this note?"
-        deleteCb={deleteItem}
+        deleteCb={deleteItems}
         cancelCb={cancelDeletion}
       />
     </View>
@@ -113,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorsDark.background1,
     paddingTop: 5,
   },
-  addBtn: {
+  floatingBtn: {
     position: 'absolute',
     bottom: 15,
     right: 15,
