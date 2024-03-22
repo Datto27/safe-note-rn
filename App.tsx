@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import BootSplash from 'react-native-bootsplash';
 import { colorsDark, colorsLight } from './src/constants/colors';
 import MainStack from './src/routes/MainStackNavigator';
 
@@ -14,6 +15,14 @@ function App(): React.JSX.Element {
       ? colorsDark.background2
       : colorsLight.background2,
   };
+
+  useEffect(() => {
+    const init = async () => {};
+
+    init().finally(async () => {
+      await BootSplash.hide({ fade: true });
+    });
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
