@@ -118,23 +118,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    fontFamily: 'JosefinSans-Medium',
     fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.5,
     color: colorsDark.text1,
   },
   info: {
+    fontFamily: 'JosefinSans-Light',
     color: 'white',
     flexWrap: 'wrap',
+    marginTop: 2,
   },
   containerRight: {
     flexDirection: 'column',
     alignItems: 'flex-end',
   },
   date: {
+    fontFamily: 'JosefinSans-Medium',
     fontSize: 12,
-    fontWeight: '300',
     color: colorsDark.text2,
+    marginTop: 1.5,
   },
   checkboxContainer: {
     flex: 1,

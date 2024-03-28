@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
     borderColor: colorsDark.background2,
   },
   text: {
+    fontFamily: 'JosefinSans-Medium',
     color: colorsDark.secondary,
+    marginTop: 2,
   },
 });

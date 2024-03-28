@@ -29,7 +29,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   text: {
+    fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
     color: colorsDark.secondary,
+    marginTop: 2,
   },
 });

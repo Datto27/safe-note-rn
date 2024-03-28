@@ -142,7 +142,7 @@ const NoteEditor = ({
           value={title}
           setValue={setTitle}
           containerStyles={{ marginHorizontal: 5 }}
-          textStyles={{ fontSize: 16 }}
+          textStyles={{ fontSize: 18 }}
           error={error.field === 'title' ? error.msg : null}
         />
         <CustomTextInput

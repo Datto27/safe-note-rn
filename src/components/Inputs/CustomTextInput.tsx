@@ -64,11 +64,11 @@ const CustomTextInput = ({
       {type === 'password' ? (
         showEntry ? (
           <TouchableOpacity onPress={() => setShowEntry(false)}>
-            <FeatherIcon name="eye" color={colorsDark.text2} size={22} />
+            <FeatherIcon name="eye" color={colorsDark.text2} size={20} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setShowEntry(true)}>
-            <FeatherIcon name="eye-off" color={colorsDark.text2} size={22} />
+            <FeatherIcon name="eye-off" color={colorsDark.text2} size={20} />
           </TouchableOpacity>
         )
       ) : null}
@@ -97,15 +97,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-start',
     textAlignVertical: 'top',
+    fontFamily: 'JosefinSans-Medium',
+    fontSize: 17,
     backgroundColor: 'transparent',
-    fontSize: 16,
+    marginTop: 2,
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontFamily: 'JosefinSans-Medium',
+    fontSize: 17,
     fontWeight: '500',
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
+    // marginTop: 2,
   },
 });

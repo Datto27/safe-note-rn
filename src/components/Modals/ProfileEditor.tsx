@@ -1,5 +1,5 @@
 import { Modal, SafeAreaView, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileI } from '../../interfaces/profile';
 import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -20,6 +20,13 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   const [password, setPassword] = useState('');
   const [hint, setHint] = useState('');
   const [error, setError] = useState({ field: '', msg: '' });
+
+  useEffect(() => {
+    if (profile) {
+      setUsername(profile.username);
+      setHint(profile.hint);
+    }
+  }, [profile]);
 
   const createProfile = () => {
     if (!username) {
@@ -54,6 +61,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
             setValue={setUsername}
           />
           <CustomTextInput
+            type="password"
             placeholder="Password"
             containerStyles={{ marginVertical: 7 }}
             error={error.field === 'password' ? error.msg : null}

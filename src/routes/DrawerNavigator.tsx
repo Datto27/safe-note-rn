@@ -25,6 +25,14 @@ const DrawerNavigator = () => {
         drawerStyle: {
           backgroundColor: colorsDark.background1,
         },
+        drawerLabelStyle: {
+          fontFamily: 'JosefinSans-Medium',
+          fontSize: 16,
+        },
+        headerTitleStyle: {
+          fontFamily: 'JosefinSans-Bold',
+          textAlign: 'center',
+        },
       }}>
       <Drawer.Screen
         name="Home"

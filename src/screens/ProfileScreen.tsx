@@ -113,13 +113,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   profileName: {
+    fontFamily: 'JosefinSans-Bold',
     flexWrap: 'wrap',
     fontSize: 18,
-    fontWeight: '600',
     color: colorsDark.text1,
-    marginTop: 4,
+    marginVertical: 2,
     marginRight: 5,
   },
 });
