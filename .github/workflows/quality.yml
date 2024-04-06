@@ -8,20 +8,20 @@ on:
 jobs:
   prettier:
     runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      node-version: 20.x
-  steps:
-    - uses: actions/checkout@v3
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 8
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: "pnpm"
-    - name: Install dependencies
-      run: yarn install
-    - name: Code prettier
-      run: yarn prettier:check
+    strategy:
+      matrix:
+        node-version: 20.x
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+      - name: Install dependencies
+        run: yarn install
+      - name: Code prettier
+        run: yarn prettier:check
