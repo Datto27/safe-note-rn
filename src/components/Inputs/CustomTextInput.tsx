@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { Dispatch, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colorsDark } from '../../constants/colors';
+import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   placeholder: string;
@@ -34,12 +34,13 @@ const CustomTextInput = ({
   error,
 }: Props) => {
   const inputRef = useRef<TextInput | null>(null);
+  const { theme } = useGlobalState();
   const [showEntry, setShowEntry] = useState(type === 'password');
 
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={[styles.container, containerStyles, error ? styles.error : {}]}
+      style={[styles.container, containerStyles, { backgroundColor: theme.colors.secondary04, borderColor: theme.colors.primary}, error ? styles.error : {}]}
       onPress={() => inputRef.current?.focus()}>
       {multiline ? (
         <TextInput
@@ -64,11 +65,11 @@ const CustomTextInput = ({
       {type === 'password' ? (
         showEntry ? (
           <TouchableOpacity onPress={() => setShowEntry(false)}>
-            <FeatherIcon name="eye" color={colorsDark.text2} size={20} />
+            <FeatherIcon name="eye" color={theme.colors.text2} size={20} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setShowEntry(true)}>
-            <FeatherIcon name="eye-off" color={colorsDark.text2} size={20} />
+            <FeatherIcon name="eye-off" color={theme.colors.text2} size={20} />
           </TouchableOpacity>
         )
       ) : null}
@@ -83,12 +84,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: colorsDark.secondary04,
     paddingVertical: 8,
     paddingHorizontal: 15,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colorsDark.primary,
   },
   error: {
     borderColor: 'red',
@@ -110,6 +109,6 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
-    // marginTop: 2,
+    marginTop: 2,
   },
 });

@@ -9,8 +9,9 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { NoteI } from '../interfaces/note';
-import { colorsDark } from '../constants/colors';
 import { parseTime } from '../utils/time';
+
+import { useGlobalState } from '../contexts/GlobaState';
 
 type Props = {
   item: NoteI;
@@ -29,6 +30,7 @@ const NoteItem = ({
   onLongPress,
   handleCheckboxMark,
 }: Props) => {
+  const {theme} = useGlobalState();
   const [pressed, setPressed] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const createdAt = new Date(item.updatedAt);
@@ -55,7 +57,7 @@ const NoteItem = ({
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }]}
+        style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }, { backgroundColor: theme.colors.secondary02 }]}
         onPress={() => onPress()}
         onLongPress={() => {
           setIsChecked(true);
@@ -64,8 +66,8 @@ const NoteItem = ({
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}>
         <View style={styles.containerLeft}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text numberOfLines={2} style={styles.info}>
+          <Text style={[styles.title, {color: theme.colors.text1}]}>{item.title}</Text>
+          <Text numberOfLines={2} style={[styles.info, {color: theme.colors.text2}]}>
             {item.info}
           </Text>
         </View>
@@ -74,7 +76,7 @@ const NoteItem = ({
             <View style={styles.checkboxContainer}>
               <BouncyCheckbox
                 size={32}
-                fillColor={colorsDark.secondary}
+                fillColor={theme.colors.primary}
                 iconStyle={{ right: -10 }}
                 isChecked={isChecked}
                 onPress={() => {
@@ -85,11 +87,11 @@ const NoteItem = ({
             </View>
           ) : (
             <>
-              <Text style={styles.date}>Updated At:</Text>
-              <Text style={styles.date}>
+              <Text style={[styles.date, {color: theme.colors.text2}]}>Updated At:</Text>
+              <Text style={[styles.date, {color: theme.colors.text2}]}>
                 {createdAt.toLocaleDateString('en-US')}
               </Text>
-              <Text style={styles.date}>
+              <Text style={[styles.date, {color: theme.colors.text2}]}>
                 {parseTime(createdAt.getHours())}:
                 {parseTime(createdAt.getMinutes())}
               </Text>
@@ -108,8 +110,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 70,
-    backgroundColor: colorsDark.secondary02,
-    padding: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     margin: 3,
     borderRadius: 20,
     zIndex: 99,
@@ -120,7 +122,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'JosefinSans-Medium',
     fontSize: 16,
-    color: colorsDark.text1,
   },
   info: {
     fontFamily: 'JosefinSans-Light',
@@ -135,7 +136,6 @@ const styles = StyleSheet.create({
   date: {
     fontFamily: 'JosefinSans-Medium',
     fontSize: 12,
-    color: colorsDark.text2,
     marginTop: 1.5,
   },
   checkboxContainer: {

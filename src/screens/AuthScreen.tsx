@@ -1,14 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackActions, useNavigation } from '@react-navigation/native';
-import { colorsDark } from '../constants/colors';
 import { ProfileI } from '../interfaces/profile';
 import { getData } from '../utils/storage';
 import CustomTextInput from '../components/Inputs/CustomTextInput';
 import PrimaryButton from '../components/Buttons/PrimaryButton';
+import { useGlobalState } from '../contexts/GlobaState';
 
 const AuthScreen = () => {
   const navigation = useNavigation();
+  const { theme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI>();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -32,9 +33,9 @@ const AuthScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputsContainer}>
-        <Text style={styles.title}>Welcome back {profile?.username}!</Text>
+    <View style={[styles.container, {backgroundColor: theme.colors.background1}]}>
+      <View style={[styles.inputsContainer, { backgroundColor: theme.colors.primary05 }]}>
+        <Text style={[styles.title, { color: theme.colors.text1 }]}>Welcome back {profile?.username}!</Text>
         <CustomTextInput
           type="password"
           placeholder="Password"
@@ -42,7 +43,7 @@ const AuthScreen = () => {
           value={password}
           setValue={setPassword}
         />
-        {profile?.hint && <Text style={styles.hint}>{profile.hint}</Text>}
+        {profile?.hint && <Text style={[styles.hint, {color: theme.colors.text2}]}>{profile.hint}</Text>}
         <PrimaryButton
           text="Authorize"
           onPress={handleAuthorization}
@@ -60,18 +61,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colorsDark.background1,
   },
   title: {
     fontSize: 22,
     fontWeight: '600',
     textAlign: 'center',
-    color: colorsDark.text1,
     marginBottom: 40,
   },
   inputsContainer: {
     width: '90%',
-    backgroundColor: colorsDark.primary05,
     paddingVertical: 30,
     paddingHorizontal: 20,
     marginHorizontal: 10,
@@ -82,9 +80,8 @@ const styles = StyleSheet.create({
   },
   hint: {
     fontSize: 12,
-    color: colorsDark.text3,
-    marginTop: 2,
-    marginLeft: 10,
+    marginTop: 4,
+    marginLeft: 8,
   },
   authBtn: {
     alignSelf: 'center',

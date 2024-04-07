@@ -5,13 +5,16 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { useGlobalState } from '../contexts/GlobaState';
+import { ThemeEnum } from '../enums/theme';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
+  const { theme } = useGlobalState();
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.header}>
         <Image
-          source={require('../assets/safe_note.png')}
+          source={theme.type === ThemeEnum.YELLOW ? require('../assets/safe_note_yellow.png') : require( '../assets/safe_note.png')}
           style={styles.safeImage}
         />
       </View>
@@ -24,10 +27,10 @@ export default CustomDrawer;
 
 const styles = StyleSheet.create({
   header: {
-    // alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 20,
-    paddingLeft: 10,
+    paddingRight: 10,
   },
   safeImage: {
     height: 80,

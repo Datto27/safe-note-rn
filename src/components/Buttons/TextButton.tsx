@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextStyle, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { colorsDark } from '../../constants/colors';
+import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   text: string;
@@ -10,11 +10,13 @@ type Props = {
 };
 
 const TextButton = ({ text, color, style, onPress }: Props) => {
+  const {theme} = useGlobalState();
+  
   return (
     <TouchableOpacity
       style={style ? style : styles.container}
       onPress={onPress}>
-      <Text style={[styles.text, color ? { color } : {}]}>{text}</Text>
+      <Text style={[styles.text, color ? { color } : { color: theme.colors.secondary }]}>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -31,7 +33,6 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
-    color: colorsDark.secondary,
     marginTop: 2,
   },
 });

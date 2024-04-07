@@ -10,12 +10,13 @@ import {
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import { getData, saveData } from '../../utils/storage';
 import { NoteI } from '../../interfaces/note';
 import TextButton from '../Buttons/TextButton';
 import { EditorModeT } from '../../interfaces/editor-info.type';
+import SecondaryButton from '../Buttons/SecondaryButton';
+import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   item?: NoteI;
@@ -37,6 +38,7 @@ const NoteEditor = ({
   cb,
 }: Props) => {
   const idRef = useRef('');
+  const { theme } = useGlobalState();
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
@@ -124,11 +126,9 @@ const NoteEditor = ({
 
   return (
     <Modal visible={visible} animationType="slide">
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.cancelBtn} onPress={handleClose}>
-            <Text style={styles.cancelTxt}>Cancel</Text>
-          </TouchableOpacity>
+          <SecondaryButton text="Cancel" onPress={handleClose} />
           {mode === 'update' && item && (
             <TextButton
               text="Delete"
@@ -142,7 +142,7 @@ const NoteEditor = ({
           value={title}
           setValue={setTitle}
           containerStyles={{ marginHorizontal: 5 }}
-          textStyles={{ fontSize: 18 }}
+          textStyles={{ fontSize: 18, color: theme.colors.text1 }}
           error={error.field === 'title' ? error.msg : null}
         />
         <CustomTextInput
@@ -151,10 +151,11 @@ const NoteEditor = ({
           numberOfLines={20}
           value={info}
           setValue={setInfo}
+          textStyles={{ color: theme.colors.text1 }}
           containerStyles={styles.inputContainer}
         />
         <TouchableOpacity
-          style={styles.saveBtn}
+          style={[styles.saveBtn, { backgroundColor: theme.colors.primary, borderColor: theme.colors.secondary }]}
           onPress={async () => {
             const res = await saveNote();
             if (res?.field) {
@@ -164,9 +165,9 @@ const NoteEditor = ({
             }
           }}>
           {isLoading ? (
-            <ActivityIndicator size={32} color={colorsDark.secondary} />
+            <ActivityIndicator size={32} color={theme.colors.text1} />
           ) : (
-            <FeatherIcon name="save" color={colorsDark.text1} size={30} />
+            <FeatherIcon name="save" color={theme.colors.text1} size={30} />
           )}
         </TouchableOpacity>
       </SafeAreaView>
@@ -179,26 +180,13 @@ export default NoteEditor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colorsDark.background2,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  cancelBtn: {
-    backgroundColor: colorsDark.secondary02,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
-    marginHorizontal: 5,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colorsDark.background2,
-  },
-  cancelTxt: {
-    color: colorsDark.secondary,
+    marginTop: 5,
+    marginBottom: 15,
   },
   inputContainer: {
     flex: 1,
@@ -210,11 +198,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 5,
     right: 5,
-    backgroundColor: colorsDark.primary,
     padding: 15,
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: colorsDark.secondary,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.25,

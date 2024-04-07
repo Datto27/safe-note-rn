@@ -2,28 +2,30 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import HomeScreen from '../screens/HomeScreen';
-import { colorsDark } from '../constants/colors';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/CustomDrawer';
+import { useGlobalState } from '../contexts/GlobaState';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
+  const { theme } = useGlobalState();
+
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
         headerStyle: {
-          backgroundColor: colorsDark.background2,
+          backgroundColor: theme.colors.background2,
         },
-        headerTintColor: colorsDark.text1,
-        drawerActiveTintColor: colorsDark.secondary,
-        drawerInactiveTintColor: colorsDark.text2,
-        drawerActiveBackgroundColor: colorsDark.primary,
-        drawerInactiveBackgroundColor: colorsDark.primary05,
+        headerTintColor: theme.colors.text1,
+        drawerActiveTintColor: theme.colors.secondary,
+        drawerInactiveTintColor: theme.colors.text2,
+        drawerActiveBackgroundColor: theme.colors.primary,
+        drawerInactiveBackgroundColor: theme.colors.primary05,
         drawerStyle: {
-          backgroundColor: colorsDark.background1,
+          backgroundColor: theme.colors.background1,
         },
         drawerLabelStyle: {
           fontFamily: 'JosefinSans-Medium',
@@ -44,7 +46,7 @@ const DrawerNavigator = () => {
             <FeatherIcon
               name="list"
               size={22}
-              color={focused ? colorsDark.secondary : colorsDark.text2}
+              color={focused ? theme.colors.secondary : theme.colors.text2}
             />
           ),
         }}
@@ -59,7 +61,7 @@ const DrawerNavigator = () => {
             <FeatherIcon
               name="user"
               size={22}
-              color={focused ? colorsDark.secondary : colorsDark.text2}
+              color={focused ? theme.colors.secondary : theme.colors.text2}
             />
           ),
         }}
