@@ -33,9 +33,16 @@ const AuthScreen = () => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.colors.background1}]}>
-      <View style={[styles.inputsContainer, { backgroundColor: theme.colors.primary05 }]}>
-        <Text style={[styles.title, { color: theme.colors.text1 }]}>Welcome back {profile?.username}!</Text>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      <View
+        style={[
+          styles.inputsContainer,
+          { backgroundColor: theme.colors.primary05 },
+        ]}>
+        <Text style={[styles.title, { color: theme.colors.text1 }]}>
+          Welcome back {profile?.username}!
+        </Text>
         <CustomTextInput
           type="password"
           placeholder="Password"
@@ -43,7 +50,11 @@ const AuthScreen = () => {
           value={password}
           setValue={setPassword}
         />
-        {profile?.hint && <Text style={[styles.hint, {color: theme.colors.text2}]}>{profile.hint}</Text>}
+        {profile?.hint && (
+          <Text style={[styles.hint, { color: theme.colors.text2 }]}>
+            {profile.hint}
+          </Text>
+        )}
         <PrimaryButton
           text="Authorize"
           onPress={handleAuthorization}

@@ -1,5 +1,11 @@
 import 'react-native-gesture-handler';
-import React, { Dispatch, SetStateAction, createContext, useEffect, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useEffect,
+  useState,
+} from 'react';
 import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
@@ -25,10 +31,13 @@ type ThemeT = {
     text1: string;
     text2: string;
     text3: string;
-  }
+  };
 };
 
-export const AppContext = createContext<{theme: ThemeT; setTheme: Dispatch<SetStateAction<ThemeT>>}>({});
+export const AppContext = createContext<{
+  theme: ThemeT;
+  setTheme: Dispatch<SetStateAction<ThemeT>>;
+}>({});
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -50,7 +59,7 @@ function App(): React.JSX.Element {
       await BootSplash.hide({ fade: true });
     });
 
-    getData('theme').then((res) => {
+    getData('theme').then(res => {
       if (res === ThemeEnum.DARK) {
         setTheme({
           type: ThemeEnum.DARK,
@@ -73,11 +82,11 @@ function App(): React.JSX.Element {
   }, []);
 
   useEffect(() => {
-    saveData('theme', theme.type).then(() => {})
-  }, [theme])
+    saveData('theme', theme.type).then(() => {});
+  }, [theme]);
 
   return (
-    <AppContext.Provider value={{theme, setTheme}}>
+    <AppContext.Provider value={{ theme, setTheme }}>
       <SafeAreaView style={backgroundStyle}>
         <StatusBar
           barStyle={'light-content'}

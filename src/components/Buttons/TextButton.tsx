@@ -10,13 +10,19 @@ type Props = {
 };
 
 const TextButton = ({ text, color, style, onPress }: Props) => {
-  const {theme} = useGlobalState();
-  
+  const { theme } = useGlobalState();
+
   return (
     <TouchableOpacity
       style={style ? style : styles.container}
       onPress={onPress}>
-      <Text style={[styles.text, color ? { color } : { color: theme.colors.secondary }]}>{text}</Text>
+      <Text
+        style={[
+          styles.text,
+          color ? { color } : { color: theme.colors.secondary },
+        ]}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };

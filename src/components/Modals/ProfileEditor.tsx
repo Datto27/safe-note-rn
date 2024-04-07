@@ -52,8 +52,16 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
 
   return (
     <Modal visible={visible} animationType="slide">
-      <SafeAreaView style={[styles.container, {backgroundColor: theme.colors.background1}]}>
-        <View style={[styles.inputsContainer , {backgroundColor: theme.colors.primary05}]}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background1 },
+        ]}>
+        <View
+          style={[
+            styles.inputsContainer,
+            { backgroundColor: theme.colors.primary05 },
+          ]}>
           <CustomTextInput
             placeholder="Username"
             containerStyles={{ marginVertical: 7 }}

@@ -40,7 +40,15 @@ const CustomTextInput = ({
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={[styles.container, containerStyles, { backgroundColor: theme.colors.secondary04, borderColor: theme.colors.primary}, error ? styles.error : {}]}
+      style={[
+        styles.container,
+        containerStyles,
+        {
+          backgroundColor: theme.colors.secondary04,
+          borderColor: theme.colors.primary,
+        },
+        error ? styles.error : {},
+      ]}
       onPress={() => inputRef.current?.focus()}>
       {multiline ? (
         <TextInput

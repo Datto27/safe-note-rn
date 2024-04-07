@@ -17,9 +17,22 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
 
   return (
     <Modal transparent visible={visible} animationType="fade">
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background2_09 }]}>
-        <View style={[styles.modalContainer, { backgroundColor: theme.colors.background2, borderColor: theme.colors.text3 }]}>
-          <Text style={[styles.title, {color: theme.colors.text1}]}>{text}</Text>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background2_09 },
+        ]}>
+        <View
+          style={[
+            styles.modalContainer,
+            {
+              backgroundColor: theme.colors.background2,
+              borderColor: theme.colors.text3,
+            },
+          ]}>
+          <Text style={[styles.title, { color: theme.colors.text1 }]}>
+            {text}
+          </Text>
           <View style={styles.iconContainer}>
             <FeatherIcons name="trash-2" color="red" size={40} />
           </View>

@@ -47,4 +47,4 @@ export const colorsYellow = {
   text1: 'white',
   text2: 'rgba(170, 170, 170, 1)',
   text3: 'rgba(70, 70, 70, 1)',
-}
+};

@@ -30,7 +30,7 @@ const NoteItem = ({
   onLongPress,
   handleCheckboxMark,
 }: Props) => {
-  const {theme} = useGlobalState();
+  const { theme } = useGlobalState();
   const [pressed, setPressed] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const createdAt = new Date(item.updatedAt);
@@ -57,7 +57,11 @@ const NoteItem = ({
   return (
     <Animated.View style={{ opacity: fadeAnim }}>
       <TouchableOpacity
-        style={[styles.container, pressed && { transform: [{ scale: 0.98 }] }, { backgroundColor: theme.colors.secondary02 }]}
+        style={[
+          styles.container,
+          pressed && { transform: [{ scale: 0.98 }] },
+          { backgroundColor: theme.colors.secondary02 },
+        ]}
         onPress={() => onPress()}
         onLongPress={() => {
           setIsChecked(true);
@@ -66,8 +70,12 @@ const NoteItem = ({
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}>
         <View style={styles.containerLeft}>
-          <Text style={[styles.title, {color: theme.colors.text1}]}>{item.title}</Text>
-          <Text numberOfLines={2} style={[styles.info, {color: theme.colors.text2}]}>
+          <Text style={[styles.title, { color: theme.colors.text1 }]}>
+            {item.title}
+          </Text>
+          <Text
+            numberOfLines={2}
+            style={[styles.info, { color: theme.colors.text2 }]}>
             {item.info}
           </Text>
         </View>
@@ -87,11 +95,13 @@ const NoteItem = ({
             </View>
           ) : (
             <>
-              <Text style={[styles.date, {color: theme.colors.text2}]}>Updated At:</Text>
-              <Text style={[styles.date, {color: theme.colors.text2}]}>
+              <Text style={[styles.date, { color: theme.colors.text2 }]}>
+                Updated At:
+              </Text>
+              <Text style={[styles.date, { color: theme.colors.text2 }]}>
                 {createdAt.toLocaleDateString('en-US')}
               </Text>
-              <Text style={[styles.date, {color: theme.colors.text2}]}>
+              <Text style={[styles.date, { color: theme.colors.text2 }]}>
                 {parseTime(createdAt.getHours())}:
                 {parseTime(createdAt.getMinutes())}
               </Text>

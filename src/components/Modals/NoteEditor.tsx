@@ -126,7 +126,11 @@ const NoteEditor = ({
 
   return (
     <Modal visible={visible} animationType="slide">
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background1 },
+        ]}>
         <View style={styles.header}>
           <SecondaryButton text="Cancel" onPress={handleClose} />
           {mode === 'update' && item && (
@@ -155,7 +159,13 @@ const NoteEditor = ({
           containerStyles={styles.inputContainer}
         />
         <TouchableOpacity
-          style={[styles.saveBtn, { backgroundColor: theme.colors.primary, borderColor: theme.colors.secondary }]}
+          style={[
+            styles.saveBtn,
+            {
+              backgroundColor: theme.colors.primary,
+              borderColor: theme.colors.secondary,
+            },
+          ]}
           onPress={async () => {
             const res = await saveNote();
             if (res?.field) {

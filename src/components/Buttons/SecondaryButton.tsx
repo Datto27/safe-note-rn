@@ -8,11 +8,15 @@ type Props = {
 };
 
 const SecondaryButton = ({ text, onPress }: Props) => {
-  const {theme} = useGlobalState();
+  const { theme } = useGlobalState();
 
   return (
-    <TouchableOpacity style={[styles.container, { backgroundColor: theme.colors.secondary02}]} onPress={onPress}>
-      <Text style={[styles.text, { color: theme.colors.secondary }]}>{text}</Text>
+    <TouchableOpacity
+      style={[styles.container, { backgroundColor: theme.colors.secondary02 }]}
+      onPress={onPress}>
+      <Text style={[styles.text, { color: theme.colors.secondary }]}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };

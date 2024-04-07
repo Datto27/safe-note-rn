@@ -13,9 +13,16 @@ const PrimaryButton = ({ text, onPress, containerStyle }: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, containerStyle, {backgroundColor: theme.colors.primary, borderColor: theme.colors.secondary}]}
+      style={[
+        styles.container,
+        containerStyle,
+        {
+          backgroundColor: theme.colors.primary,
+          borderColor: theme.colors.secondary,
+        },
+      ]}
       onPress={onPress}>
-      <Text style={[styles.text, {color: theme.colors.text1}]}>{text}</Text>
+      <Text style={[styles.text, { color: theme.colors.text1 }]}>{text}</Text>
     </TouchableOpacity>
   );
 };

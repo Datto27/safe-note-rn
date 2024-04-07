@@ -75,7 +75,8 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
       <FlatList
         data={notes ? Object.keys(notes) : []}
         renderItem={({ item, index }) => (
@@ -98,20 +99,33 @@ const HomeScreen = () => {
       {deleteMode ? (
         deleteArr.length > 0 ? (
           <TouchableOpacity
-            style={[styles.floatingBtn, { backgroundColor: theme.colors.primary }]}
+            style={[
+              styles.floatingBtn,
+              { backgroundColor: theme.colors.primary },
+            ]}
             onPress={() => setShowDeleteModal(true)}>
             <FeatherIcon name="trash" size={32} color={'red'} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={[styles.floatingBtn, { backgroundColor: theme.colors.primary }]}
+            style={[
+              styles.floatingBtn,
+              { backgroundColor: theme.colors.primary },
+            ]}
             onPress={() => setDeleteMode(false)}>
-            <FeatherIcon name="slash" size={32} color={theme.colors.secondary} />
+            <FeatherIcon
+              name="slash"
+              size={32}
+              color={theme.colors.secondary}
+            />
           </TouchableOpacity>
         )
       ) : (
         <TouchableOpacity
-          style={[styles.floatingBtn, { backgroundColor: theme.colors.primary }]}
+          style={[
+            styles.floatingBtn,
+            { backgroundColor: theme.colors.primary },
+          ]}
           onPress={() =>
             setEditorInfo({ show: true, mode: 'create', item: undefined })
           }>

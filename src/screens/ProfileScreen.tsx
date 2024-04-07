@@ -38,15 +38,26 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.colors.background1}]}>
-      <View style={[styles.profileCard, { backgroundColor: theme.colors.primary05 }]}>
-        <View style={[styles.profileIconContainer, { backgroundColor: theme.colors.background2_09 }]}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      <View
+        style={[
+          styles.profileCard,
+          { backgroundColor: theme.colors.primary05 },
+        ]}>
+        <View
+          style={[
+            styles.profileIconContainer,
+            { backgroundColor: theme.colors.background2_09 },
+          ]}>
           <FeatherIcon name="user" color={theme.colors.text2} size={42} />
         </View>
         {profile ? (
           <View style={styles.profile}>
             <View>
-              <Text style={[styles.profileName, { color: theme.colors.text1 }]}>{profile.username}</Text>
+              <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+                {profile.username}
+              </Text>
               <TextButton
                 text="Update Profile"
                 style={{ marginTop: 10 }}
@@ -59,7 +70,9 @@ const ProfileScreen = () => {
           </View>
         ) : (
           <View style={styles.noProfile}>
-            <Text style={[styles.profileName, { color: theme.colors.text1 }]}>No Profile</Text>
+            <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+              No Profile
+            </Text>
             <TextButton
               text="Create Profile"
               style={{ alignSelf: 'center' }}
@@ -80,21 +93,67 @@ const ProfileScreen = () => {
           cancelCb={() => setShowDeleteModal(false)}
         />
       </View>
-      <View style={[styles.themesContainer, { backgroundColor: theme.colors.background2_09 }]}>
-        <TouchableOpacity style={[styles.theme, theme.type === ThemeEnum.DARK && { borderColor: 'white' }]}
-          onPress={() => setTheme({type: ThemeEnum.DARK, colors: colorsDark})}>
-          <View style={[styles.themeColor, {backgroundColor: colorsDark.primary}]}></View>
-          <View style={[styles.themeColor, {backgroundColor: colorsDark.background1}]}></View>
+      <View
+        style={[
+          styles.themesContainer,
+          { backgroundColor: theme.colors.background2_09 },
+        ]}>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.DARK && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.DARK, colors: colorsDark })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsDark.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsDark.background1 },
+            ]}></View>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.theme, theme.type === ThemeEnum.LIGHT && { borderColor: 'white' }]}
-          onPress={() => setTheme({type: ThemeEnum.LIGHT, colors: colorsLight})}>
-          <View style={[styles.themeColor, {backgroundColor: colorsLight.primary}]}></View>
-          <View style={[styles.themeColor, {backgroundColor: colorsLight.background1}]}></View>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.LIGHT && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.LIGHT, colors: colorsLight })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsLight.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsLight.background1 },
+            ]}></View>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.theme, theme.type === ThemeEnum.YELLOW && { borderColor: 'white' }]}
-          onPress={() => setTheme({type: ThemeEnum.YELLOW, colors: colorsYellow})}>
-          <View style={[styles.themeColor, {backgroundColor: colorsYellow.primary}]}></View>
-          <View style={[styles.themeColor, {backgroundColor: colorsYellow.background1}]}></View>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.YELLOW && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.YELLOW, colors: colorsYellow })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsYellow.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsYellow.background1 },
+            ]}></View>
         </TouchableOpacity>
       </View>
     </View>
@@ -156,5 +215,5 @@ const styles = StyleSheet.create({
   themeColor: {
     height: 30,
     width: 15,
-  }
+  },
 });

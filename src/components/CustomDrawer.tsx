@@ -14,7 +14,11 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
     <DrawerContentScrollView {...props}>
       <View style={styles.header}>
         <Image
-          source={theme.type === ThemeEnum.YELLOW ? require('../assets/safe_note_yellow.png') : require( '../assets/safe_note.png')}
+          source={
+            theme.type === ThemeEnum.YELLOW
+              ? require('../assets/safe_note_yellow.png')
+              : require('../assets/safe_note.png')
+          }
           style={styles.safeImage}
         />
       </View>
