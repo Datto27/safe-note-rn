@@ -6,11 +6,20 @@ import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
 import { FlatList } from 'react-native-gesture-handler';
-import NoteItem from '../components/NoteItem';
+import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
+<<<<<<< Updated upstream
 
 const HomeScreen = () => {
+=======
+import { useGlobalState } from '../contexts/GlobaState';
+import { useIsFocused } from '@react-navigation/native';
+
+const HomeScreen = () => {
+  const { theme } = useGlobalState();
+  const isFocused = useIsFocused();
+>>>>>>> Stashed changes
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});
   const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
     show: false,
@@ -23,7 +32,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [isFocused]);
 
   const fetchNotes = () => {
     getData('notes').then((res: { [key: string]: NoteI }) => {

@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Medium',
     fontSize: 17,
     backgroundColor: 'transparent',
-    marginTop: 2,
   },
   input: {
     flex: 1,
@@ -110,6 +109,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
+<<<<<<< Updated upstream
     // marginTop: 2,
+=======
+>>>>>>> Stashed changes
   },
 });
