@@ -1,12 +1,12 @@
 import { Modal, SafeAreaView, StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ProfileI } from '../../interfaces/profile';
-import { colorsDark } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import PrimaryButton from '../Buttons/PrimaryButton';
 import { saveData } from '../../utils/storage';
 import { EditorModeT } from '../../interfaces/editor-info.type';
+import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   profile?: ProfileI | null;
@@ -16,6 +16,7 @@ type Props = {
 };
 
 const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
+  const { theme } = useGlobalState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hint, setHint] = useState('');
@@ -51,8 +52,16 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
 
   return (
     <Modal visible={visible} animationType="slide">
-      <SafeAreaView style={styles.container}>
-        <View style={styles.inputsContainer}>
+      <SafeAreaView
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background1 },
+        ]}>
+        <View
+          style={[
+            styles.inputsContainer,
+            { backgroundColor: theme.colors.primary05 },
+          ]}>
           <CustomTextInput
             placeholder="Username"
             containerStyles={{ marginVertical: 7 }}
@@ -95,10 +104,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colorsDark.background2,
   },
   inputsContainer: {
-    backgroundColor: colorsDark.primary05,
     paddingVertical: 30,
     paddingHorizontal: 20,
     marginHorizontal: 10,
@@ -111,6 +118,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: 30,
   },
 });

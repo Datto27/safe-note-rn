@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
-import { colorsDark } from '../../constants/colors';
+import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   text: string;
@@ -8,9 +8,15 @@ type Props = {
 };
 
 const SecondaryButton = ({ text, onPress }: Props) => {
+  const { theme } = useGlobalState();
+
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text style={styles.text}>{text}</Text>
+    <TouchableOpacity
+      style={[styles.container, { backgroundColor: theme.colors.secondary02 }]}
+      onPress={onPress}>
+      <Text style={[styles.text, { color: theme.colors.secondary }]}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -19,18 +25,14 @@ export default SecondaryButton;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colorsDark.secondary02,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginVertical: 10,
     marginHorizontal: 5,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colorsDark.background2,
   },
   text: {
-    fontFamily: 'JosefinSans-Medium',
-    color: colorsDark.secondary,
-    marginTop: 2,
+    // fontFamily: 'JosefinSans-Medium',
+    marginTop: 3,
   },
 });

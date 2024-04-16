@@ -1,15 +1,18 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colorsDark } from '../constants/colors';
+import { colorsDark, colorsLight, colorsYellow } from '../constants/colors';
 import TextButton from '../components/Buttons/TextButton';
 import ProfileEditor from '../components/Modals/ProfileEditor';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { getData, removeData } from '../utils/storage';
 import { ProfileI } from '../interfaces/profile';
 import DeleteModal from '../components/Modals/DeleteModal';
+import { useGlobalState } from '../contexts/GlobaState';
+import { ThemeEnum } from '../enums/theme';
 
 const ProfileScreen = () => {
+  const { theme, setTheme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI | null>(null);
   const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
     show: false,
@@ -35,15 +38,26 @@ const ProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.profileCard}>
-        <View style={styles.profileIconContainer}>
-          <FeatherIcon name="user" color={colorsDark.text2} size={42} />
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      <View
+        style={[
+          styles.profileCard,
+          { backgroundColor: theme.colors.primary05 },
+        ]}>
+        <View
+          style={[
+            styles.profileIconContainer,
+            { backgroundColor: theme.colors.background2_09 },
+          ]}>
+          <FeatherIcon name="user" color={theme.colors.text2} size={42} />
         </View>
         {profile ? (
           <View style={styles.profile}>
             <View>
-              <Text style={styles.profileName}>{profile.username}</Text>
+              <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+                {profile.username}
+              </Text>
               <TextButton
                 text="Update Profile"
                 style={{ marginTop: 10 }}
@@ -56,7 +70,9 @@ const ProfileScreen = () => {
           </View>
         ) : (
           <View style={styles.noProfile}>
-            <Text style={styles.profileName}>No Profile</Text>
+            <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+              No Profile
+            </Text>
             <TextButton
               text="Create Profile"
               style={{ alignSelf: 'center' }}
@@ -77,6 +93,69 @@ const ProfileScreen = () => {
           cancelCb={() => setShowDeleteModal(false)}
         />
       </View>
+      <View
+        style={[
+          styles.themesContainer,
+          { backgroundColor: theme.colors.background2_09 },
+        ]}>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.DARK && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.DARK, colors: colorsDark })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsDark.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsDark.background1 },
+            ]}></View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.LIGHT && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.LIGHT, colors: colorsLight })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsLight.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsLight.background1 },
+            ]}></View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            theme.type === ThemeEnum.YELLOW && { borderColor: 'white' },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.YELLOW, colors: colorsYellow })
+          }>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsYellow.primary },
+            ]}></View>
+          <View
+            style={[
+              styles.themeColor,
+              { backgroundColor: colorsYellow.background1 },
+            ]}></View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -86,11 +165,9 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colorsDark.background1,
   },
   profileCard: {
     flexDirection: 'row',
-    backgroundColor: colorsDark.primary05,
     padding: 20,
     borderRadius: 20,
     marginVertical: 20,
@@ -98,7 +175,6 @@ const styles = StyleSheet.create({
   },
   profileIconContainer: {
     justifyContent: 'center',
-    backgroundColor: colorsDark.background2_09,
     padding: 10,
     marginRight: 20,
     borderRadius: 15,
@@ -119,8 +195,25 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Bold',
     flexWrap: 'wrap',
     fontSize: 18,
-    color: colorsDark.text1,
     marginVertical: 2,
     marginRight: 5,
+  },
+  themesContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    padding: 8,
+    borderRadius: 20,
+  },
+  theme: {
+    flexDirection: 'row',
+    marginHorizontal: 8,
+    borderColor: 'grey',
+    borderWidth: 6,
+    borderRadius: 50,
+    overflow: 'hidden',
+  },
+  themeColor: {
+    height: 30,
+    width: 15,
   },
 });

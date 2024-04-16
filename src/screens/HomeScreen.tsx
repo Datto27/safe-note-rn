@@ -1,16 +1,19 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colorsDark } from '../constants/colors';
 import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
 import { FlatList } from 'react-native-gesture-handler';
-import NoteItem from '../components/NoteItem';
+import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
+import { useGlobalState } from '../contexts/GlobaState';
+import { useIsFocused } from '@react-navigation/native';
 
 const HomeScreen = () => {
+  const isFocused = useIsFocused();
+  const { theme } = useGlobalState();
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});
   const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
     show: false,
@@ -23,7 +26,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     fetchNotes();
-  }, []);
+  }, [isFocused]);
 
   const fetchNotes = () => {
     getData('notes').then((res: { [key: string]: NoteI }) => {
@@ -74,7 +77,8 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
       <FlatList
         data={notes ? Object.keys(notes) : []}
         renderItem={({ item, index }) => (
@@ -97,24 +101,37 @@ const HomeScreen = () => {
       {deleteMode ? (
         deleteArr.length > 0 ? (
           <TouchableOpacity
-            style={styles.floatingBtn}
+            style={[
+              styles.floatingBtn,
+              { backgroundColor: theme.colors.primary },
+            ]}
             onPress={() => setShowDeleteModal(true)}>
             <FeatherIcon name="trash" size={32} color={'red'} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={styles.floatingBtn}
+            style={[
+              styles.floatingBtn,
+              { backgroundColor: theme.colors.primary },
+            ]}
             onPress={() => setDeleteMode(false)}>
-            <FeatherIcon name="slash" size={32} color={colorsDark.secondary} />
+            <FeatherIcon
+              name="slash"
+              size={32}
+              color={theme.colors.secondary}
+            />
           </TouchableOpacity>
         )
       ) : (
         <TouchableOpacity
-          style={styles.floatingBtn}
+          style={[
+            styles.floatingBtn,
+            { backgroundColor: theme.colors.primary },
+          ]}
           onPress={() =>
             setEditorInfo({ show: true, mode: 'create', item: undefined })
           }>
-          <FeatherIcon name="plus" size={32} color={colorsDark.text1} />
+          <FeatherIcon name="plus" size={32} color={theme.colors.text1} />
         </TouchableOpacity>
       )}
       <NoteEditor
@@ -147,7 +164,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colorsDark.background1,
     paddingTop: 5,
   },
   floatingBtn: {
@@ -158,7 +174,6 @@ const styles = StyleSheet.create({
     width: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colorsDark.primary,
     borderRadius: 50,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
