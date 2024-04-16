@@ -31,10 +31,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
-<<<<<<< Updated upstream
     color: colorsDark.secondary,
     marginTop: 2,
-=======
->>>>>>> Stashed changes
   },
 });

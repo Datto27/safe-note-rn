@@ -29,12 +29,8 @@ const styles = StyleSheet.create({
     borderColor: colorsDark.background2,
   },
   text: {
-<<<<<<< Updated upstream
     fontFamily: 'JosefinSans-Medium',
     color: colorsDark.secondary,
     marginTop: 2,
-=======
-    // fontFamily: 'JosefinSans-Medium',
->>>>>>> Stashed changes
   },
 });

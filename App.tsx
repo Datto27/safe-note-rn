@@ -9,39 +9,22 @@ import MainStack from './src/routes/MainStackNavigator';
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const backgroundStyle = {
+    flex: 1,
+    backgroundColor: isDarkMode
+      ? colorsDark.background2
+      : colorsLight.background2,
+  };
+
   useEffect(() => {
     const init = async () => {};
 
     init().finally(async () => {
       await BootSplash.hide({ fade: true });
     });
-<<<<<<< Updated upstream
-=======
-    getData('theme').then(res => {
-      if (res === ThemeEnum.DARK) {
-        setTheme({
-          type: ThemeEnum.DARK,
-          colors: colorsDark,
-        });
-      }
-      if (res === ThemeEnum.LIGHT) {
-        setTheme({
-          type: ThemeEnum.LIGHT,
-          colors: colorsLight,
-        });
-      }
-      if (res === ThemeEnum.YELLOW) {
-        setTheme({
-          type: ThemeEnum.YELLOW,
-          colors: colorsYellow,
-        });
-      }
-    });
->>>>>>> Stashed changes
   }, []);
 
   return (
-<<<<<<< Updated upstream
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle={'light-content'}
@@ -51,20 +34,6 @@ function App(): React.JSX.Element {
         <MainStack />
       </NavigationContainer>
     </SafeAreaView>
-=======
-    <AppContext.Provider value={{ theme, setTheme }}>
-      <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background2}}>
-        <StatusBar
-          barStyle={theme.type === ThemeEnum.LIGHT ? 'dark-content' : 'light-content'}
-          backgroundColor={theme.colors.background1}
-          translucent
-        />
-        <NavigationContainer>
-          <MainStack />
-        </NavigationContainer>
-      </SafeAreaView>
-    </AppContext.Provider>
->>>>>>> Stashed changes
   );
 }
 
