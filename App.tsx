@@ -40,18 +40,10 @@ export const AppContext = createContext<{
 }>({});
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
   const [theme, setTheme] = useState({
     type: ThemeEnum.DARK,
     colors: colorsDark,
   });
-
-  const backgroundStyle = {
-    flex: 1,
-    backgroundColor: isDarkMode
-      ? colorsDark.background2
-      : colorsLight.background2,
-  };
 
   useEffect(() => {
     const init = async () => {};
@@ -87,9 +79,9 @@ function App(): React.JSX.Element {
 
   return (
     <AppContext.Provider value={{ theme, setTheme }}>
-      <SafeAreaView style={backgroundStyle}>
+      <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background2}}>
         <StatusBar
-          barStyle={'light-content'}
+          barStyle={theme.type === ThemeEnum.LIGHT ? 'dark-content' : 'light-content'}
           backgroundColor={theme.colors.background1}
           translucent
         />
