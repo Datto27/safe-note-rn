@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CustomDrawer from '../components/CustomDrawer';
 import { useGlobalState } from '../contexts/GlobaState';
+import ArchiveScreen from '../screens/ArchiveScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -60,6 +61,21 @@ const DrawerNavigator = () => {
           drawerIcon: ({ focused }) => (
             <FeatherIcon
               name="user"
+              size={22}
+              color={focused ? theme.colors.secondary : theme.colors.text2}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Archive"
+        component={ArchiveScreen}
+        options={{
+          headerTitle: 'Archive',
+          drawerLabel: 'Archive',
+          drawerIcon: ({ focused }) => (
+            <FeatherIcon
+              name="archive"
               size={22}
               color={focused ? theme.colors.secondary : theme.colors.text2}
             />

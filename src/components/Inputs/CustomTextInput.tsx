@@ -117,6 +117,6 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
-    marginTop: 2,
+    // marginTop: 2,
   },
 });

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   text: {
-    fontFamily: 'JosefinSans-Medium',
+    // fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
     marginTop: 2,
   },

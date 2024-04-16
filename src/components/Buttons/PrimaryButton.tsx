@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   text: {
-    fontFamily: 'JosefinSans-Medium',
+    // fontFamily: 'JosefinSans-Medium',
     marginTop: 2,
   },
 });

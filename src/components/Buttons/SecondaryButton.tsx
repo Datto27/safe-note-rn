@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   text: {
-    fontFamily: 'JosefinSans-Medium',
+    // fontFamily: 'JosefinSans-Medium',
     marginTop: 3,
   },
 });
