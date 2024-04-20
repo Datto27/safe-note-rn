@@ -85,7 +85,7 @@ const HomeScreen = () => {
           <NoteItem
             key={index}
             item={notes[item]}
-            animationDelay={150 * (index + 1)}
+            animationDelay={50 * (index * 2 + 1)}
             deleteMode={deleteMode}
             handleCheckboxMark={markDeleteItem}
             onPress={() => {
@@ -124,14 +124,11 @@ const HomeScreen = () => {
         )
       ) : (
         <TouchableOpacity
-          style={[
-            styles.floatingBtn,
-            { backgroundColor: theme.colors.primary },
-          ]}
+          style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
           onPress={() =>
             setEditorInfo({ show: true, mode: 'create', item: undefined })
           }>
-          <FeatherIcon name="plus" size={32} color={theme.colors.text1} />
+          <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
         </TouchableOpacity>
       )}
       <NoteEditor

@@ -13,6 +13,11 @@ export const colorsDark = {
   text1: 'white',
   text2: 'rgba(153, 153, 153, 1)',
   text3: 'rgba(70, 70, 70, 1)',
+  btn1: 'rgba(12, 25, 54, 1)',
+  btn2: 'rgba(12, 25, 54, 0.5)',
+  btnText1: 'white',
+  btnText2: 'rgba(68, 121, 238, 1)',
+  btnText3: 'rgba(153, 153, 153, 1)',
 };
 
 export const colorsLight = {
@@ -25,18 +30,23 @@ export const colorsLight = {
   secondary02: 'rgba(68, 160, 238, 0.1)',
   tertiary: '#061831',
   background1: 'rgba(230, 230, 230, 1)',
-  background2: 'rgba(240, 240, 240, 1)',
+  background2: 'rgba(235, 235, 235, 1)',
   background2_09: 'rgba(230, 230, 230, 0.9)',
   text1: 'black',
   text2: 'rgba(120, 120, 120, 1)',
   text3: 'rgba(180, 180, 180, 1)',
+  btn1: 'rgba(5, 90, 169, 0.8)',
+  btn2: 'rgba(5, 90, 169, 0.35)',
+  btnText1: 'white',
+  btnText2: 'rgba(240, 240, 240, 1)',
+  btnText3: 'rgba(230, 230, 230, 1)',
 };
 
 export const colorsYellow = {
   primary: 'rgba(255, 170, 4, 1)',
   primary05: 'rgba(255, 185, 4, 0.2)',
   primary02: 'rgba(255, 185, 4, 0.1)',
-  secondary: 'rgba(255, 230, 4, 1)',
+  secondary: 'rgba(255, 200, 4, 1)',
   secondary05: 'rgba(255, 185, 4, 0.3)',
   secondary04: 'rgba(255, 185, 4, 0.2)',
   secondary02: 'rgba(255, 185, 4, 0.1)',
@@ -47,4 +57,9 @@ export const colorsYellow = {
   text1: 'white',
   text2: 'rgba(170, 170, 170, 1)',
   text3: 'rgba(70, 70, 70, 1)',
+  btn1: 'rgba(255, 170, 4, 0.8)',
+  btn2: 'rgba(255, 185, 4, 0.2)',
+  btnText1: 'white',
+  btnText2: 'rgba(255, 200, 4, 1)',
+  btnText3: 'rgba(153, 153, 153, 1)',
 };

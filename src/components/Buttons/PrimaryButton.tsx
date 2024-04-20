@@ -17,12 +17,14 @@ const PrimaryButton = ({ text, onPress, containerStyle }: Props) => {
         styles.container,
         containerStyle,
         {
-          backgroundColor: theme.colors.primary,
-          borderColor: theme.colors.secondary,
+          backgroundColor: theme.colors.btn1,
+          borderColor: theme.colors.primary,
         },
       ]}
       onPress={onPress}>
-      <Text style={[styles.text, { color: theme.colors.text1 }]}>{text}</Text>
+      <Text style={[styles.text, { color: theme.colors.btnText1 }]}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -40,6 +42,6 @@ const styles = StyleSheet.create({
   },
   text: {
     // fontFamily: 'JosefinSans-Medium',
-    marginTop: 2,
+    // marginTop: 2,
   },
 });

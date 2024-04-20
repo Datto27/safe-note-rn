@@ -51,7 +51,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   };
 
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
       <SafeAreaView
         style={[
           styles.container,
@@ -106,13 +106,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputsContainer: {
+    width: '96%',
     paddingVertical: 30,
     paddingHorizontal: 20,
     marginHorizontal: 10,
     borderRadius: 20,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-    elevation: 1,
   },
   actionBtns: {
     width: '100%',

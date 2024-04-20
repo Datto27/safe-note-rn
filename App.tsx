@@ -31,6 +31,11 @@ type ThemeT = {
     text1: string;
     text2: string;
     text3: string;
+    btn1: string;
+    btn2: string;
+    btnText1: string;
+    btnText2: string;
+    btnText3: string;
   };
 };
 
@@ -79,10 +84,13 @@ function App(): React.JSX.Element {
 
   return (
     <AppContext.Provider value={{ theme, setTheme }}>
-      <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background2}}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: theme.colors.background2 }}>
         <StatusBar
-          barStyle={theme.type === ThemeEnum.LIGHT ? 'dark-content' : 'light-content'}
-          backgroundColor={theme.colors.background1}
+          barStyle={
+            theme.type === ThemeEnum.LIGHT ? 'dark-content' : 'light-content'
+          }
+          backgroundColor={theme.colors.background2}
           translucent
         />
         <NavigationContainer>

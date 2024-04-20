@@ -28,8 +28,7 @@ type ArchivedProps = {
   animationDelay?: number | null;
   onRecover: (id: string) => void;
   onDelete: (id: string) => void;
-}
-
+};
 
 export const NoteItem = ({
   item,
@@ -93,7 +92,7 @@ export const NoteItem = ({
             <View style={styles.checkboxContainer}>
               <BouncyCheckbox
                 size={32}
-                fillColor={theme.colors.primary}
+                fillColor={theme.colors.secondary}
                 iconStyle={{ right: -10 }}
                 isChecked={isChecked}
                 onPress={() => {
@@ -122,7 +121,12 @@ export const NoteItem = ({
   );
 };
 
-export const ArchivedNoteItem = ({item, animationDelay, onRecover, onDelete}: ArchivedProps) => {
+export const ArchivedNoteItem = ({
+  item,
+  animationDelay,
+  onRecover,
+  onDelete,
+}: ArchivedProps) => {
   const { theme } = useGlobalState();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -139,9 +143,15 @@ export const ArchivedNoteItem = ({item, animationDelay, onRecover, onDelete}: Ar
   }, [fadeAnim]);
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim, backgroundColor: theme.colors.secondary02 }]}>
-      <TouchableOpacity style={styles.deleteBtn} onPress={() => onDelete(item.id)}>
-        <FeatherIcon name='trash' size={32} color={'red'} />
+    <Animated.View
+      style={[
+        styles.container,
+        { opacity: fadeAnim, backgroundColor: theme.colors.secondary02 },
+      ]}>
+      <TouchableOpacity
+        style={styles.deleteBtn}
+        onPress={() => onDelete(item.id)}>
+        <FeatherIcon name="trash" size={32} color={'red'} />
       </TouchableOpacity>
       <View style={styles.containerLeft}>
         <Text style={[styles.title, { color: theme.colors.text1 }]}>
@@ -153,12 +163,14 @@ export const ArchivedNoteItem = ({item, animationDelay, onRecover, onDelete}: Ar
           {item.info}
         </Text>
       </View>
-      <TouchableOpacity style={styles.recoverBtn} onPress={() => onRecover(item.id)}>
-        <FeatherIcon name='repeat' size={32} color={theme.colors.primary} />
+      <TouchableOpacity
+        style={styles.recoverBtn}
+        onPress={() => onRecover(item.id)}>
+        <FeatherIcon name="repeat" size={32} color={theme.colors.btnText1} />
       </TouchableOpacity>
     </Animated.View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -206,5 +218,5 @@ const styles = StyleSheet.create({
   recoverBtn: {
     alignSelf: 'center',
     marginRight: 10,
-  }
+  },
 });

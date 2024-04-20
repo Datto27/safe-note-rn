@@ -16,7 +16,11 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
   const { theme } = useGlobalState();
 
   return (
-    <Modal transparent visible={visible} animationType="fade">
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+      onRequestClose={cancelCb}>
       <SafeAreaView
         style={[
           styles.container,

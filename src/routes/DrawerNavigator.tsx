@@ -21,10 +21,10 @@ const DrawerNavigator = () => {
           backgroundColor: theme.colors.background2,
         },
         headerTintColor: theme.colors.text1,
-        drawerActiveTintColor: theme.colors.secondary,
-        drawerInactiveTintColor: theme.colors.text2,
-        drawerActiveBackgroundColor: theme.colors.primary,
-        drawerInactiveBackgroundColor: theme.colors.primary05,
+        drawerActiveTintColor: theme.colors.btnText1,
+        drawerInactiveTintColor: theme.colors.btnText3,
+        drawerActiveBackgroundColor: theme.colors.btn1,
+        drawerInactiveBackgroundColor: theme.colors.btn2,
         drawerStyle: {
           backgroundColor: theme.colors.background1,
         },
@@ -47,7 +47,7 @@ const DrawerNavigator = () => {
             <FeatherIcon
               name="list"
               size={22}
-              color={focused ? theme.colors.secondary : theme.colors.text2}
+              color={focused ? theme.colors.btnText1 : theme.colors.btnText3}
             />
           ),
         }}
@@ -62,7 +62,7 @@ const DrawerNavigator = () => {
             <FeatherIcon
               name="user"
               size={22}
-              color={focused ? theme.colors.secondary : theme.colors.text2}
+              color={focused ? theme.colors.btnText1 : theme.colors.btnText3}
             />
           ),
         }}
@@ -77,7 +77,7 @@ const DrawerNavigator = () => {
             <FeatherIcon
               name="archive"
               size={22}
-              color={focused ? theme.colors.secondary : theme.colors.text2}
+              color={focused ? theme.colors.btnText1 : theme.colors.btnText3}
             />
           ),
         }}

@@ -19,7 +19,7 @@ const TextButton = ({ text, color, style, onPress }: Props) => {
       <Text
         style={[
           styles.text,
-          color ? { color } : { color: theme.colors.secondary },
+          color ? { color } : { color: theme.colors.btnText2 },
         ]}>
         {text}
       </Text>
@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
   text: {
     // fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
-    marginTop: 2,
+    // marginTop: 2,
   },
 });

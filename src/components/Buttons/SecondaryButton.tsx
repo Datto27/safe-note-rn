@@ -12,9 +12,9 @@ const SecondaryButton = ({ text, onPress }: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: theme.colors.secondary02 }]}
+      style={[styles.container, { backgroundColor: theme.colors.btn2 }]}
       onPress={onPress}>
-      <Text style={[styles.text, { color: theme.colors.secondary }]}>
+      <Text style={[styles.text, { color: theme.colors.btnText2 }]}>
         {text}
       </Text>
     </TouchableOpacity>
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   },
   text: {
     // fontFamily: 'JosefinSans-Medium',
-    marginTop: 3,
+    // marginTop: 3,
   },
 });

@@ -125,7 +125,7 @@ const NoteEditor = ({
   };
 
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
       <SafeAreaView
         style={[
           styles.container,
@@ -150,7 +150,7 @@ const NoteEditor = ({
           error={error.field === 'title' ? error.msg : null}
         />
         <CustomTextInput
-          placeholder="What you want to save?"
+          placeholder="What's in your mind?"
           multiline
           numberOfLines={20}
           value={info}
@@ -175,9 +175,9 @@ const NoteEditor = ({
             }
           }}>
           {isLoading ? (
-            <ActivityIndicator size={32} color={theme.colors.text1} />
+            <ActivityIndicator size={32} color={theme.colors.btnText1} />
           ) : (
-            <FeatherIcon name="save" color={theme.colors.text1} size={30} />
+            <FeatherIcon name="save" color={theme.colors.btnText1} size={30} />
           )}
         </TouchableOpacity>
       </SafeAreaView>
