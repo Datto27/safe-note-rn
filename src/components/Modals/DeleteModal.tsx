@@ -1,5 +1,13 @@
-import { Modal, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import {
+  Animated,
+  Easing,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, { useEffect, useRef } from 'react';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import TextButton from '../Buttons/TextButton';
@@ -14,6 +22,45 @@ type Props = {
 
 const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
   const { theme } = useGlobalState();
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+
+  const animateBin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-7deg', '7deg'],
+  });
+
+  useEffect(() => {
+    if (visible) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(rotateAnim, {
+            toValue: 1,
+            duration: 500,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: 0,
+            duration: 100,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: 1,
+            duration: 100,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+          Animated.timing(rotateAnim, {
+            toValue: 0,
+            duration: 500,
+            easing: Easing.ease,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    }
+  }, [visible]);
 
   return (
     <Modal
@@ -38,7 +85,9 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
             {text}
           </Text>
           <View style={styles.iconContainer}>
-            <FeatherIcons name="trash-2" color="red" size={40} />
+            <Animated.View style={{ transform: [{ rotate: animateBin }] }}>
+              <FeatherIcons name="trash-2" color="red" size={40} />
+            </Animated.View>
           </View>
           <View style={styles.actionBtns}>
             <SecondaryButton text="Cancel" onPress={() => cancelCb()} />

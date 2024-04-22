@@ -1,5 +1,5 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
@@ -23,9 +23,11 @@ const HomeScreen = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteArr, setDeleteArr] = useState<string[]>([]);
+  const floatBtnAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     fetchNotes();
+    animateScale();
   }, [isFocused]);
 
   const fetchNotes = () => {
@@ -76,6 +78,15 @@ const HomeScreen = () => {
     setDeleteMode(false);
   };
 
+  const animateScale = () => {
+    Animated.spring(floatBtnAnim, {
+      toValue: 1,
+      speed: 0.8,
+      bounciness: 0.1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
@@ -123,13 +134,15 @@ const HomeScreen = () => {
           </TouchableOpacity>
         )
       ) : (
-        <TouchableOpacity
-          style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
-          onPress={() =>
-            setEditorInfo({ show: true, mode: 'create', item: undefined })
-          }>
-          <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
-        </TouchableOpacity>
+        <Animated.View style={{ transform: [{ scale: floatBtnAnim }] }}>
+          <TouchableOpacity
+            style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
+            onPress={() =>
+              setEditorInfo({ show: true, mode: 'create', item: undefined })
+            }>
+            <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
+          </TouchableOpacity>
+        </Animated.View>
       )}
       <NoteEditor
         mode={editorInfo.mode}
