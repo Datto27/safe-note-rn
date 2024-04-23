@@ -44,7 +44,7 @@ const CustomTextInput = ({
         styles.container,
         containerStyles,
         {
-          backgroundColor: theme.colors.secondary04,
+          backgroundColor: theme.colors.background2_09,
           borderColor: theme.colors.primary,
         },
         error ? styles.error : {},
@@ -53,7 +53,7 @@ const CustomTextInput = ({
       {multiline ? (
         <TextInput
           ref={inputRef}
-          style={[styles.textarea, textStyles]}
+          style={[styles.textarea, textStyles, {color: theme.colors.text1}]}
           multiline={true}
           numberOfLines={numberOfLines}
           placeholder={placeholder}
@@ -64,7 +64,7 @@ const CustomTextInput = ({
         <TextInput
           ref={inputRef}
           secureTextEntry={showEntry}
-          style={[styles.input, textStyles]}
+          style={[styles.input, textStyles, {color: theme.colors.text1}]}
           placeholder={placeholder}
           value={value}
           onChangeText={setValue}
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
     borderWidth: 1,

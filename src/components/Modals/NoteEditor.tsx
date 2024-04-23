@@ -61,7 +61,7 @@ const NoteEditor = ({
   useEffect(() => {
     let to: NodeJS.Timeout;
 
-    if (title !== '' && info !== '') {
+    if (title !== '' && info !== '' && mode !== 'create') {
       setIsLoading(true);
       to = setTimeout(() => {
         saveNote();
