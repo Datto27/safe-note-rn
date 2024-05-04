@@ -5,6 +5,7 @@ import {
   ViewStyle,
   TextStyle,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import React, { Dispatch, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -53,7 +54,7 @@ const CustomTextInput = ({
       {multiline ? (
         <TextInput
           ref={inputRef}
-          style={[styles.textarea, textStyles, {color: theme.colors.text1}]}
+          style={[styles.textarea, textStyles, { color: theme.colors.text1 }]}
           multiline={true}
           numberOfLines={numberOfLines}
           placeholder={placeholder}
@@ -64,7 +65,7 @@ const CustomTextInput = ({
         <TextInput
           ref={inputRef}
           secureTextEntry={showEntry}
-          style={[styles.input, textStyles, {color: theme.colors.text1}]}
+          style={[styles.input, textStyles, { color: theme.colors.text1 }]}
           placeholder={placeholder}
           value={value}
           onChangeText={setValue}
@@ -81,6 +82,7 @@ const CustomTextInput = ({
           </TouchableOpacity>
         )
       ) : null}
+      <Text style={styles.errorMsg}>{error}</Text>
     </TouchableOpacity>
   );
 };
@@ -92,7 +94,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
     borderWidth: 1,
@@ -116,5 +117,12 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
+    marginVertical: 10,
+  },
+  errorMsg: {
+    position: 'absolute',
+    bottom: -18,
+    right: 0,
+    color: 'red',
   },
 });

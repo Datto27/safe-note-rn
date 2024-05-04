@@ -22,13 +22,13 @@ const AuthScreen = () => {
 
   const handleAuthorization = () => {
     if (!password) {
-      return setError('Password is required!');
+      return setError('Password Is Required!');
     }
 
     if (password === profile?.password) {
       navigation.dispatch(StackActions.replace('DrawerNav'));
     } else {
-      setError('Password is incorect!');
+      setError('Password Is Incorect!');
     }
   };
 

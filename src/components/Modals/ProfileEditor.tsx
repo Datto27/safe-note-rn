@@ -19,6 +19,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   const { theme } = useGlobalState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rePassword, setRePassword] = useState('');
   const [hint, setHint] = useState('');
   const [error, setError] = useState({ field: '', msg: '' });
 
@@ -31,10 +32,16 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
 
   const createProfile = () => {
     if (!username) {
-      return setError({ field: 'username', msg: 'Username is required' });
+      return setError({ field: 'username', msg: 'Username Is Required' });
     }
     if (!password) {
-      return setError({ field: 'password', msg: 'Password is required' });
+      return setError({ field: 'password', msg: 'Password Is Required' });
+    }
+    if (password !== rePassword) {
+      return setError({
+        field: 'rePassword',
+        msg: 'Passwords Rhould Be Identical',
+      });
     }
 
     saveData('profile', { username, password, hint }).then(() => {
@@ -45,6 +52,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   const handleClose = () => {
     setUsername('');
     setPassword('');
+    setRePassword('');
     setHint('');
     setError({ field: '', msg: '' });
     setVisible(false);
@@ -72,14 +80,22 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           <CustomTextInput
             type="password"
             placeholder="Password"
-            containerStyles={{ marginVertical: 7 }}
+            containerStyles={{ marginVertical: 10 }}
             error={error.field === 'password' ? error.msg : null}
             value={password}
             setValue={setPassword}
           />
           <CustomTextInput
+            type="password"
+            placeholder="Repeat Password"
+            containerStyles={{ marginVertical: 10 }}
+            error={error.field === 'rePassword' ? error.msg : null}
+            value={rePassword}
+            setValue={setRePassword}
+          />
+          <CustomTextInput
             placeholder="Hint for remember the password"
-            containerStyles={{ marginVertical: 7 }}
+            containerStyles={{ marginVertical: 10 }}
             value={hint}
             setValue={setHint}
           />
