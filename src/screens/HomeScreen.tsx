@@ -96,7 +96,7 @@ const HomeScreen = () => {
           <NoteItem
             key={index}
             item={notes[item]}
-            animationDelay={50 * (index * 2 + 1)}
+            animationDelay={50 * (index * 2.4 + 1)}
             deleteMode={deleteMode}
             handleCheckboxMark={markDeleteItem}
             onPress={() => {

@@ -82,7 +82,7 @@ const NoteEditor = ({
 
   const saveNote = async () => {
     if (!title) {
-      return { field: 'title', msg: 'Title is required!' };
+      return { field: 'title', msg: '' };
     }
 
     if (mode === 'create') {

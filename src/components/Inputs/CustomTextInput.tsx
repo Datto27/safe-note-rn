@@ -58,6 +58,7 @@ const CustomTextInput = ({
           multiline={true}
           numberOfLines={numberOfLines}
           placeholder={placeholder}
+          placeholderTextColor={theme.colors.text3}
           value={value}
           onChangeText={setValue}
         />
@@ -67,6 +68,7 @@ const CustomTextInput = ({
           secureTextEntry={showEntry}
           style={[styles.input, textStyles, { color: theme.colors.text1 }]}
           placeholder={placeholder}
+          placeholderTextColor={theme.colors.text3}
           value={value}
           onChangeText={setValue}
         />
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    borderRadius: 20,
+    borderRadius: 25,
     borderWidth: 1,
   },
   error: {

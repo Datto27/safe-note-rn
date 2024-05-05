@@ -1,4 +1,10 @@
-import { Modal, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ProfileI } from '../../interfaces/profile';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -65,49 +71,51 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <View
-          style={[
-            styles.inputsContainer,
-            { backgroundColor: theme.colors.primary05 },
-          ]}>
-          <CustomTextInput
-            placeholder="Username"
-            containerStyles={{ marginVertical: 7 }}
-            error={error.field === 'username' ? error.msg : null}
-            value={username}
-            setValue={setUsername}
-          />
-          <CustomTextInput
-            type="password"
-            placeholder="Password"
-            containerStyles={{ marginVertical: 10 }}
-            error={error.field === 'password' ? error.msg : null}
-            value={password}
-            setValue={setPassword}
-          />
-          <CustomTextInput
-            type="password"
-            placeholder="Repeat Password"
-            containerStyles={{ marginVertical: 10 }}
-            error={error.field === 'rePassword' ? error.msg : null}
-            value={rePassword}
-            setValue={setRePassword}
-          />
-          <CustomTextInput
-            placeholder="Hint for remember the password"
-            containerStyles={{ marginVertical: 10 }}
-            value={hint}
-            setValue={setHint}
-          />
-          <View style={styles.actionBtns}>
-            <SecondaryButton text="Cancel" onPress={() => handleClose()} />
-            {mode === 'create' ? (
-              <PrimaryButton text="Create" onPress={() => createProfile()} />
-            ) : (
-              <PrimaryButton text="Update" onPress={() => createProfile()} />
-            )}
+        <ScrollView contentContainerStyle={styles.scrollView}>
+          <View
+            style={[
+              styles.inputsContainer,
+              { backgroundColor: theme.colors.primary05 },
+            ]}>
+            <CustomTextInput
+              placeholder="Username"
+              containerStyles={{ marginVertical: 7 }}
+              error={error.field === 'username' ? error.msg : null}
+              value={username}
+              setValue={setUsername}
+            />
+            <CustomTextInput
+              type="password"
+              placeholder="Password"
+              containerStyles={{ marginVertical: 10 }}
+              error={error.field === 'password' ? error.msg : null}
+              value={password}
+              setValue={setPassword}
+            />
+            <CustomTextInput
+              type="password"
+              placeholder="Repeat Password"
+              containerStyles={{ marginVertical: 10 }}
+              error={error.field === 'rePassword' ? error.msg : null}
+              value={rePassword}
+              setValue={setRePassword}
+            />
+            <CustomTextInput
+              placeholder="Hint for remember the password"
+              containerStyles={{ marginVertical: 10 }}
+              value={hint}
+              setValue={setHint}
+            />
+            <View style={styles.actionBtns}>
+              <SecondaryButton text="Cancel" onPress={() => handleClose()} />
+              {mode === 'create' ? (
+                <PrimaryButton text="Create" onPress={() => createProfile()} />
+              ) : (
+                <PrimaryButton text="Update" onPress={() => createProfile()} />
+              )}
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </Modal>
   );
@@ -118,6 +126,11 @@ export default ProfileEditor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scrollView: {
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
