@@ -23,7 +23,7 @@ const HomeScreen = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteArr, setDeleteArr] = useState<string[]>([]);
-  const floatBtnAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     fetchNotes();
@@ -79,13 +79,38 @@ const HomeScreen = () => {
   };
 
   const animateScale = () => {
-    Animated.spring(floatBtnAnim, {
+    Animated.spring(scaleAnim, {
       toValue: 1,
       speed: 0.8,
-      bounciness: 0.1,
+      bounciness: 0.5,
       useNativeDriver: true,
     }).start();
   };
+  const animateBounc = () => {
+    Animated.timing(scaleAnim, {
+      toValue: 0.5,
+      duration: 100,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(scaleAnim, {
+        toValue: 1.3,
+        duration: 100,
+        useNativeDriver: true,
+      }).start(() => {
+        Animated.timing(scaleAnim, {
+          toValue: 0.8,
+          duration: 100,
+          useNativeDriver: true,
+        }).start(() => {
+          Animated.timing(scaleAnim, {
+            toValue: 1,
+            duration: 100,
+            useNativeDriver: true,
+          }).start();
+        });
+      });
+    });
+  }
 
   return (
     <View
@@ -111,35 +136,40 @@ const HomeScreen = () => {
       />
       {deleteMode ? (
         deleteArr.length > 0 ? (
-          <TouchableOpacity
-            style={[
-              styles.floatingBtn,
-              { backgroundColor: theme.colors.primary },
-            ]}
-            onPress={() => setShowDeleteModal(true)}>
-            <FeatherIcon name="trash" size={32} color={'red'} />
-          </TouchableOpacity>
+          <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
+            <TouchableOpacity
+              style={[
+                styles.floatingBtn,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              onPress={() => setShowDeleteModal(true)}>
+              <FeatherIcon name="trash" size={32} color={'red'} />
+            </TouchableOpacity>
+          </Animated.View>
         ) : (
-          <TouchableOpacity
-            style={[
-              styles.floatingBtn,
-              { backgroundColor: theme.colors.primary },
-            ]}
-            onPress={() => setDeleteMode(false)}>
-            <FeatherIcon
-              name="slash"
-              size={32}
-              color={theme.colors.secondary}
-            />
-          </TouchableOpacity>
+          <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
+            <TouchableOpacity
+              style={[
+                styles.floatingBtn,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              onPress={() => setDeleteMode(false)}>
+              <FeatherIcon
+                name="slash"
+                size={32}
+                color={theme.colors.secondary}
+              />
+            </TouchableOpacity>
+          </Animated.View>
         )
       ) : (
-        <Animated.View style={{ transform: [{ scale: floatBtnAnim }] }}>
+        <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
           <TouchableOpacity
             style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
-            onPress={() =>
+            onPress={() => {
+              animateBounc();
               setEditorInfo({ show: true, mode: 'create', item: undefined })
-            }>
+            }}>
             <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
           </TouchableOpacity>
         </Animated.View>
@@ -176,12 +206,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 5,
   },
-  floatingBtn: {
+  floatingBtnContainer: {
     position: 'absolute',
     bottom: 15,
     right: 15,
     height: 60,
     width: 60,
+  },
+  floatingBtn: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 50,
