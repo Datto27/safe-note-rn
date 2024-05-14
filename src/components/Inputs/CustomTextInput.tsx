@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Medium',
     fontSize: 17,
     backgroundColor: 'transparent',
+    marginVertical: 10,
   },
   input: {
     flex: 1,

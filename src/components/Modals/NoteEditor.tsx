@@ -7,6 +7,8 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Animated,
+  Easing,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -46,6 +48,8 @@ const NoteEditor = ({
     msg: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  let heightAnim = useRef(new Animated.Value(0)).current;
+  let widthAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     idRef.current = item ? item.id : Math.random().toString(16).slice(2);
@@ -72,6 +76,28 @@ const NoteEditor = ({
       clearTimeout(to);
     };
   }, [title, info]);
+
+  useEffect(() => {
+    if (visible) {
+      Animated.timing(widthAnim, {
+        toValue: 1,
+        delay: 50,
+        duration: 300,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(heightAnim, {
+        toValue: 1,
+        delay: 450,
+        duration: 300,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      widthAnim.setValue(0);
+      heightAnim.setValue(0);
+    }
+  }, [heightAnim, visible]);
 
   const handleClose = () => {
     setTitle('');
@@ -141,29 +167,32 @@ const NoteEditor = ({
             />
           )}
         </View>
-        <CustomTextInput
-          placeholder="Title"
-          value={title}
-          setValue={setTitle}
-          containerStyles={{ marginHorizontal: 5 }}
-          textStyles={{ fontSize: 18, color: theme.colors.text1 }}
-          error={error.field === 'title' ? error.msg : null}
-        />
-        <CustomTextInput
-          placeholder="What's in your mind?"
-          multiline
-          numberOfLines={20}
-          value={info}
-          setValue={setInfo}
-          textStyles={{ color: theme.colors.text1 }}
-          containerStyles={styles.inputContainer}
-        />
+        <Animated.View style={{ transform: [{ scaleX: widthAnim }] }}>
+          <CustomTextInput
+            placeholder="Title"
+            value={title}
+            setValue={setTitle}
+            containerStyles={{ marginHorizontal: 5 }}
+            textStyles={{ fontSize: 18, color: theme.colors.text1 }}
+            error={error.field === 'title' ? error.msg : null}
+          />
+        </Animated.View>
+        <Animated.View style={{ flex: 1, transform: [{ scaleY: heightAnim }] }}>
+          <CustomTextInput
+            placeholder="What's in your mind?"
+            multiline
+            numberOfLines={20}
+            value={info}
+            setValue={setInfo}
+            textStyles={{ color: theme.colors.text1 }}
+            containerStyles={styles.inputContainer}
+          />
+        </Animated.View>
         <TouchableOpacity
           style={[
             styles.saveBtn,
             {
               backgroundColor: theme.colors.primary,
-              borderColor: theme.colors.secondary,
             },
           ]}
           onPress={async () => {

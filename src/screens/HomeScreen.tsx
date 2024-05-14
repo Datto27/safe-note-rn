@@ -110,7 +110,7 @@ const HomeScreen = () => {
         });
       });
     });
-  }
+  };
 
   return (
     <View
@@ -136,7 +136,11 @@ const HomeScreen = () => {
       />
       {deleteMode ? (
         deleteArr.length > 0 ? (
-          <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
+          <Animated.View
+            style={[
+              styles.floatingBtnContainer,
+              { transform: [{ scale: scaleAnim }] },
+            ]}>
             <TouchableOpacity
               style={[
                 styles.floatingBtn,
@@ -147,7 +151,11 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </Animated.View>
         ) : (
-          <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
+          <Animated.View
+            style={[
+              styles.floatingBtnContainer,
+              { transform: [{ scale: scaleAnim }] },
+            ]}>
             <TouchableOpacity
               style={[
                 styles.floatingBtn,
@@ -163,12 +171,16 @@ const HomeScreen = () => {
           </Animated.View>
         )
       ) : (
-        <Animated.View style={[styles.floatingBtnContainer, { transform: [{ scale: scaleAnim}]}]}>
+        <Animated.View
+          style={[
+            styles.floatingBtnContainer,
+            { transform: [{ scale: scaleAnim }] },
+          ]}>
           <TouchableOpacity
             style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
             onPress={() => {
               animateBounc();
-              setEditorInfo({ show: true, mode: 'create', item: undefined })
+              setEditorInfo({ show: true, mode: 'create', item: undefined });
             }}>
             <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
           </TouchableOpacity>
