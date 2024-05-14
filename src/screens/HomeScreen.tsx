@@ -54,15 +54,16 @@ const HomeScreen = () => {
     }
   };
 
-  const deleteItems = () => {
+  const deleteItems = async () => {
+    const allNotes: { [key: string]: NoteI } = await getData('notes');
     if (deleteArr.length > 0) {
-      Object.values(notes).forEach((note: NoteI) => {
+      Object.values(allNotes).forEach((note: NoteI) => {
         if (deleteArr.includes(note.id)) {
-          notes[note.id].deleted = true;
+          allNotes[note.id].deleted = true;
         }
       });
 
-      saveData('notes', notes).then(() => {
+      await saveData('notes', allNotes).then(() => {
         fetchNotes();
       });
     }
