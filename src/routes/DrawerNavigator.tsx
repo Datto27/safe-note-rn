@@ -28,6 +28,10 @@ const DrawerNavigator = () => {
         drawerStyle: {
           backgroundColor: theme.colors.background1,
         },
+        drawerItemStyle: {
+          borderRadius: 15,
+          paddingHorizontal: 3,
+        },
         drawerLabelStyle: {
           fontFamily: 'JosefinSans-Medium',
           fontSize: 16,

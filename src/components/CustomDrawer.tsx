@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import {
   DrawerContentComponentProps,
@@ -10,6 +10,7 @@ import { ThemeEnum } from '../enums/theme';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const { theme } = useGlobalState();
+
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.header}>
@@ -21,6 +22,9 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
           }
           style={styles.safeImage}
         />
+        <Text style={[styles.title, { color: theme.colors.text1 }]}>
+          Safe Note
+        </Text>
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>
@@ -31,13 +35,18 @@ export default CustomDrawer;
 
 const styles = StyleSheet.create({
   header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: 20,
-    paddingRight: 10,
+    paddingHorizontal: 10,
+  },
+  title: {
+    fontFamily: 'JosefinSans-Bold',
+    fontSize: 24,
   },
   safeImage: {
-    height: 80,
-    width: 80,
+    height: 60,
+    width: 60,
+    marginRight: 15,
   },
 });
