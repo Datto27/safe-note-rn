@@ -48,8 +48,8 @@ const NoteEditor = ({
     msg: '',
   });
   const [isLoading, setIsLoading] = useState(false);
-  let heightAnim = useRef(new Animated.Value(0)).current;
-  let widthAnim = useRef(new Animated.Value(0)).current;
+  let titleAnim = useRef(new Animated.Value(0)).current;
+  let infoAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     idRef.current = item ? item.id : Math.random().toString(16).slice(2);
@@ -79,25 +79,25 @@ const NoteEditor = ({
 
   useEffect(() => {
     if (visible) {
-      Animated.timing(widthAnim, {
+      Animated.timing(titleAnim, {
         toValue: 1,
-        delay: 50,
+        delay: 200,
         duration: 300,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start();
-      Animated.timing(heightAnim, {
+      Animated.timing(infoAnim, {
         toValue: 1,
-        delay: 450,
+        delay: 400,
         duration: 300,
         easing: Easing.linear,
         useNativeDriver: true,
       }).start();
     } else {
-      widthAnim.setValue(0);
-      heightAnim.setValue(0);
+      infoAnim.setValue(0);
+      titleAnim.setValue(0);
     }
-  }, [heightAnim, visible]);
+  }, [titleAnim, visible]);
 
   const handleClose = () => {
     setTitle('');
@@ -157,58 +157,60 @@ const NoteEditor = ({
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <View style={styles.header}>
-          <SecondaryButton text="Cancel" onPress={handleClose} />
-          {mode === 'update' && item && (
-            <TextButton
-              text="Delete"
-              color="red"
-              onPress={() => showDeleteModal(item.id)}
+        <View style={{flex: 1}}>
+          <View style={styles.header}>
+            <SecondaryButton text="Cancel" onPress={handleClose} />
+            {mode === 'update' && item && (
+              <TextButton
+                text="Delete"
+                color="red"
+                onPress={() => showDeleteModal(item.id)}
+              />
+            )}
+          </View>
+          <Animated.View style={{ opacity: titleAnim }}>
+            <CustomTextInput
+              placeholder="Title"
+              value={title}
+              setValue={setTitle}
+              containerStyles={{ marginHorizontal: 5 }}
+              textStyles={{ fontSize: 18, color: theme.colors.text1 }}
+              error={error.field === 'title' ? error.msg : null}
             />
-          )}
+          </Animated.View>
+          <Animated.View style={{ flex: 1, opacity: infoAnim }}>
+            <CustomTextInput
+              placeholder="What's in your mind?"
+              multiline
+              numberOfLines={20}
+              value={info}
+              setValue={setInfo}
+              textStyles={{ color: theme.colors.text1 }}
+              containerStyles={styles.inputContainer}
+            />
+          </Animated.View>
+          <TouchableOpacity
+            style={[
+              styles.saveBtn,
+              {
+                backgroundColor: theme.colors.primary,
+              },
+            ]}
+            onPress={async () => {
+              const res = await saveNote();
+              if (res?.field) {
+                setError(res);
+              } else {
+                handleClose();
+              }
+            }}>
+            {isLoading ? (
+              <ActivityIndicator size={32} color={theme.colors.btnText1} />
+            ) : (
+              <FeatherIcon name="save" color={theme.colors.btnText1} size={30} />
+            )}
+          </TouchableOpacity>
         </View>
-        <Animated.View style={{ transform: [{ scaleX: widthAnim }] }}>
-          <CustomTextInput
-            placeholder="Title"
-            value={title}
-            setValue={setTitle}
-            containerStyles={{ marginHorizontal: 5 }}
-            textStyles={{ fontSize: 18, color: theme.colors.text1 }}
-            error={error.field === 'title' ? error.msg : null}
-          />
-        </Animated.View>
-        <Animated.View style={{ flex: 1, transform: [{ scaleY: heightAnim }] }}>
-          <CustomTextInput
-            placeholder="What's in your mind?"
-            multiline
-            numberOfLines={20}
-            value={info}
-            setValue={setInfo}
-            textStyles={{ color: theme.colors.text1 }}
-            containerStyles={styles.inputContainer}
-          />
-        </Animated.View>
-        <TouchableOpacity
-          style={[
-            styles.saveBtn,
-            {
-              backgroundColor: theme.colors.primary,
-            },
-          ]}
-          onPress={async () => {
-            const res = await saveNote();
-            if (res?.field) {
-              setError(res);
-            } else {
-              handleClose();
-            }
-          }}>
-          {isLoading ? (
-            <ActivityIndicator size={32} color={theme.colors.btnText1} />
-          ) : (
-            <FeatherIcon name="save" color={theme.colors.btnText1} size={30} />
-          )}
-        </TouchableOpacity>
       </SafeAreaView>
     </Modal>
   );
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
   },
   saveBtn: {
     position: 'absolute',
-    bottom: 5,
+    bottom: 7,
     right: 5,
     padding: 15,
     borderRadius: 50,
