@@ -1,19 +1,29 @@
-# Install libraries
-- /> yarn install
-- /> cd ios && pod install
+# Safe Note
+To Save You Data
 
-# Start application
-- /> yarn start
 
-### Run project on android
-- /> yarn run android
+## Install libraries
+```bash
+/> yarn install
+/> cd ios && pod install
+```
 
-### Run project on ioss
-- /> yarn run ios
+## Start application
+- yarn start
+
+### Run on android
+- yarn run android
+
+### Run on ios
+- yarn run ios
+
+
 
 # App images
-<img src"assets/1.png" width="24%" title="Home" >
-<img src"assets/2.png" width="24%" title="Profile" >
-<img src"assets/3.png" width="24%" title="Profile Form" >
-<img src"assets/4.png" width="24%" title="Note Form" >
+<div style="display: flex; width: 1000%; justify-content: space-between">
+  <img src="/assets/static/1.png" width="24%" title="Home">
+  <img src="/assets/static/2.png" width="24%" title="Profile" >
+  <img src="/assets/static/3.png" width="24%" title="Profile Form" >
+  <img src="/assets/static/4.png" width="24%" title="Note Form" >
+</div>
 
