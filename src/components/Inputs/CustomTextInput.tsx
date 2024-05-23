@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   errorMsg: {
     position: 'absolute',
-    bottom: -18,
+    bottom: -19,
     right: 0,
     color: 'red',
   },

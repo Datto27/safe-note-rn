@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colorsDark, colorsLight, colorsYellow } from '../constants/colors';
@@ -10,6 +16,9 @@ import { ProfileI } from '../interfaces/profile';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { useGlobalState } from '../contexts/GlobaState';
 import { ThemeEnum } from '../enums/theme';
+import ValidationModal from '../components/Modals/ValidationModal';
+import PrimaryButton from '../components/Buttons/PrimaryButton';
+import DataReviewModal from '../components/Modals/DataReviewModal';
 
 const ProfileScreen = () => {
   const { theme, setTheme } = useGlobalState();
@@ -19,6 +28,8 @@ const ProfileScreen = () => {
     mode: 'create',
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [modal, setModal] = useState<string | null>(null);
+  const [showDataOptions, setShowDataOptions] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -156,6 +167,69 @@ const ProfileScreen = () => {
             ]}></View>
         </TouchableOpacity>
       </View>
+      {/* <View
+        style={{
+          alignItems: 'flex-start',
+          backgroundColor: theme.colors.background2,
+          padding: 0,
+          marginVertical: 20,
+          marginHorizontal: 10,
+          borderRadius: 20,
+        }}>
+        <TextButton
+          text="Activate Data Encryption"
+          onPress={() => setModal('confirm')}
+        />
+      </View> */}
+      <View
+        style={{
+          height: showDataOptions ? 180 : 50,
+          overflow: 'hidden',
+          marginHorizontal: 10,
+        }}>
+        <TouchableOpacity
+          style={styles.dropdownBtn}
+          onPress={() => {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut,
+            );
+            setShowDataOptions(!showDataOptions);
+          }}>
+          <Text style={[styles.dropText, { color: theme.colors.text1 }]}>
+            Mange your Data
+          </Text>
+          <FeatherIcon
+            name={showDataOptions ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color={theme.colors.text1}
+          />
+        </TouchableOpacity>
+        <PrimaryButton
+          text="Export Data"
+          containerStyle={{}}
+          style={{ fontSize: 16 }}
+          onPress={() => setModal(profile ? 'validate' : 'export')}
+        />
+        <PrimaryButton
+          text="Import Data"
+          containerStyle={{ marginTop: 0 }}
+          style={{ fontSize: 16 }}
+          onPress={() => setModal(profile ? 'validate' : 'import')}
+        />
+      </View>
+      <DataReviewModal
+        visible={modal === 'export' || modal === 'import'}
+        type={modal}
+        text=""
+        onClose={() => setModal(null)}
+      />
+      <ValidationModal
+        visible={modal === 'validate'}
+        profile={profile}
+        text="Enter Your Password"
+        cancelCb={() => setModal(null)}
+        successCb={() => setModal(null)}
+      />
     </View>
   );
 };
@@ -215,5 +289,16 @@ const styles = StyleSheet.create({
   themeColor: {
     height: 30,
     width: 15,
+  },
+  dropdownBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    marginHorizontal: 10,
+  },
+  dropText: {
+    fontSize: 18,
+    fontFamily: 'JosefinSans-Medium',
   },
 });

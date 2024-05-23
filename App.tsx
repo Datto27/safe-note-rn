@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { SafeAreaView, StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
 import { colorsDark, colorsLight, colorsYellow } from './src/constants/colors';

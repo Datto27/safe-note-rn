@@ -157,7 +157,7 @@ const NoteEditor = ({
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View style={styles.header}>
             <SecondaryButton text="Cancel" onPress={handleClose} />
             {mode === 'update' && item && (
@@ -207,7 +207,11 @@ const NoteEditor = ({
             {isLoading ? (
               <ActivityIndicator size={32} color={theme.colors.btnText1} />
             ) : (
-              <FeatherIcon name="save" color={theme.colors.btnText1} size={30} />
+              <FeatherIcon
+                name="save"
+                color={theme.colors.btnText1}
+                size={30}
+              />
             )}
           </TouchableOpacity>
         </View>
