@@ -75,7 +75,6 @@ const ProfileScreen = () => {
           ...notes[k],
           info: decryptData(notes[k].info, ekey) ?? notes[k].info,
         };
-        console.log('remove', notes[k].info);
       });
       removeData('key').then(res => {
         if (res === 'ok') {

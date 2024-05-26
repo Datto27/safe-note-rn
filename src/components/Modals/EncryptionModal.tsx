@@ -49,7 +49,6 @@ const EncryptionModal = ({
         Object.keys(notes).forEach(k => {
           notes[k] = { ...notes[k], info: encryptData(notes[k].info, key) };
         });
-        console.log('encrypt', JSON.stringify(notes, null, 2));
         saveData('notes', notes).then(() => {
           setIsLoading(false);
           successCb();

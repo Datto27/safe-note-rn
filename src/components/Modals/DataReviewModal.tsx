@@ -39,7 +39,6 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
   useEffect(() => {
     if (visible) {
       getData('notes').then((res: { [key: string]: NoteI }) => {
-        console.log('fetch');
         const items = Object.values(res)
           .filter(obj => obj.deleted !== true)
           .reduce((obj, cur) => ({ ...obj, [cur.id]: cur }), {});
