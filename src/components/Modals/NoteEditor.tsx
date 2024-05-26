@@ -19,6 +19,7 @@ import TextButton from '../Buttons/TextButton';
 import { EditorModeT } from '../../interfaces/editor-info.type';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { decryptData, encryptData } from '../../utils/encrypt.private';
 
 type Props = {
   item?: NoteI;
@@ -41,6 +42,7 @@ const NoteEditor = ({
 }: Props) => {
   const idRef = useRef('');
   const { theme } = useGlobalState();
+  const [ekey, setEkey] = useState(null);
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const [error, setError] = useState({
@@ -52,29 +54,36 @@ const NoteEditor = ({
   let infoAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    idRef.current = item ? item.id : Math.random().toString(16).slice(2);
+    if (visible) {
+      idRef.current = item ? item.id : Math.random().toString(16).slice(2);
+      getData('key').then(res => {
+        setEkey(res);
+      });
+    }
   }, [visible]);
 
   useEffect(() => {
     if (mode === 'update' && item) {
       setTitle(item.title);
-      setInfo(item.info);
+      if (ekey) {
+        setInfo(decryptData(item.info, ekey) ?? item.info);
+      } else {
+        setInfo(item.info);
+      }
     }
-  }, [item]);
+  }, [item, ekey]);
 
   useEffect(() => {
-    let to: NodeJS.Timeout;
-
-    if (title !== '' && info !== '' && mode !== 'create') {
-      setIsLoading(true);
-      to = setTimeout(() => {
-        saveNote();
-      }, 500);
-    }
-
-    return () => {
-      clearTimeout(to);
-    };
+    // let to: NodeJS.Timeout;
+    // if (title !== '' && info !== '' && mode !== 'create') {
+    //   setIsLoading(true);
+    //   to = setTimeout(() => {
+    //     saveNote();
+    //   }, 1000);
+    // }
+    // return () => {
+    //   clearTimeout(to);
+    // };
   }, [title, info]);
 
   useEffect(() => {
@@ -115,7 +124,7 @@ const NoteEditor = ({
       const note: NoteI = {
         id: idRef.current,
         title,
-        info,
+        info: ekey ? encryptData(info, ekey) : info,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -134,7 +143,7 @@ const NoteEditor = ({
       const note: NoteI = {
         ...item,
         title,
-        info,
+        info: ekey ? encryptData(info, ekey) : info,
         updatedAt: new Date(),
       };
 

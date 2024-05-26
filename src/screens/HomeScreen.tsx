@@ -10,6 +10,7 @@ import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
 import { useIsFocused } from '@react-navigation/native';
+import { decryptData } from '../utils/encrypt.private';
 
 const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -30,7 +31,8 @@ const HomeScreen = () => {
     animateScale();
   }, [isFocused]);
 
-  const fetchNotes = () => {
+  const fetchNotes = async () => {
+    const key = await getData('key');
     getData('notes').then((res: { [key: string]: NoteI }) => {
       if (!res) {
         return;

@@ -17,7 +17,7 @@ type Props = {
   multiline?: boolean;
   numberOfLines?: number;
   value: string;
-  setValue: Dispatch<React.SetStateAction<string>>;
+  setValue: ((text: string) => void) | undefined;
   containerStyles?: StyleProp<ViewStyle>;
   textStyles?: StyleProp<TextStyle>;
   error?: string | null;

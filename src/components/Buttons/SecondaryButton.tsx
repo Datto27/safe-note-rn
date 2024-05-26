@@ -1,22 +1,40 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
 import { useGlobalState } from '../../contexts/GlobaState';
 
 type Props = {
   text: string;
   icon?: any;
+  style?: TextStyle;
+  containerStyle?: ViewStyle;
   onPress: () => void;
 };
 
-const SecondaryButton = ({ text, icon, onPress }: Props) => {
+const SecondaryButton = ({
+  text,
+  icon,
+  style,
+  containerStyle,
+  onPress,
+}: Props) => {
   const { theme } = useGlobalState();
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: theme.colors.btn2 }]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.btn2 },
+        containerStyle,
+      ]}
       onPress={onPress}>
       {icon}
-      <Text style={[styles.text, { color: theme.colors.btnText2 }]}>
+      <Text style={[styles.text, { color: theme.colors.btnText2 }, style]}>
         {text}
       </Text>
     </TouchableOpacity>
