@@ -46,7 +46,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
     if (password !== rePassword) {
       return setError({
         field: 'rePassword',
-        msg: 'Passwords Rhould Be Identical',
+        msg: 'Passwords Should Be Identical',
       });
     }
 
