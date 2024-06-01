@@ -220,10 +220,10 @@ const ProfileScreen = () => {
                   setValidationOptions({
                     text: 'Enter Your Password',
                     cancelCb: () => setModal(null),
-                    successCb: () => setModal('encrypt'),
+                    successCb: () => setModal('encrypt-update'),
                   });
                 } else {
-                  setModal('encrypt');
+                  setModal('encrypt-update');
                 }
               }}
             />
@@ -334,7 +334,8 @@ const ProfileScreen = () => {
         successCb={validationOptions.successCb}
       />
       <EncryptionModal
-        visible={modal === 'encrypt'}
+        visible={modal === 'encrypt' || modal === 'encrypt-update'}
+        mode={modal}
         title="Enter Encryption Key"
         text="You have to memorize this key to decrypt your info, if needed"
         cancelCb={() => setModal(null)}

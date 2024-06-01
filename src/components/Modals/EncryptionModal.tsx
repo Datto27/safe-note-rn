@@ -13,10 +13,11 @@ import CustomTextInput from '../Inputs/CustomTextInput';
 import PrimaryButton from '../Buttons/PrimaryButton';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import { getData, saveData } from '../../utils/storage';
-import { encryptData } from '../../utils/encrypt.private';
+import { decryptData, encryptData } from '../../utils/encrypt.private';
 
 type Props = {
   visible: boolean;
+  mode: string | null;
   title: string;
   text: string;
   cancelCb: () => void;
@@ -25,6 +26,7 @@ type Props = {
 
 const EncryptionModal = ({
   visible,
+  mode,
   title,
   text,
   cancelCb,
@@ -35,6 +37,12 @@ const EncryptionModal = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleCancel = () => {
+    setIsLoading(false);
+    setError(null);
+    cancelCb();
+  }
+
   const encrypt = () => {
     if (!key) {
       return setError('Key is empty!');
@@ -43,16 +51,26 @@ const EncryptionModal = ({
       return setError('More than 8 characters');
     }
     setIsLoading(true);
-
-    saveData('key', key).then(r => {
-      getData('notes').then(notes => {
+    getData('notes').then(async (notes) => {
+      if (mode === 'encrypt-update') {
+        const oldKey = await getData('key')
         Object.keys(notes).forEach(k => {
-          notes[k] = { ...notes[k], info: encryptData(notes[k].info, key) };
+          notes[k] = {
+            ...notes[k],
+            info: decryptData(notes[k].info, oldKey),
+          };
         });
-        saveData('notes', notes).then(() => {
+      }
+      
+      Object.keys(notes).forEach(k => {
+        notes[k] = { ...notes[k], info: encryptData(notes[k].info, key) };
+      });
+
+      saveData('notes', notes).then(() => {
+        saveData('key', key).then(() => {
           setIsLoading(false);
           successCb();
-        });
+        })
       });
     });
   };
@@ -90,7 +108,7 @@ const EncryptionModal = ({
               }}
             />
             <View style={styles.btnsSection}>
-              <SecondaryButton text="Cancel" onPress={cancelCb} />
+              <SecondaryButton text="Cancel" onPress={handleCancel} />
               <PrimaryButton
                 text="Submit"
                 onPress={encrypt}
