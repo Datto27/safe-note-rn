@@ -38,7 +38,7 @@ export const colorsLight = {
   btn1: 'rgba(5, 90, 169, 0.8)',
   btn2: 'rgba(5, 90, 169, 0.35)',
   btnText1: 'white',
-  btnText2: 'rgba(240, 240, 240, 1)',
+  btnText2: 'rgba(5, 90, 169, 1)',
   btnText3: 'rgba(230, 230, 230, 1)',
 };
 
