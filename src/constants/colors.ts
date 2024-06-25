@@ -18,6 +18,8 @@ export const colorsDark = {
   btnText1: 'white',
   btnText2: 'rgba(68, 121, 238, 1)',
   btnText3: 'rgba(153, 153, 153, 1)',
+  shadowColor1: 'transparent',
+  shadowColor2: 'transparent',
 };
 
 export const colorsLight = {
@@ -40,6 +42,8 @@ export const colorsLight = {
   btnText1: 'white',
   btnText2: 'rgba(5, 90, 169, 1)',
   btnText3: 'rgba(230, 230, 230, 1)',
+  shadowColor1: 'transparent',
+  shadowColor2: 'transparent',
 };
 
 export const colorsYellow = {
@@ -62,4 +66,30 @@ export const colorsYellow = {
   btnText1: 'white',
   btnText2: 'rgba(255, 200, 4, 1)',
   btnText3: 'rgba(153, 153, 153, 1)',
+  shadowColor1: 'transparent',
+  shadowColor2: 'transparent',
+};
+
+export const colorsNeon = {
+  primary: 'rgba(0, 34, 77, 1)',
+  primary05: 'rgba(0, 34, 77, 0.5)',
+  primary02: 'rgba(0, 34, 77, 0.2)',
+  secondary: 'rgba(93, 14, 65, 1)',
+  secondary05: 'rgba(93, 14, 65, 0.5)',
+  secondary04: 'rgba(93, 14, 65, 0.4)',
+  secondary02: 'rgba(93, 14, 65, 0.2)',
+  tertiary: '#A0153E',
+  background1: 'rgba(3, 10, 15, 1)',
+  background2: 'rgba(3, 2, 2, 1)',
+  background2_09: 'rgba(3, 10, 18, 0.9)',
+  text1: 'rgb(255, 32, 78)',
+  text2: 'rgb(255, 128, 153)',
+  text3: 'rgb(199, 199, 199)',
+  btn1: 'rgba(93, 14, 65, 1)',
+  btn2: 'rgba(93, 14, 65, 0.5)',
+  btnText1: 'rgb(255, 32, 78)',
+  btnText2: 'rgb(255, 128, 153)',
+  btnText3: 'rgb(199, 199, 199)',
+  shadowColor1: 'red',
+  shadowColor2: 'rgba(93, 14, 65, 1)',
 };
