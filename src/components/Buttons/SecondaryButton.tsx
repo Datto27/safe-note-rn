@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { globalStyles } from '../../constants/globalStyles';
 
 type Props = {
   text: string;
@@ -13,7 +14,14 @@ const SecondaryButton = ({ text, icon, onPress }: Props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: theme.colors.btn2 }]}
+      style={[
+        styles.container,
+        globalStyles.shadow,
+        {
+          backgroundColor: theme.colors.btn2,
+          shadowColor: theme.colors.shadowColor1,
+        },
+      ]}
       onPress={onPress}>
       {icon}
       <Text style={[styles.text, { color: theme.colors.btnText2 }]}>

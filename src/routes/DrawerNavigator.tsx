@@ -31,10 +31,20 @@ const DrawerNavigator = () => {
         drawerItemStyle: {
           borderRadius: 15,
           paddingHorizontal: 3,
+          shadowColor: theme.colors.shadowColor1,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 1,
+          shadowRadius: 10,
+          elevation: 5,
         },
         drawerLabelStyle: {
           fontFamily: 'JosefinSans-Medium',
           fontSize: 16,
+          textShadowColor: theme.colors.shadowColor1,
+          textShadowRadius: 10,
+          textShadowOffset: { width: 0, height: 0 },
+          lineHeight: 24,
+          paddingHorizontal: 5,
         },
         headerTitleStyle: {
           fontFamily: 'JosefinSans-Bold',

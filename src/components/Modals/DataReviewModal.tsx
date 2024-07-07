@@ -81,10 +81,7 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
       animationType="fade"
       onRequestClose={onClose}>
       <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.background2_09 },
-        ]}>
+        style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
         <View
           style={{
             alignItems: 'center',
@@ -119,11 +116,7 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
           </ScrollView>
         </View>
         <View style={styles.btnsContainer}>
-          <TextButton
-            text="Cancel"
-            color={colorsYellow.primary}
-            onPress={onClose}
-          />
+          <TextButton text="Cancel" color={'red'} onPress={onClose} />
           {type === 'export' ? (
             <SecondaryButton
               text="Copy"

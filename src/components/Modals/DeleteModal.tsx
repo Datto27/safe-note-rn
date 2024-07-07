@@ -69,10 +69,7 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
       animationType="fade"
       onRequestClose={cancelCb}>
       <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: theme.colors.background2_09 },
-        ]}>
+        style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
         <View
           style={[
             styles.modalContainer,

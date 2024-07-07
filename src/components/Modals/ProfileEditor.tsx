@@ -75,7 +75,10 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           <View
             style={[
               styles.inputsContainer,
-              { backgroundColor: theme.colors.primary05 },
+              {
+                backgroundColor: theme.colors.modalBg,
+                shadowColor: theme.colors.modalShadow,
+              },
             ]}>
             <CustomTextInput
               placeholder="Username"
@@ -135,11 +138,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputsContainer: {
-    width: '96%',
+    width: '95%',
     paddingVertical: 30,
     paddingHorizontal: 20,
     marginHorizontal: 10,
     borderRadius: 20,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 5,
   },
   actionBtns: {
     width: '100%',
