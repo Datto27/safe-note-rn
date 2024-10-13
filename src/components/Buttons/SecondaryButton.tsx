@@ -29,15 +29,14 @@ const SecondaryButton = ({
   return (
     <TouchableOpacity
       style={[
-        
         styles.container,
-       
+
         globalStyles.shadow,
         {
           backgroundColor: theme.colors.btn2,
           shadowColor: theme.colors.shadowColor1,
         },
-      ,
+        ,
         containerStyle,
       ]}
       onPress={onPress}>

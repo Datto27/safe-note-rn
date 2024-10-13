@@ -41,7 +41,7 @@ const EncryptionModal = ({
     setIsLoading(false);
     setError(null);
     cancelCb();
-  }
+  };
 
   const encrypt = () => {
     if (!key) {
@@ -51,9 +51,9 @@ const EncryptionModal = ({
       return setError('More than 8 characters');
     }
     setIsLoading(true);
-    getData('notes').then(async (notes) => {
+    getData('notes').then(async notes => {
       if (mode === 'encrypt-update') {
-        const oldKey = await getData('key')
+        const oldKey = await getData('key');
         Object.keys(notes).forEach(k => {
           notes[k] = {
             ...notes[k],
@@ -61,7 +61,7 @@ const EncryptionModal = ({
           };
         });
       }
-      
+
       Object.keys(notes).forEach(k => {
         notes[k] = { ...notes[k], info: encryptData(notes[k].info, key) };
       });
@@ -70,7 +70,7 @@ const EncryptionModal = ({
         saveData('key', key).then(() => {
           setIsLoading(false);
           successCb();
-        })
+        });
       });
     });
   };
