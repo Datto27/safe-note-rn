@@ -11,12 +11,19 @@ import { globalStyles } from '../../constants/globalStyles';
 
 type Props = {
   text: string;
+  icon?: any;
   onPress: () => void;
   containerStyle?: ViewStyle;
   style?: TextStyle;
 };
 
-const PrimaryButton = ({ text, onPress, containerStyle, style }: Props) => {
+const PrimaryButton = ({
+  text,
+  icon,
+  onPress,
+  containerStyle,
+  style,
+}: Props) => {
   const { theme } = useGlobalState();
 
   return (
@@ -32,6 +39,7 @@ const PrimaryButton = ({ text, onPress, containerStyle, style }: Props) => {
         },
       ]}
       onPress={onPress}>
+      {icon}
       <Text style={[styles.text, { ...style, color: theme.colors.btnText1 }]}>
         {text}
       </Text>
@@ -43,6 +51,9 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginVertical: 10,

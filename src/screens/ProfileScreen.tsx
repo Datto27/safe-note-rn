@@ -16,7 +16,7 @@ import {
 import TextButton from '../components/Buttons/TextButton';
 import ProfileEditor from '../components/Modals/ProfileEditor';
 import { EditorInfoT } from '../interfaces/editor-info.type';
-import { getData, removeData } from '../utils/storage';
+import { getData, removeData, saveData } from '../utils/storage';
 import { ProfileI } from '../interfaces/profile';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { useGlobalState } from '../contexts/GlobaState';
@@ -24,17 +24,35 @@ import { ThemeEnum } from '../enums/theme';
 import ValidationModal from '../components/Modals/ValidationModal';
 import PrimaryButton from '../components/Buttons/PrimaryButton';
 import DataReviewModal from '../components/Modals/DataReviewModal';
+import EncryptionModal from '../components/Modals/EncryptionModal';
+import SecondaryButton from '../components/Buttons/SecondaryButton';
+import { decryptData } from '../utils/encrypt.private';
 
 const ProfileScreen = () => {
   const { theme, setTheme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI | null>(null);
+  const [ekey, setEkey] = useState<string | null>(null);
   const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
     show: false,
     mode: 'create',
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modal, setModal] = useState<string | null>(null);
+  const [validationOptions, setValidationOptions] = useState({
+    text: '',
+    successCb: () => {},
+    cancelCb: () => {},
+  });
   const [showDataOptions, setShowDataOptions] = useState(false);
+
+  useEffect(() => {
+    fetchEKey();
+  }, []);
+
+  const fetchEKey = () => {
+    setModal(null);
+    getData('key').then(res => setEkey(res));
+  };
 
   useEffect(() => {
     fetchProfile();
@@ -50,6 +68,26 @@ const ProfileScreen = () => {
     removeData('profile').then(() => {
       setShowDeleteModal(false);
       fetchProfile();
+    });
+  };
+
+  const removeDataEncryption = () => {
+    if (!ekey) return;
+    setModal(null);
+    getData('notes').then(notes => {
+      Object.keys(notes).forEach(k => {
+        notes[k] = {
+          ...notes[k],
+          info: decryptData(notes[k].info, ekey) ?? notes[k].info,
+        };
+      });
+      removeData('key').then(res => {
+        if (res === 'ok') {
+          saveData('notes', notes).then(res => {
+            setEkey(null);
+          });
+        }
+      });
     });
   };
 
@@ -237,23 +275,66 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
-      {/* <View
-        style={{
-          alignItems: 'flex-start',
-          backgroundColor: theme.colors.background2,
-          padding: 0,
-          marginVertical: 20,
-          marginHorizontal: 10,
-          borderRadius: 20,
-        }}>
-        <TextButton
-          text="Activate Data Encryption"
-          onPress={() => setModal('confirm')}
-        />
-      </View> */}
+      <View
+        style={[
+          styles.encryptionSection,
+          { backgroundColor: theme.colors.background2 },
+        ]}>
+        {ekey ? (
+          <View style={styles.encryptionBtns}>
+            <TextButton
+              text="Update Encryption Key"
+              onPress={() => {
+                if (profile) {
+                  setModal('validate');
+                  setValidationOptions({
+                    text: 'Enter Your Password',
+                    cancelCb: () => setModal(null),
+                    successCb: () => setModal('encrypt-update'),
+                  });
+                } else {
+                  setModal('encrypt-update');
+                }
+              }}
+            />
+            <SecondaryButton
+              text="Remove"
+              style={{ color: 'red' }}
+              onPress={() => {
+                if (profile) {
+                  setModal('validate');
+                  setValidationOptions({
+                    text: 'Enter Your Password',
+                    cancelCb: () => setModal(null),
+                    successCb: () => removeDataEncryption(),
+                  });
+                } else {
+                  setModal('remove-encrypt');
+                }
+              }}
+            />
+          </View>
+        ) : (
+          <TextButton
+            text="Activate Data Encryption"
+            onPress={() => {
+              if (profile) {
+                setModal('validate');
+                setValidationOptions({
+                  text: 'Enter Your Password',
+                  cancelCb: () => setModal(null),
+                  successCb: () => setModal('encrypt'),
+                });
+              } else {
+                setModal('encrypt');
+              }
+            }}
+          />
+        )}
+      </View>
       <View
         style={{
-          height: showDataOptions ? 180 : 50,
+          height: showDataOptions ? 180 : 30,
           overflow: 'hidden',
           marginHorizontal: 10,
         }}>
@@ -278,13 +359,35 @@ const ProfileScreen = () => {
           text="Export Data"
           containerStyle={{}}
           style={{ fontSize: 16 }}
-          onPress={() => setModal(profile ? 'validate' : 'export')}
+          onPress={() => {
+            if (profile) {
+              setModal('validate');
+              setValidationOptions({
+                text: 'Enter Your Password',
+                cancelCb: () => setModal(null),
+                successCb: () => setModal('export'),
+              });
+            } else {
+              setModal('export');
+            }
+          }}
         />
         <PrimaryButton
           text="Import Data"
           containerStyle={{ marginTop: 0 }}
           style={{ fontSize: 16 }}
-          onPress={() => setModal(profile ? 'validate' : 'import')}
+          onPress={() => {
+            if (profile) {
+              setModal('validate');
+              setValidationOptions({
+                text: 'Enter Your Password',
+                cancelCb: () => setModal(null),
+                successCb: () => setModal('import'),
+              });
+            } else {
+              setModal('import');
+            }
+          }}
         />
       </View>
       <DataReviewModal
@@ -296,9 +399,23 @@ const ProfileScreen = () => {
       <ValidationModal
         visible={modal === 'validate'}
         profile={profile}
-        text="Enter Your Password"
+        text={validationOptions.text}
+        cancelCb={validationOptions.cancelCb}
+        successCb={validationOptions.successCb}
+      />
+      <EncryptionModal
+        visible={modal === 'encrypt' || modal === 'encrypt-update'}
+        mode={modal}
+        title="Enter Encryption Key"
+        text="You have to memorize this key to decrypt your info, if needed"
         cancelCb={() => setModal(null)}
-        successCb={() => setModal(null)}
+        successCb={fetchEKey}
+      />
+      <DeleteModal
+        visible={modal === 'remove-encrypt'}
+        text="Do you want to remove encryption key?"
+        deleteCb={removeDataEncryption}
+        cancelCb={() => setModal(null)}
       />
     </View>
   );
@@ -373,11 +490,23 @@ const styles = StyleSheet.create({
     height: 30,
     width: 15,
   },
+  encryptionSection: {
+    alignItems: 'flex-start',
+    padding: 0,
+    marginVertical: 15,
+    marginHorizontal: 5,
+    borderRadius: 20,
+  },
+  encryptionBtns: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
   dropdownBtn: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
     marginHorizontal: 10,
   },
   dropText: {
