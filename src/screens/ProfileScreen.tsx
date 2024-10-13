@@ -7,7 +7,12 @@ import {
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colorsDark, colorsLight, colorsYellow } from '../constants/colors';
+import {
+  colorsDark,
+  colorsLight,
+  colorsNeon,
+  colorsYellow,
+} from '../constants/colors';
 import TextButton from '../components/Buttons/TextButton';
 import ProfileEditor from '../components/Modals/ProfileEditor';
 import { EditorInfoT } from '../interfaces/editor-info.type';
@@ -92,7 +97,11 @@ const ProfileScreen = () => {
       <View
         style={[
           styles.profileCard,
-          { backgroundColor: theme.colors.primary05 },
+          styles.shadow,
+          {
+            backgroundColor: theme.colors.modalBg,
+            shadowColor: theme.colors.shadowColor1,
+          },
         ]}>
         <View
           style={[
@@ -104,12 +113,17 @@ const ProfileScreen = () => {
         {profile ? (
           <View style={styles.profile}>
             <View>
-              <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+              <Text
+                style={[
+                  styles.profileName,
+                  theme.colors.shadowColor1 ? styles.textShadow : null,
+                  { color: theme.colors.text1 },
+                ]}>
                 {profile.username}
               </Text>
               <TextButton
                 text="Update Profile"
-                style={{ marginTop: 10 }}
+                style={{ marginTop: 0, marginLeft: -4 }}
                 onPress={() => setEditorInfo({ mode: 'update', show: true })}
               />
             </View>
@@ -119,7 +133,15 @@ const ProfileScreen = () => {
           </View>
         ) : (
           <View style={styles.noProfile}>
-            <Text style={[styles.profileName, { color: theme.colors.text1 }]}>
+            <Text
+              style={[
+                styles.profileName,
+                styles.textShadow,
+                {
+                  color: theme.colors.text1,
+                  textShadowColor: theme.colors.shadowColor1,
+                },
+              ]}>
               No Profile
             </Text>
             <TextButton
@@ -150,59 +172,107 @@ const ProfileScreen = () => {
         <TouchableOpacity
           style={[
             styles.theme,
-            theme.type === ThemeEnum.DARK && { borderColor: 'white' },
+            {
+              backgroundColor:
+                theme.type === ThemeEnum.DARK
+                  ? 'white'
+                  : theme.colors.secondary05,
+            },
           ]}
           onPress={() =>
             setTheme({ type: ThemeEnum.DARK, colors: colorsDark })
           }>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsDark.primary },
-            ]}></View>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsDark.background1 },
-            ]}></View>
+          <View style={styles.themeFrame}>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsDark.primary },
+              ]}></View>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsDark.secondary },
+              ]}></View>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.theme,
-            theme.type === ThemeEnum.LIGHT && { borderColor: 'white' },
+            {
+              backgroundColor:
+                theme.type === ThemeEnum.LIGHT
+                  ? 'white'
+                  : theme.colors.secondary05,
+            },
           ]}
           onPress={() =>
             setTheme({ type: ThemeEnum.LIGHT, colors: colorsLight })
           }>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsLight.primary },
-            ]}></View>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsLight.background1 },
-            ]}></View>
+          <View style={styles.themeFrame}>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsLight.primary },
+              ]}></View>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsLight.secondary },
+              ]}></View>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.theme,
-            theme.type === ThemeEnum.YELLOW && { borderColor: 'white' },
+            {
+              backgroundColor:
+                theme.type === ThemeEnum.YELLOW
+                  ? 'white'
+                  : theme.colors.secondary05,
+            },
           ]}
           onPress={() =>
             setTheme({ type: ThemeEnum.YELLOW, colors: colorsYellow })
           }>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsYellow.primary },
-            ]}></View>
-          <View
-            style={[
-              styles.themeColor,
-              { backgroundColor: colorsYellow.background1 },
-            ]}></View>
+          <View style={styles.themeFrame}>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsYellow.primary },
+              ]}></View>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsYellow.secondary },
+              ]}></View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.theme,
+            styles.shadow,
+            {
+              backgroundColor:
+                theme.type === ThemeEnum.NEON
+                  ? 'white'
+                  : theme.colors.secondary05,
+            },
+          ]}
+          onPress={() =>
+            setTheme({ type: ThemeEnum.NEON, colors: colorsNeon })
+          }>
+          <View style={styles.themeFrame}>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsNeon.primary },
+              ]}></View>
+            <View
+              style={[
+                styles.themeColor,
+                { backgroundColor: colorsNeon.secondary },
+              ]}></View>
+          </View>
         </TouchableOpacity>
       </View>
       <View
@@ -386,8 +456,7 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Bold',
     flexWrap: 'wrap',
     fontSize: 18,
-    marginVertical: 2,
-    marginRight: 5,
+    padding: 5,
   },
   themesContainer: {
     flexDirection: 'row',
@@ -396,12 +465,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   theme: {
-    flexDirection: 'row',
+    padding: 6,
     marginHorizontal: 8,
-    borderColor: 'grey',
-    borderWidth: 6,
+    borderRadius: 50,
+  },
+  themeFrame: {
+    flexDirection: 'row',
     borderRadius: 50,
     overflow: 'hidden',
+  },
+  shadow: {
+    shadowColor: 'red',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  textShadow: {
+    textShadowColor: colorsNeon.shadowColor2,
+    textShadowRadius: 10,
+    textShadowOffset: { width: 0, height: 0 },
   },
   themeColor: {
     height: 30,

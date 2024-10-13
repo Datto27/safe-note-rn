@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextStyle, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { globalStyles } from '../../constants/globalStyles';
 
 type Props = {
   text: string;
@@ -19,7 +20,13 @@ const TextButton = ({ text, color, style, onPress }: Props) => {
       <Text
         style={[
           styles.text,
-          color ? { color } : { color: theme.colors.btnText2 },
+          globalStyles.textShadow,
+          color
+            ? { color, textShadowColor: theme.colors.shadowColor1 }
+            : {
+                color: theme.colors.btnText2,
+                textShadowColor: theme.colors.shadowColor1,
+              },
         ]}>
         {text}
       </Text>
@@ -33,12 +40,9 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginVertical: 10,
-    marginHorizontal: 5,
   },
   text: {
-    // fontFamily: 'JosefinSans-Medium',
     fontSize: 15,
-    // marginTop: 2,
+    padding: 8,
   },
 });

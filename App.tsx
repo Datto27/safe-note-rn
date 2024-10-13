@@ -9,7 +9,12 @@ import React, {
 import { SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
-import { colorsDark, colorsLight, colorsYellow } from './src/constants/colors';
+import {
+  colorsDark,
+  colorsLight,
+  colorsNeon,
+  colorsYellow,
+} from './src/constants/colors';
 import MainStack from './src/routes/MainStackNavigator';
 import { getData, saveData } from './src/utils/storage';
 import { ThemeEnum } from './src/enums/theme';
@@ -36,6 +41,10 @@ type ThemeT = {
     btnText1: string;
     btnText2: string;
     btnText3: string;
+    shadowColor1?: string;
+    shadowColor2?: string;
+    modalBg: string;
+    modalShadow: string;
   };
 };
 
@@ -73,6 +82,12 @@ function App(): React.JSX.Element {
         setTheme({
           type: ThemeEnum.YELLOW,
           colors: colorsYellow,
+        });
+      }
+      if (res === ThemeEnum.NEON) {
+        setTheme({
+          type: ThemeEnum.NEON,
+          colors: colorsNeon,
         });
       }
     });

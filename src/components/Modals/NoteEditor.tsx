@@ -19,6 +19,7 @@ import TextButton from '../Buttons/TextButton';
 import { EditorModeT } from '../../interfaces/editor-info.type';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { globalStyles } from '../../constants/globalStyles';
 import { decryptData, encryptData } from '../../utils/encrypt.private';
 
 type Props = {
@@ -201,8 +202,10 @@ const NoteEditor = ({
           <TouchableOpacity
             style={[
               styles.saveBtn,
+              globalStyles.shadow,
               {
                 backgroundColor: theme.colors.primary,
+                shadowColor: theme.colors.shadowColor2,
               },
             ]}
             onPress={async () => {

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { globalStyles } from '../../constants/globalStyles';
 
 type Props = {
   text: string;
@@ -28,8 +29,15 @@ const SecondaryButton = ({
   return (
     <TouchableOpacity
       style={[
+        
         styles.container,
-        { backgroundColor: theme.colors.btn2 },
+       
+        globalStyles.shadow,
+        {
+          backgroundColor: theme.colors.btn2,
+          shadowColor: theme.colors.shadowColor1,
+        },
+      ,
         containerStyle,
       ]}
       onPress={onPress}>

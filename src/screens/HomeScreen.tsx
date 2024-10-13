@@ -10,6 +10,7 @@ import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
 import { useIsFocused } from '@react-navigation/native';
+import { globalStyles } from '../constants/globalStyles';
 import { decryptData } from '../utils/encrypt.private';
 
 const HomeScreen = () => {
@@ -142,7 +143,11 @@ const HomeScreen = () => {
           <Animated.View
             style={[
               styles.floatingBtnContainer,
-              { transform: [{ scale: scaleAnim }] },
+              globalStyles.shadow,
+              {
+                transform: [{ scale: scaleAnim }],
+                shadowColor: theme.colors.shadowColor2,
+              },
             ]}>
             <TouchableOpacity
               style={[
@@ -157,7 +162,11 @@ const HomeScreen = () => {
           <Animated.View
             style={[
               styles.floatingBtnContainer,
-              { transform: [{ scale: scaleAnim }] },
+              globalStyles.shadow,
+              {
+                transform: [{ scale: scaleAnim }],
+                shadowColor: theme.colors.shadowColor2,
+              },
             ]}>
             <TouchableOpacity
               style={[
@@ -177,7 +186,11 @@ const HomeScreen = () => {
         <Animated.View
           style={[
             styles.floatingBtnContainer,
-            { transform: [{ scale: scaleAnim }] },
+            globalStyles.shadow,
+            {
+              transform: [{ scale: scaleAnim }],
+              shadowColor: theme.colors.shadowColor2,
+            },
           ]}>
           <TouchableOpacity
             style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}

@@ -13,6 +13,7 @@ import { NoteI } from '../interfaces/note';
 import { parseTime } from '../utils/time';
 
 import { useGlobalState } from '../contexts/GlobaState';
+import { globalStyles } from '../constants/globalStyles';
 
 type Props = {
   item: NoteI;
@@ -67,8 +68,12 @@ export const NoteItem = ({
       <TouchableOpacity
         style={[
           styles.container,
+          globalStyles.shadow,
           pressed && { transform: [{ scale: 0.98 }] },
-          { backgroundColor: theme.colors.secondary02 },
+          {
+            backgroundColor: theme.colors.secondary02,
+            shadowColor: theme.colors.shadowColor1,
+          },
         ]}
         onPress={() => onPress()}
         onLongPress={() => {
@@ -93,6 +98,7 @@ export const NoteItem = ({
               <BouncyCheckbox
                 size={32}
                 fillColor={theme.colors.secondary}
+                unfillColor={theme.colors.primary05}
                 iconStyle={{ right: -10 }}
                 isChecked={isChecked}
                 onPress={() => {
