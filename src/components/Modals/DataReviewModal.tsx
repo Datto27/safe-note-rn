@@ -102,7 +102,7 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
             ) : (
               <CustomTextInput
                 multiline
-                placeholder="Input Data For import"
+                placeholder={`Input Data For Import \n(should be correctly exported from the app)`}
                 containerStyles={{
                   flex: 1,
                   height: '100%',

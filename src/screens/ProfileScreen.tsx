@@ -85,7 +85,7 @@ const ProfileScreen = () => {
               </Text>
               <TextButton
                 text="Update Profile"
-                style={{ marginTop: 10 }}
+                style={{ marginTop: 0, marginLeft: -4 }}
                 onPress={() => setEditorInfo({ mode: 'update', show: true })}
               />
             </View>
@@ -98,8 +98,11 @@ const ProfileScreen = () => {
             <Text
               style={[
                 styles.profileName,
-                theme.colors.shadowColor1 ? styles.textShadow : null,
-                { color: theme.colors.text1 },
+                styles.textShadow,
+                {
+                  color: theme.colors.text1,
+                  textShadowColor: theme.colors.shadowColor1,
+                },
               ]}>
               No Profile
             </Text>
@@ -336,8 +339,7 @@ const styles = StyleSheet.create({
     fontFamily: 'JosefinSans-Bold',
     flexWrap: 'wrap',
     fontSize: 18,
-    marginVertical: 2,
-    marginRight: 5,
+    padding: 5,
   },
   themesContainer: {
     flexDirection: 'row',

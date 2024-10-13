@@ -49,6 +49,9 @@ const DrawerNavigator = () => {
         headerTitleStyle: {
           fontFamily: 'JosefinSans-Bold',
           textAlign: 'center',
+          textShadowColor: theme.colors.shadowColor1,
+          textShadowRadius: 10,
+          textShadowOffset: { width: 0, height: 0 },
         },
       }}>
       <Drawer.Screen

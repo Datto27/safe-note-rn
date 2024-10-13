@@ -77,9 +77,9 @@ export const colorsYellow = {
 };
 
 export const colorsNeon = {
-  primary: 'rgba(118, 47, 122, 0.6)',
-  primary05: 'rgba(118, 47, 122, 0.4)',
-  primary02: 'rgba(118, 47, 122, 0.1)',
+  primary: 'rgba(93, 14, 65, 0.6)',
+  primary05: 'rgba(93, 14, 65, 0.4)',
+  primary02: 'rgba(93, 14, 65, 0.1)',
   secondary: 'rgba(50, 4, 25, 1)',
   secondary05: 'rgba(50, 4, 25, 0.5)',
   secondary04: 'rgba(50, 4, 25, 0.4)',
