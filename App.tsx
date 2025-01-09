@@ -54,7 +54,7 @@ export const AppContext = createContext<{
 }>({});
 
 function App(): React.JSX.Element {
-  const [theme, setTheme] = useState({
+  const [theme, setTheme] = useState<ThemeT>({
     type: ThemeEnum.DARK,
     colors: colorsDark,
   });

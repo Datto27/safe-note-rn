@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 20,
     borderWidth: 1,
+    borderRightWidth: 2,
+    borderLeftWidth: 2,
   },
   text: {
     textAlign: 'center',

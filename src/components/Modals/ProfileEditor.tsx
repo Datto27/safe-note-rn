@@ -72,50 +72,54 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           { backgroundColor: theme.colors.background1 },
         ]}>
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <View
-            style={[
-              styles.inputsContainer,
-              {
-                backgroundColor: theme.colors.modalBg,
-                shadowColor: theme.colors.modalShadow,
-              },
-            ]}>
-            <CustomTextInput
-              placeholder="Username"
-              containerStyles={{ marginVertical: 7 }}
-              error={error.field === 'username' ? error.msg : null}
-              value={username}
-              setValue={setUsername}
-            />
-            <CustomTextInput
-              type="password"
-              placeholder="Password"
-              containerStyles={{ marginVertical: 10 }}
-              error={error.field === 'password' ? error.msg : null}
-              value={password}
-              setValue={setPassword}
-            />
-            <CustomTextInput
-              type="password"
-              placeholder="Repeat Password"
-              containerStyles={{ marginVertical: 10 }}
-              error={error.field === 'rePassword' ? error.msg : null}
-              value={rePassword}
-              setValue={setRePassword}
-            />
-            <CustomTextInput
-              placeholder="Hint for remember the password"
-              containerStyles={{ marginVertical: 10 }}
-              value={hint}
-              setValue={setHint}
-            />
-            <View style={styles.actionBtns}>
-              <SecondaryButton text="Cancel" onPress={() => handleClose()} />
-              {mode === 'create' ? (
-                <PrimaryButton text="Create" onPress={() => createProfile()} />
-              ) : (
-                <PrimaryButton text="Update" onPress={() => createProfile()} />
-              )}
+          <View style={[
+            styles.wrapper,
+            { shadowColor: theme.colors.modalShadow }
+          ]}>
+            <View
+              style={[
+                styles.inputsContainer,
+                {
+                  backgroundColor: theme.colors.modalBg,
+                },
+              ]}>
+              <CustomTextInput
+                placeholder="Username"
+                containerStyles={{ marginVertical: 7 }}
+                error={error.field === 'username' ? error.msg : null}
+                value={username}
+                setValue={setUsername}
+              />
+              <CustomTextInput
+                type="password"
+                placeholder="Password"
+                containerStyles={{ marginVertical: 10 }}
+                error={error.field === 'password' ? error.msg : null}
+                value={password}
+                setValue={setPassword}
+              />
+              <CustomTextInput
+                type="password"
+                placeholder="Repeat Password"
+                containerStyles={{ marginVertical: 10 }}
+                error={error.field === 'rePassword' ? error.msg : null}
+                value={rePassword}
+                setValue={setRePassword}
+              />
+              <CustomTextInput
+                placeholder="Hint for remember the password"
+                containerStyles={{ marginVertical: 10 }}
+                value={hint}
+                setValue={setHint}
+              />
+              <View style={styles.actionBtns}>
+                <SecondaryButton text="Cancel" onPress={() => handleClose()} />
+                {mode === 'create' ? (
+                  <PrimaryButton text="Create" onPress={() => createProfile()} />
+                ) : (
+                  <PrimaryButton text="Update" onPress={() => createProfile()} />
+                )}
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -137,16 +141,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  wrapper: {
+    paddingTop: 20,
+    marginHorizontal: 5,
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 20,
+    borderRadius: 20,
+  },
   inputsContainer: {
     width: '95%',
     paddingVertical: 30,
     paddingHorizontal: 20,
-    marginHorizontal: 10,
     borderRadius: 20,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 5,
   },
   actionBtns: {
     width: '100%',

@@ -433,6 +433,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 20,
     marginHorizontal: 10,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 20,
   },
   profileIconContainer: {
     justifyContent: 'center',
@@ -475,11 +479,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   shadow: {
-    shadowColor: 'red',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 1,
     shadowRadius: 10,
-    elevation: 5,
+    // elevation: 5,
   },
   textShadow: {
     textShadowColor: colorsNeon.shadowColor2,
