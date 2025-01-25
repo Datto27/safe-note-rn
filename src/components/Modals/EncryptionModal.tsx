@@ -91,7 +91,13 @@ const EncryptionModal = ({
           style={styles.container}
           onPress={cancelCb}>
           <View
-            style={[styles.form, { backgroundColor: theme.colors.primary05 }]}>
+            style={[
+              styles.form,
+              {
+                backgroundColor: theme.colors.modalBg,
+                shadowColor: theme.colors.shadowColor1,
+              },
+            ]}>
             <Text style={[styles.title, { color: theme.colors.text1 }]}>
               {title}
             </Text>
@@ -145,6 +151,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginHorizontal: 20,
     borderRadius: 30,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
+    elevation: 10,
   },
   title: {
     fontFamily: 'JosefinSans-Medium',

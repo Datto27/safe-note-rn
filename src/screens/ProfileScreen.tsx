@@ -97,7 +97,6 @@ const ProfileScreen = () => {
       <View
         style={[
           styles.profileCard,
-          styles.shadow,
           {
             backgroundColor: theme.colors.modalBg,
             shadowColor: theme.colors.shadowColor1,
@@ -139,7 +138,7 @@ const ProfileScreen = () => {
                 styles.textShadow,
                 {
                   color: theme.colors.text1,
-                  textShadowColor: theme.colors.shadowColor1,
+                  textShadowColor: theme.colors.textShadow,
                 },
               ]}>
               No Profile
@@ -433,10 +432,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 20,
     marginHorizontal: 10,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    elevation: 20,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 15,
+    elevation: 13,
   },
   profileIconContainer: {
     justifyContent: 'center',
@@ -485,7 +487,7 @@ const styles = StyleSheet.create({
     // elevation: 5,
   },
   textShadow: {
-    textShadowColor: colorsNeon.shadowColor2,
+    textShadowColor: colorsNeon.textShadow,
     textShadowRadius: 10,
     textShadowOffset: { width: 0, height: 0 },
   },

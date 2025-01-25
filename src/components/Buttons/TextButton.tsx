@@ -22,10 +22,10 @@ const TextButton = ({ text, color, style, onPress }: Props) => {
           styles.text,
           globalStyles.textShadow,
           color
-            ? { color, textShadowColor: theme.colors.shadowColor1 }
+            ? { color, textShadowColor: theme.colors.textShadow }
             : {
                 color: theme.colors.btnText2,
-                textShadowColor: theme.colors.shadowColor1,
+                textShadowColor: theme.colors.textShadow,
               },
         ]}>
         {text}

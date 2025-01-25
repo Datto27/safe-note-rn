@@ -40,7 +40,7 @@ const DrawerNavigator = () => {
         drawerLabelStyle: {
           fontFamily: 'JosefinSans-Medium',
           fontSize: 16,
-          textShadowColor: theme.colors.shadowColor1,
+          textShadowColor: theme.colors.textShadow,
           textShadowRadius: 10,
           textShadowOffset: { width: 0, height: 0 },
           lineHeight: 24,
@@ -49,7 +49,7 @@ const DrawerNavigator = () => {
         headerTitleStyle: {
           fontFamily: 'JosefinSans-Bold',
           textAlign: 'center',
-          textShadowColor: theme.colors.shadowColor1,
+          textShadowColor: theme.colors.textShadow,
           textShadowRadius: 10,
           textShadowOffset: { width: 0, height: 0 },
         },

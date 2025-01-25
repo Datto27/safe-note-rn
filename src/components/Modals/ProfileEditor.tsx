@@ -72,10 +72,8 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           { backgroundColor: theme.colors.background1 },
         ]}>
         <ScrollView contentContainerStyle={styles.scrollView}>
-          <View style={[
-            styles.wrapper,
-            { shadowColor: theme.colors.modalShadow }
-          ]}>
+          <View
+            style={[styles.wrapper, { shadowColor: theme.colors.modalShadow }]}>
             <View
               style={[
                 styles.inputsContainer,
@@ -115,9 +113,15 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
               <View style={styles.actionBtns}>
                 <SecondaryButton text="Cancel" onPress={() => handleClose()} />
                 {mode === 'create' ? (
-                  <PrimaryButton text="Create" onPress={() => createProfile()} />
+                  <PrimaryButton
+                    text="Create"
+                    onPress={() => createProfile()}
+                  />
                 ) : (
-                  <PrimaryButton text="Update" onPress={() => createProfile()} />
+                  <PrimaryButton
+                    text="Update"
+                    onPress={() => createProfile()}
+                  />
                 )}
               </View>
             </View>

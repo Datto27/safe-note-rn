@@ -204,7 +204,7 @@ const NoteEditor = ({
               styles.saveBtn,
               globalStyles.shadow,
               {
-                backgroundColor: theme.colors.primary,
+                backgroundColor: theme.colors.btn1,
                 shadowColor: theme.colors.shadowColor2,
               },
             ]}

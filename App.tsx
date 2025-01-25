@@ -41,6 +41,7 @@ type ThemeT = {
     btnText1: string;
     btnText2: string;
     btnText3: string;
+    textShadow: string;
     shadowColor1?: string;
     shadowColor2?: string;
     modalBg: string;

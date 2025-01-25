@@ -152,7 +152,7 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={[
                 styles.floatingBtn,
-                { backgroundColor: theme.colors.primary },
+                { backgroundColor: theme.colors.btn2 },
               ]}
               onPress={() => setShowDeleteModal(true)}>
               <FeatherIcon name="trash" size={32} color={'red'} />
@@ -171,7 +171,7 @@ const HomeScreen = () => {
             <TouchableOpacity
               style={[
                 styles.floatingBtn,
-                { backgroundColor: theme.colors.primary },
+                { backgroundColor: theme.colors.btn2 },
               ]}
               onPress={() => setDeleteMode(false)}>
               <FeatherIcon
