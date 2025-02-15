@@ -10,7 +10,7 @@ import { useGlobalState } from '../../contexts/GlobaState';
 import { globalStyles } from '../../constants/globalStyles';
 
 type Props = {
-  text: string;
+  text?: string;
   icon?: any;
   onPress: () => void;
   containerStyle?: ViewStyle;
@@ -40,9 +40,11 @@ const PrimaryButton = ({
       ]}
       onPress={onPress}>
       {icon}
-      <Text style={[styles.text, { ...style, color: theme.colors.btnText1 }]}>
-        {text}
-      </Text>
+      {text && (
+        <Text style={[styles.text, { ...style, color: theme.colors.btnText1 }]}>
+          {text}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

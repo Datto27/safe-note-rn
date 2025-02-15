@@ -202,21 +202,27 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </Animated.View>
       )}
-      <NoteEditor
-        mode={editorInfo.mode}
-        item={editorInfo.item}
-        visible={editorInfo.show}
-        notes={notes}
-        setVisible={val =>
-          setEditorInfo(state => ({ ...state, show: val, item: undefined }))
-        }
-        cb={fetchNotes}
-        showDeleteModal={(id: string) => {
-          setEditorInfo(state => ({ ...state, show: false, item: undefined }));
-          setDeleteArr([id]);
-          setShowDeleteModal(true);
-        }}
-      />
+      {editorInfo.show && (
+        <NoteEditor
+          mode={editorInfo.mode}
+          item={editorInfo.item}
+          visible={editorInfo.show}
+          notes={notes}
+          setVisible={val =>
+            setEditorInfo(state => ({ ...state, show: val, item: undefined }))
+          }
+          cb={fetchNotes}
+          showDeleteModal={(id: string) => {
+            setEditorInfo(state => ({
+              ...state,
+              show: false,
+              item: undefined,
+            }));
+            setDeleteArr([id]);
+            setShowDeleteModal(true);
+          }}
+        />
+      )}
       <DeleteModal
         visible={showDeleteModal}
         text="Do you want to delete this note?"

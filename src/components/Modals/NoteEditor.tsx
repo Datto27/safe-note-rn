@@ -21,6 +21,7 @@ import SecondaryButton from '../Buttons/SecondaryButton';
 import { useGlobalState } from '../../contexts/GlobaState';
 import { globalStyles } from '../../constants/globalStyles';
 import { decryptData, encryptData } from '../../utils/encrypt.private';
+import PrimaryButton from '../Buttons/PrimaryButton';
 
 type Props = {
   item?: NoteI;
@@ -46,10 +47,12 @@ const NoteEditor = ({
   const [ekey, setEkey] = useState(null);
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
+  const noteType = useRef<'list' | 'normal'>();
   const [error, setError] = useState({
     field: '',
     msg: '',
   });
+  const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   let titleAnim = useRef(new Animated.Value(0)).current;
   let infoAnim = useRef(new Animated.Value(0)).current;
@@ -66,6 +69,7 @@ const NoteEditor = ({
   useEffect(() => {
     if (mode === 'update' && item) {
       setTitle(item.title);
+      noteType.current = item.type;
       if (ekey) {
         setInfo(decryptData(item.info, ekey) ?? item.info);
       } else {
@@ -145,6 +149,7 @@ const NoteEditor = ({
         ...item,
         title,
         info: ekey ? encryptData(info, ekey) : info,
+        type: noteType.current,
         updatedAt: new Date(),
       };
 
@@ -160,6 +165,30 @@ const NoteEditor = ({
     cb();
   };
 
+  const convertToList = (txt?: string) => {
+    let lines = txt !== undefined ? txt.split('\n') : info.split('\n');
+    lines = lines.map((line, i) => {
+      if (line !== '' && line[0] !== '•') {
+        line = '• ' + line;
+      }
+      return line;
+    });
+    setInfo(lines.join('\n'));
+    noteType.current = 'list';
+  };
+
+  const convertToNormal = () => {
+    let lines = info.split('\n');
+    lines = lines.map(line => {
+      if (line !== '' && line[0] === '•') {
+        line = line.slice(2);
+      }
+      return line;
+    });
+    setInfo(lines.join('\n'));
+    noteType.current = 'normal';
+  };
+
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
       <SafeAreaView
@@ -171,11 +200,47 @@ const NoteEditor = ({
           <View style={styles.header}>
             <SecondaryButton text="Cancel" onPress={handleClose} />
             {mode === 'update' && item && (
-              <TextButton
-                text="Delete"
-                color="red"
-                onPress={() => showDeleteModal(item.id)}
-              />
+              <>
+                <PrimaryButton
+                  icon={
+                    <FeatherIcon
+                      name="more-horizontal"
+                      size={17}
+                      color={theme.colors.btnText1}
+                    />
+                  }
+                  onPress={() => setShowDropdown(!showDropdown)}
+                />
+                {showDropdown && (
+                  <View
+                    style={[
+                      styles.dropdown,
+                      {
+                        backgroundColor: theme.colors.background2,
+                        borderColor: theme.colors.primary,
+                      },
+                    ]}>
+                    {noteType.current === 'list' ? (
+                      <TextButton
+                        text="Convert To Text"
+                        color={theme.colors.btnText1}
+                        onPress={convertToNormal}
+                      />
+                    ) : (
+                      <TextButton
+                        text="Add List Bullets   •"
+                        color={theme.colors.btnText1}
+                        onPress={() => convertToList()}
+                      />
+                    )}
+                    <TextButton
+                      text="Delete"
+                      color="red"
+                      onPress={() => showDeleteModal(item.id)}
+                    />
+                  </View>
+                )}
+              </>
             )}
           </View>
           <Animated.View style={{ opacity: titleAnim }}>
@@ -194,7 +259,9 @@ const NoteEditor = ({
               multiline
               numberOfLines={20}
               value={info}
-              setValue={setInfo}
+              setValue={txt =>
+                noteType.current === 'list' ? convertToList(txt) : setInfo(txt)
+              }
               textStyles={{ color: theme.colors.text1 }}
               containerStyles={styles.inputContainer}
             />
@@ -239,11 +306,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 5,
     marginBottom: 15,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 60,
+    right: 5,
+    width: 200,
+    paddingVertical: 5,
+    borderWidth: 2,
+    borderRadius: 20,
+    zIndex: 999,
   },
   inputContainer: {
     flex: 1,
