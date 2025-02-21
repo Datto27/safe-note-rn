@@ -168,7 +168,12 @@ const NoteEditor = ({
   const convertToList = (txt?: string) => {
     let lines = txt !== undefined ? txt.split('\n') : info.split('\n');
     lines = lines.map((line, i) => {
-      if (line !== '' && line[0] !== '•') {
+      if (
+        line !== '' &&
+        line[0] !== '•' &&
+        line[0] !== '#' &&
+        line[0] !== '#'
+      ) {
         line = '• ' + line;
       }
       return line;
