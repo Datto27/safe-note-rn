@@ -172,7 +172,8 @@ const NoteEditor = ({
         line !== '' &&
         line[0] !== '•' &&
         line[0] !== '#' &&
-        line[0] !== '#'
+        line[0] !== '#' &&
+        line[0] !== ' '
       ) {
         line = '• ' + line;
       }
@@ -230,18 +231,21 @@ const NoteEditor = ({
                         text="Convert To Text"
                         color={theme.colors.btnText1}
                         onPress={convertToNormal}
+                        style={styles.dropdownBtn}
                       />
                     ) : (
                       <TextButton
                         text="Add List Bullets   •"
                         color={theme.colors.btnText1}
                         onPress={() => convertToList()}
+                        style={styles.dropdownBtn}
                       />
                     )}
                     <TextButton
                       text="Delete"
                       color="red"
                       onPress={() => showDeleteModal(item.id)}
+                      style={styles.dropdownBtn}
                     />
                   </View>
                 )}
@@ -327,6 +331,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 20,
     zIndex: 999,
+  },
+  dropdownBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 15,
   },
   inputContainer: {
     flex: 1,

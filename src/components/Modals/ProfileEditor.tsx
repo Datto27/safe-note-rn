@@ -79,6 +79,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
                 styles.inputsContainer,
                 {
                   backgroundColor: theme.colors.modalBg,
+                  borderColor: theme.colors.modalBorder,
                 },
               ]}>
               <CustomTextInput
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingBottom: 40,
   },
   scrollView: {
     flexGrow: 1,
@@ -146,7 +148,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   wrapper: {
-    paddingTop: 20,
     marginHorizontal: 5,
     shadowOffset: { width: 0, height: -10 },
     shadowOpacity: 0.3,
@@ -156,14 +157,16 @@ const styles = StyleSheet.create({
   },
   inputsContainer: {
     width: '95%',
-    paddingVertical: 30,
+    paddingTop: 40,
+    paddingBottom: 20,
     paddingHorizontal: 20,
-    borderRadius: 20,
+    borderRadius: 30,
+    borderWidth: 1,
   },
   actionBtns: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 15,
   },
 });

@@ -13,7 +13,8 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={styles.header}>
+      <View
+        style={[styles.header, { backgroundColor: theme.colors.background2 }]}>
         <Image
           source={
             theme.type === ThemeEnum.YELLOW

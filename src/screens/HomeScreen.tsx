@@ -11,7 +11,6 @@ import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
 import { useIsFocused } from '@react-navigation/native';
 import { globalStyles } from '../constants/globalStyles';
-import { decryptData } from '../utils/encrypt.private';
 
 const HomeScreen = () => {
   const isFocused = useIsFocused();

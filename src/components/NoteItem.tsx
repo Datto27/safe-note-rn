@@ -71,7 +71,7 @@ export const NoteItem = ({
           globalStyles.shadow,
           pressed && { transform: [{ scale: 0.98 }] },
           {
-            backgroundColor: theme.colors.secondary02,
+            backgroundColor: theme.colors.primary05,
             shadowColor: theme.colors.shadowColor1,
           },
         ]}

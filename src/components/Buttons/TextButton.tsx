@@ -38,11 +38,10 @@ export default TextButton;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    paddingVertical: 14,
     paddingHorizontal: 20,
   },
   text: {
     fontSize: 15,
-    padding: 8,
   },
 });

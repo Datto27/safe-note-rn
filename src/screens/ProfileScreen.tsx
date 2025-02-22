@@ -100,6 +100,7 @@ const ProfileScreen = () => {
           {
             backgroundColor: theme.colors.modalBg,
             shadowColor: theme.colors.shadowColor1,
+            borderColor: theme.colors.modalBorder,
           },
         ]}>
         <View
@@ -274,11 +275,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <View
-        style={[
-          styles.encryptionSection,
-          { backgroundColor: theme.colors.background2 },
-        ]}>
+      <View style={[styles.encryptionSection]}>
         {ekey ? (
           <View style={styles.encryptionBtns}>
             <TextButton
@@ -333,12 +330,17 @@ const ProfileScreen = () => {
       </View>
       <View
         style={{
-          height: showDataOptions ? 180 : 30,
+          height: showDataOptions ? 190 : 50,
           overflow: 'hidden',
           marginHorizontal: 10,
         }}>
         <TouchableOpacity
-          style={styles.dropdownBtn}
+          style={[
+            styles.dropdownBtn,
+            {
+              backgroundColor: theme.colors.background2,
+            },
+          ]}
           onPress={() => {
             LayoutAnimation.configureNext(
               LayoutAnimation.Presets.easeInEaseOut,
@@ -429,9 +431,10 @@ const styles = StyleSheet.create({
   profileCard: {
     flexDirection: 'row',
     padding: 20,
-    borderRadius: 20,
     marginVertical: 20,
     marginHorizontal: 10,
+    borderRadius: 20,
+    borderWidth: 1,
     shadowOffset: {
       width: 0,
       height: 5,
@@ -512,7 +515,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
   dropText: {
     fontSize: 18,

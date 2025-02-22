@@ -30,7 +30,6 @@ const SecondaryButton = ({
     <TouchableOpacity
       style={[
         styles.container,
-
         globalStyles.shadow,
         {
           backgroundColor: theme.colors.btn2,

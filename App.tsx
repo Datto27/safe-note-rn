@@ -46,6 +46,7 @@ type ThemeT = {
     shadowColor2?: string;
     modalBg: string;
     modalShadow: string;
+    modalBorder: string;
   };
 };
 
