@@ -19,7 +19,7 @@ import MainStack from './src/routes/MainStackNavigator';
 import { getData, saveData } from './src/utils/storage';
 import { ThemeEnum } from './src/enums/theme';
 
-type ThemeT = {
+export type ThemeT = {
   type: ThemeEnum;
   colors: {
     primary: string;
@@ -36,6 +36,7 @@ type ThemeT = {
     text1: string;
     text2: string;
     text3: string;
+    inputText: string;
     btn1: string;
     btn2: string;
     btnText1: string;
@@ -53,7 +54,42 @@ type ThemeT = {
 export const AppContext = createContext<{
   theme: ThemeT;
   setTheme: Dispatch<SetStateAction<ThemeT>>;
-}>({});
+}>({
+  theme: {
+    type: ThemeEnum.DARK,
+    colors: {
+      primary: '',
+      primary05: '',
+      primary02: '',
+      secondary: '',
+      secondary05: '',
+      secondary04: '',
+      secondary02: '',
+      tertiary: '',
+      background1: '',
+      background2: '',
+      background2_09: '',
+      text1: '',
+      text2: '',
+      text3: '',
+      inputText: '',
+      btn1: '',
+      btn2: '',
+      btnText1: '',
+      btnText2: '',
+      btnText3: '',
+      textShadow: '',
+      shadowColor1: undefined,
+      shadowColor2: undefined,
+      modalBg: '',
+      modalShadow: '',
+      modalBorder: '',
+    },
+  },
+  setTheme: function (value: React.SetStateAction<ThemeT>): void {
+    throw new Error('Function not implemented.');
+  },
+});
 
 function App(): React.JSX.Element {
   const [theme, setTheme] = useState<ThemeT>({

@@ -57,7 +57,11 @@ const CustomTextInput = ({
       {multiline ? (
         <TextInput
           ref={inputRef}
-          style={[styles.textarea, textStyles, { color: theme.colors.text1 }]}
+          style={[
+            styles.textarea,
+            textStyles,
+            { color: theme.colors.inputText },
+          ]}
           multiline={true}
           numberOfLines={numberOfLines}
           placeholder={placeholder}
@@ -69,7 +73,7 @@ const CustomTextInput = ({
         <TextInput
           ref={inputRef}
           secureTextEntry={showEntry}
-          style={[styles.input, textStyles, { color: theme.colors.text1 }]}
+          style={[styles.input, textStyles, { color: theme.colors.inputText }]}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.text3}
           value={value}
