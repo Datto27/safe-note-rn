@@ -29,10 +29,11 @@ const DrawerNavigator = () => {
           backgroundColor: theme.colors.background1,
         },
         drawerItemStyle: {
-          borderRadius: 15,
+          borderRadius: 20,
           paddingHorizontal: 3,
           shadowColor: theme.colors.shadowColor1,
           shadowOffset: { width: 0, height: 0 },
+          marginTop: 10,
           shadowOpacity: 1,
           shadowRadius: 10,
           elevation: 5,
@@ -43,7 +44,6 @@ const DrawerNavigator = () => {
           textShadowColor: theme.colors.textShadow,
           textShadowRadius: 10,
           textShadowOffset: { width: 0, height: 0 },
-          lineHeight: 24,
           paddingHorizontal: 5,
         },
         headerTitleStyle: {
