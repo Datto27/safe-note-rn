@@ -1,10 +1,15 @@
-import { StyleSheet, View, TouchableOpacity, Animated } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Animated,
+  FlatList,
+} from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
-import { FlatList } from 'react-native-gesture-handler';
 import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
