@@ -1,4 +1,5 @@
 import {
+  KeyboardAvoidingView,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -71,6 +72,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
+        <KeyboardAvoidingView behavior={'padding'}>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View
             style={[styles.wrapper, { shadowColor: theme.colors.modalShadow }]}>
@@ -128,6 +130,7 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
             </View>
           </View>
         </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );
@@ -149,9 +152,9 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     marginHorizontal: 5,
-    shadowOffset: { width: 0, height: -10 },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
-    shadowRadius: 5,
+    shadowRadius: 10,
     elevation: 20,
     borderRadius: 20,
   },

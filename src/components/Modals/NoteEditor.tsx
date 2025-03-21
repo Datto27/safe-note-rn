@@ -3,12 +3,14 @@ import {
   Modal,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   ActivityIndicator,
   Animated,
   Easing,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -47,7 +49,7 @@ const NoteEditor = ({
   const [ekey, setEkey] = useState(null);
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
-  const noteType = useRef<'list' | 'normal'>();
+  const noteType = useRef<'list' | 'normal' | undefined>(undefined);
   const [error, setError] = useState({
     field: '',
     msg: '',
@@ -167,7 +169,7 @@ const NoteEditor = ({
 
   const convertToList = (txt?: string) => {
     let lines = txt !== undefined ? txt.split('\n') : info.split('\n');
-    lines = lines.map((line, i) => {
+    lines = lines.map((line) => {
       if (
         line !== '' &&
         line[0] !== '•' &&
@@ -202,107 +204,114 @@ const NoteEditor = ({
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <View style={{ flex: 1 }}>
-          <View style={styles.header}>
-            <SecondaryButton text="Cancel" onPress={handleClose} />
-            {mode === 'update' && item && (
-              <>
-                <PrimaryButton
-                  icon={
-                    <FeatherIcon
-                      name="more-horizontal"
-                      size={17}
-                      color={theme.colors.btnText1}
-                    />
-                  }
-                  onPress={() => setShowDropdown(!showDropdown)}
-                />
-                {showDropdown && (
-                  <View
-                    style={[
-                      styles.dropdown,
-                      {
-                        backgroundColor: theme.colors.background2,
-                        borderColor: theme.colors.primary,
-                      },
-                    ]}>
-                    {noteType.current === 'list' ? (
-                      <TextButton
-                        text="Convert To Text"
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
+            <View style={styles.header}>
+              <SecondaryButton text="Cancel" onPress={handleClose} />
+              {mode === 'update' && item && (
+                <>
+                  <PrimaryButton
+                    icon={
+                      <FeatherIcon
+                        name="more-horizontal"
+                        size={17}
                         color={theme.colors.btnText1}
-                        onPress={convertToNormal}
+                      />
+                    }
+                    onPress={() => setShowDropdown(!showDropdown)}
+                  />
+                  {showDropdown && (
+                    <View
+                      style={[
+                        styles.dropdown,
+                        {
+                          backgroundColor: theme.colors.background2,
+                          borderColor: theme.colors.primary,
+                        },
+                      ]}>
+                      {noteType.current === 'list' ? (
+                        <TextButton
+                          text="Convert To Text"
+                          color={theme.colors.btnText1}
+                          onPress={convertToNormal}
+                          style={styles.dropdownBtn}
+                        />
+                      ) : (
+                        <TextButton
+                          text="Add List Bullets   •"
+                          color={theme.colors.btnText1}
+                          onPress={() => convertToList()}
+                          style={styles.dropdownBtn}
+                        />
+                      )}
+                      <TextButton
+                        text="Delete"
+                        color="red"
+                        onPress={() => showDeleteModal(item.id)}
                         style={styles.dropdownBtn}
                       />
-                    ) : (
-                      <TextButton
-                        text="Add List Bullets   •"
-                        color={theme.colors.btnText1}
-                        onPress={() => convertToList()}
-                        style={styles.dropdownBtn}
-                      />
-                    )}
-                    <TextButton
-                      text="Delete"
-                      color="red"
-                      onPress={() => showDeleteModal(item.id)}
-                      style={styles.dropdownBtn}
-                    />
-                  </View>
-                )}
-              </>
-            )}
-          </View>
-          <Animated.View style={{ opacity: titleAnim }}>
-            <CustomTextInput
-              placeholder="Title"
-              value={title}
-              setValue={setTitle}
-              containerStyles={{ marginHorizontal: 5 }}
-              textStyles={{ fontSize: 18, color: theme.colors.text1 }}
-              error={error.field === 'title' ? error.msg : null}
-            />
-          </Animated.View>
-          <Animated.View style={{ flex: 1, opacity: infoAnim }}>
-            <CustomTextInput
-              placeholder="What's in your mind?"
-              multiline
-              numberOfLines={20}
-              value={info}
-              setValue={txt =>
-                noteType.current === 'list' ? convertToList(txt) : setInfo(txt)
-              }
-              textStyles={{ color: theme.colors.text1 }}
-              containerStyles={styles.inputContainer}
-            />
-          </Animated.View>
-          <TouchableOpacity
-            style={[
-              styles.saveBtn,
-              globalStyles.shadow,
-              {
-                backgroundColor: theme.colors.btn1,
-                shadowColor: theme.colors.shadowColor2,
-              },
-            ]}
-            onPress={async () => {
-              const res = await saveNote();
-              if (res?.field) {
-                setError(res);
-              } else {
-                handleClose();
-              }
-            }}>
-            {isLoading ? (
-              <ActivityIndicator size={32} color={theme.colors.btnText1} />
-            ) : (
-              <FeatherIcon
-                name="save"
-                color={theme.colors.btnText1}
-                size={30}
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+            <Animated.View style={{ opacity: titleAnim }}>
+              <CustomTextInput
+                placeholder="Title"
+                value={title}
+                setValue={setTitle}
+                containerStyles={{ marginHorizontal: 5 }}
+                textStyles={{ fontSize: 18, color: theme.colors.text1 }}
+                error={error.field === 'title' ? error.msg : null}
               />
-            )}
-          </TouchableOpacity>
-        </View>
+            </Animated.View>
+            <Animated.View
+              style={[styles.inputWrapper, {
+                opacity: infoAnim,
+              }]}>
+              <CustomTextInput
+                placeholder="What's in your mind?"
+                multiline
+                numberOfLines={20}
+                value={info}
+                setValue={txt =>
+                  noteType.current === 'list'
+                    ? convertToList(txt)
+                    : setInfo(txt)
+                }
+                textStyles={{ color: theme.colors.text1 }}
+                containerStyles={styles.inputContainer}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.saveBtn,
+                  globalStyles.shadow,
+                  {
+                    backgroundColor: theme.colors.btn1,
+                    shadowColor: theme.colors.shadowColor2,
+                  },
+                ]}
+                onPress={async () => {
+                  const res = await saveNote();
+                  if (res?.field) {
+                    setError(res);
+                  } else {
+                    handleClose();
+                  }
+                }}>
+                {isLoading ? (
+                  <ActivityIndicator size={32} color={theme.colors.btnText1} />
+                ) : (
+                  <FeatherIcon
+                    name="save"
+                    color={theme.colors.btnText1}
+                    size={30}
+                  />
+                )}
+              </TouchableOpacity>
+            </Animated.View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
     </Modal>
   );
@@ -336,6 +345,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 15,
   },
+  inputWrapper: {
+    flex: 1,
+    position: 'relative',
+   },
   inputContainer: {
     flex: 1,
     marginHorizontal: 5,

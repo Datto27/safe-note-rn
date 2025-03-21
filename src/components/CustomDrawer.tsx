@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 10,
+    borderRadius: 20,
   },
   title: {
     fontFamily: 'JosefinSans-Bold',

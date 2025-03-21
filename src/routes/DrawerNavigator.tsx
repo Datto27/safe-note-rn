@@ -30,7 +30,6 @@ const DrawerNavigator = () => {
         },
         drawerItemStyle: {
           borderRadius: 20,
-          paddingHorizontal: 3,
           shadowColor: theme.colors.shadowColor1,
           shadowOffset: { width: 0, height: 0 },
           marginTop: 10,

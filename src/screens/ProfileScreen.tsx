@@ -72,7 +72,7 @@ const ProfileScreen = () => {
   };
 
   const removeDataEncryption = () => {
-    if (!ekey) return;
+    if (!ekey) {return;}
     setModal(null);
     getData('notes').then(notes => {
       Object.keys(notes).forEach(k => {
@@ -106,7 +106,7 @@ const ProfileScreen = () => {
         <View
           style={[
             styles.profileIconContainer,
-            { backgroundColor: theme.colors.background2_09 },
+            { backgroundColor: theme.colors.background2 },
           ]}>
           <FeatherIcon name="user" color={theme.colors.text2} size={42} />
         </View>
@@ -187,12 +187,12 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsDark.primary },
-              ]}></View>
+              ]} />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsDark.secondary },
-              ]}></View>
+              ]} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -213,12 +213,12 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsLight.primary },
-              ]}></View>
+              ]} />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsLight.secondary },
-              ]}></View>
+              ]} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -239,12 +239,12 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsYellow.primary },
-              ]}></View>
+              ]} />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsYellow.secondary },
-              ]}></View>
+              ]} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -266,12 +266,12 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsNeon.primary },
-              ]}></View>
+              ]} />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsNeon.secondary },
-              ]}></View>
+              ]} />
           </View>
         </TouchableOpacity>
       </View>

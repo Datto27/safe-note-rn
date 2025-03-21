@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -14,7 +15,6 @@ import { getData, saveData } from '../../utils/storage';
 import { useGlobalState } from '../../contexts/GlobaState';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import TextButton from '../Buttons/TextButton';
-import { colorsYellow } from '../../constants/colors';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import { decryptData, encryptData } from '../../utils/encrypt.private';
 import { NoteI } from '../../interfaces/note';
@@ -100,11 +100,12 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
       animationType="fade"
       onRequestClose={onClose}>
       <SafeAreaView
-        style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
-        <View
+        style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+        <KeyboardAvoidingView
+          behavior={'padding'}
           style={[
             styles.formContainer,
-            { backgroundColor: theme.colors.background2 },
+            { backgroundColor: theme.colors.modalBg },
           ]}>
           <ScrollView contentContainerStyle={[styles.dataScroll]}>
             {type === 'export' ? (
@@ -137,8 +138,7 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
               </>
             )}
           </ScrollView>
-        </View>
-        <View style={styles.btnsContainer}>
+          <View style={styles.btnsContainer}>
           <TextButton text="Cancel" color={'red'} onPress={onClose} />
           {type === 'export' ? (
             <SecondaryButton
@@ -194,6 +194,7 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
             />
           )}
         </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );
@@ -211,16 +212,15 @@ const styles = StyleSheet.create({
   formContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    maxHeight: 400,
-    width: '96%',
-    marginVertical: 40,
-    marginHorizontal: 20,
-    borderRadius: 20,
+    maxHeight: 500,
+    paddingVertical: 30,
+    marginHorizontal: 15,
+    borderRadius: 30,
   },
   dataScroll: {
     flexGrow: 1,
     width: '90%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     paddingVertical: 20,
   },
   btnsContainer: {

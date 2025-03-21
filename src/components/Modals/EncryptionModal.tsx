@@ -1,10 +1,10 @@
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
   Modal,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useState } from 'react';
@@ -86,10 +86,10 @@ const EncryptionModal = ({
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <TouchableOpacity
-          activeOpacity={1}
+        <KeyboardAvoidingView
+          behavior={'padding'}
           style={styles.container}
-          onPress={cancelCb}>
+          >
           <View
             style={[
               styles.form,
@@ -130,7 +130,7 @@ const EncryptionModal = ({
               />
             </View>
           </View>
-        </TouchableOpacity>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );
