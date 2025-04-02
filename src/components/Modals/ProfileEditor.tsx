@@ -73,63 +73,69 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
           { backgroundColor: theme.colors.background1 },
         ]}>
         <KeyboardAvoidingView behavior={'padding'}>
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <View
-            style={[styles.wrapper, { shadowColor: theme.colors.modalShadow }]}>
+          <ScrollView contentContainerStyle={styles.scrollView}>
             <View
               style={[
-                styles.inputsContainer,
-                {
-                  backgroundColor: theme.colors.modalBg,
-                  borderColor: theme.colors.modalBorder,
-                },
+                styles.wrapper,
+                { shadowColor: theme.colors.modalShadow },
               ]}>
-              <CustomTextInput
-                placeholder="Username"
-                containerStyles={{ marginVertical: 7 }}
-                error={error.field === 'username' ? error.msg : null}
-                value={username}
-                setValue={setUsername}
-              />
-              <CustomTextInput
-                type="password"
-                placeholder="Password"
-                containerStyles={{ marginVertical: 10 }}
-                error={error.field === 'password' ? error.msg : null}
-                value={password}
-                setValue={setPassword}
-              />
-              <CustomTextInput
-                type="password"
-                placeholder="Repeat Password"
-                containerStyles={{ marginVertical: 10 }}
-                error={error.field === 'rePassword' ? error.msg : null}
-                value={rePassword}
-                setValue={setRePassword}
-              />
-              <CustomTextInput
-                placeholder="Hint for remember the password"
-                containerStyles={{ marginVertical: 10 }}
-                value={hint}
-                setValue={setHint}
-              />
-              <View style={styles.actionBtns}>
-                <SecondaryButton text="Cancel" onPress={() => handleClose()} />
-                {mode === 'create' ? (
-                  <PrimaryButton
-                    text="Create"
-                    onPress={() => createProfile()}
+              <View
+                style={[
+                  styles.inputsContainer,
+                  {
+                    backgroundColor: theme.colors.modalBg,
+                    borderColor: theme.colors.modalBorder,
+                  },
+                ]}>
+                <CustomTextInput
+                  placeholder="Username"
+                  containerStyles={{ marginVertical: 7 }}
+                  error={error.field === 'username' ? error.msg : null}
+                  value={username}
+                  setValue={setUsername}
+                />
+                <CustomTextInput
+                  type="password"
+                  placeholder="Password"
+                  containerStyles={{ marginVertical: 10 }}
+                  error={error.field === 'password' ? error.msg : null}
+                  value={password}
+                  setValue={setPassword}
+                />
+                <CustomTextInput
+                  type="password"
+                  placeholder="Repeat Password"
+                  containerStyles={{ marginVertical: 10 }}
+                  error={error.field === 'rePassword' ? error.msg : null}
+                  value={rePassword}
+                  setValue={setRePassword}
+                />
+                <CustomTextInput
+                  placeholder="Hint for remember the password"
+                  containerStyles={{ marginVertical: 10 }}
+                  value={hint}
+                  setValue={setHint}
+                />
+                <View style={styles.actionBtns}>
+                  <SecondaryButton
+                    text="Cancel"
+                    onPress={() => handleClose()}
                   />
-                ) : (
-                  <PrimaryButton
-                    text="Update"
-                    onPress={() => createProfile()}
-                  />
-                )}
+                  {mode === 'create' ? (
+                    <PrimaryButton
+                      text="Create"
+                      onPress={() => createProfile()}
+                    />
+                  ) : (
+                    <PrimaryButton
+                      text="Update"
+                      onPress={() => createProfile()}
+                    />
+                  )}
+                </View>
               </View>
             </View>
-          </View>
-        </ScrollView>
+          </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>

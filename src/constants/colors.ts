@@ -49,7 +49,7 @@ export const colorsLight: ThemeT['colors'] = {
   btn2: 'rgb(131, 147, 174)',
   btnText1: 'rgb(245, 248, 255)',
   btnText2: 'rgb(14, 66, 139)',
-  btnText3: 'rgb(191, 198, 209)', 
+  btnText3: 'rgb(191, 198, 209)',
   textShadow: 'rgba(255, 255, 255, 0.1)',
   shadowColor1: 'rgba(0, 0, 0, 0.15)',
   shadowColor2: 'rgba(0, 0, 0, 0.1)',

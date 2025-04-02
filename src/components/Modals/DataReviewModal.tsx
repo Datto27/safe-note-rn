@@ -100,7 +100,10 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
       animationType="fade"
       onRequestClose={onClose}>
       <SafeAreaView
-        style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+        style={[
+          styles.container,
+          { backgroundColor: theme.colors.background1 },
+        ]}>
         <KeyboardAvoidingView
           behavior={'padding'}
           style={[
@@ -139,61 +142,61 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
             )}
           </ScrollView>
           <View style={styles.btnsContainer}>
-          <TextButton text="Cancel" color={'red'} onPress={onClose} />
-          {type === 'export' ? (
-            <SecondaryButton
-              text="Copy"
-              icon={
-                isLoading ? (
-                  <ActivityIndicator
-                    color={theme.colors.secondary}
-                    size={'small'}
-                    style={{ marginRight: 10 }}
-                  />
-                ) : copied ? (
-                  <FeatherIcon
-                    name="check"
-                    color={'green'}
-                    style={{ marginRight: 5 }}
-                  />
-                ) : (
-                  <FeatherIcon
-                    name="copy"
-                    color={theme.colors.text2}
-                    style={{ marginRight: 5 }}
-                  />
-                )
-              }
-              onPress={copyToClipboard}
-            />
-          ) : (
-            <SecondaryButton
-              text="Save"
-              icon={
-                isLoading ? (
-                  <ActivityIndicator
-                    color={theme.colors.secondary}
-                    size={'small'}
-                    style={{ marginRight: 10 }}
-                  />
-                ) : copied ? (
-                  <FeatherIcon
-                    name="check"
-                    color={'green'}
-                    style={{ marginRight: 5 }}
-                  />
-                ) : (
-                  <FeatherIcon
-                    name="save"
-                    color={theme.colors.text2}
-                    style={{ marginRight: 5 }}
-                  />
-                )
-              }
-              onPress={saveImport}
-            />
-          )}
-        </View>
+            <TextButton text="Cancel" color={'red'} onPress={onClose} />
+            {type === 'export' ? (
+              <SecondaryButton
+                text="Copy"
+                icon={
+                  isLoading ? (
+                    <ActivityIndicator
+                      color={theme.colors.secondary}
+                      size={'small'}
+                      style={{ marginRight: 10 }}
+                    />
+                  ) : copied ? (
+                    <FeatherIcon
+                      name="check"
+                      color={'green'}
+                      style={{ marginRight: 5 }}
+                    />
+                  ) : (
+                    <FeatherIcon
+                      name="copy"
+                      color={theme.colors.text2}
+                      style={{ marginRight: 5 }}
+                    />
+                  )
+                }
+                onPress={copyToClipboard}
+              />
+            ) : (
+              <SecondaryButton
+                text="Save"
+                icon={
+                  isLoading ? (
+                    <ActivityIndicator
+                      color={theme.colors.secondary}
+                      size={'small'}
+                      style={{ marginRight: 10 }}
+                    />
+                  ) : copied ? (
+                    <FeatherIcon
+                      name="check"
+                      color={'green'}
+                      style={{ marginRight: 5 }}
+                    />
+                  ) : (
+                    <FeatherIcon
+                      name="save"
+                      color={theme.colors.text2}
+                      style={{ marginRight: 5 }}
+                    />
+                  )
+                }
+                onPress={saveImport}
+              />
+            )}
+          </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>

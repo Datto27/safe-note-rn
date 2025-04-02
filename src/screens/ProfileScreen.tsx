@@ -72,7 +72,9 @@ const ProfileScreen = () => {
   };
 
   const removeDataEncryption = () => {
-    if (!ekey) {return;}
+    if (!ekey) {
+      return;
+    }
     setModal(null);
     getData('notes').then(notes => {
       Object.keys(notes).forEach(k => {
@@ -187,12 +189,14 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsDark.primary },
-              ]} />
+              ]}
+            />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsDark.secondary },
-              ]} />
+              ]}
+            />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -213,12 +217,14 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsLight.primary },
-              ]} />
+              ]}
+            />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsLight.secondary },
-              ]} />
+              ]}
+            />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -239,12 +245,14 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsYellow.primary },
-              ]} />
+              ]}
+            />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsYellow.secondary },
-              ]} />
+              ]}
+            />
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -266,12 +274,14 @@ const ProfileScreen = () => {
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsNeon.primary },
-              ]} />
+              ]}
+            />
             <View
               style={[
                 styles.themeColor,
                 { backgroundColor: colorsNeon.secondary },
-              ]} />
+              ]}
+            />
           </View>
         </TouchableOpacity>
       </View>

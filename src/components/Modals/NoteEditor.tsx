@@ -58,6 +58,7 @@ const NoteEditor = ({
   const [isLoading, setIsLoading] = useState(false);
   let titleAnim = useRef(new Animated.Value(0)).current;
   let infoAnim = useRef(new Animated.Value(0)).current;
+  let inputTimeout = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
     if (visible) {
@@ -169,7 +170,7 @@ const NoteEditor = ({
 
   const convertToList = (txt?: string) => {
     let lines = txt !== undefined ? txt.split('\n') : info.split('\n');
-    lines = lines.map((line) => {
+    lines = lines.map(line => {
       if (
         line !== '' &&
         line[0] !== '•' &&
@@ -195,6 +196,18 @@ const NoteEditor = ({
     });
     setInfo(lines.join('\n'));
     noteType.current = 'normal';
+  };
+
+  const handleInputUpdate = (txt: string) => {
+    clearTimeout(inputTimeout.current);
+    if (noteType.current === 'list') {
+      setInfo(txt);
+      inputTimeout.current = setTimeout(() => {
+        convertToList(txt);
+      }, 500);
+    } else {
+      setInfo(txt);
+    }
   };
 
   return (
@@ -266,19 +279,18 @@ const NoteEditor = ({
               />
             </Animated.View>
             <Animated.View
-              style={[styles.inputWrapper, {
-                opacity: infoAnim,
-              }]}>
+              style={[
+                styles.inputWrapper,
+                {
+                  opacity: infoAnim,
+                },
+              ]}>
               <CustomTextInput
                 placeholder="What's in your mind?"
                 multiline
                 numberOfLines={20}
                 value={info}
-                setValue={txt =>
-                  noteType.current === 'list'
-                    ? convertToList(txt)
-                    : setInfo(txt)
-                }
+                setValue={handleInputUpdate}
                 textStyles={{ color: theme.colors.text1 }}
                 containerStyles={styles.inputContainer}
               />
@@ -348,7 +360,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flex: 1,
     position: 'relative',
-   },
+  },
   inputContainer: {
     flex: 1,
     marginHorizontal: 5,

@@ -124,6 +124,7 @@ const HomeScreen = () => {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
       <FlatList
+        contentContainerStyle={styles.flashlist}
         data={notes ? Object.keys(notes) : []}
         renderItem={({ item, index }) => (
           <NoteItem
@@ -243,6 +244,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
+  },
+  flashlist: {
+    paddingBottom: 80,
   },
   floatingBtnContainer: {
     position: 'absolute',
