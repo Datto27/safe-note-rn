@@ -1,8 +1,9 @@
 # Safe Note
 - Privacy-focused mobile application to encryption and save your information locally.
 - All created notes are saved locally on the user's device which can be encrypted if the user adds an encryption key.
-- The application makes it possible to export encrypted information as a text and save it to another place !(have to memorize the key you used for encryption), but for decrypt information again info should be imported to SafeNote application with its encryption key.
+- The application makes it possible to export encrypted information as a text and save it to another place !(have to memorize the key you used for encryption), but for decrypt information note objects should be imported to SafeNote application with its encryption key.
 - Also, users can create profiles to require authorization when someone tries to open an application.
+- The project is open to contributors.
 
 ## Install libraries
 ```bash
