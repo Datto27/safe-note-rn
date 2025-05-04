@@ -71,7 +71,7 @@ export const NoteItem = ({
           globalStyles.shadow,
           pressed && { transform: [{ scale: 0.98 }] },
           {
-            backgroundColor: theme.colors.primary05,
+            backgroundColor: theme.colors.secondary05,
             shadowColor: theme.colors.shadowColor1,
           },
         ]}
@@ -152,7 +152,7 @@ export const ArchivedNoteItem = ({
     <Animated.View
       style={[
         styles.container,
-        { opacity: fadeAnim, backgroundColor: theme.colors.primary05 },
+        { opacity: fadeAnim, backgroundColor: theme.colors.secondary05 },
       ]}>
       <TouchableOpacity
         style={styles.deleteBtn}

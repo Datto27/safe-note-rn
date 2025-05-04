@@ -14,7 +14,6 @@ const TabsNavigator = () => {
     <Tabs.Navigator
       initialRouteName="Home"
       screenOptions={{
-        // tabBarShowLabel: false,
         tabBarStyle: {
           elevation: 0,
           backgroundColor: theme.colors.background2,
@@ -23,11 +22,14 @@ const TabsNavigator = () => {
           borderBottomColor: theme.colors.modalBorder,
           borderBottomWidth: 1,
         },
+        tabBarIndicatorStyle: {
+          backgroundColor: theme.colors.primary,
+        },
         tabBarItemStyle: {
           flexDirection: 'row',
         },
         tabBarInactiveTintColor: theme.colors.btnText3,
-        tabBarActiveTintColor: theme.colors.secondary,
+        tabBarActiveTintColor: theme.colors.primary,
         tabBarLabelStyle: {
           fontSize: 14,
           fontWeight: '500',
@@ -41,7 +43,7 @@ const TabsNavigator = () => {
             <FeatherIcon
               name="list"
               size={22}
-              color={focused ? theme.colors.secondary : theme.colors.btnText3}
+              color={focused ? theme.colors.primary : theme.colors.btnText3}
             />
           ),
         }}
@@ -54,7 +56,7 @@ const TabsNavigator = () => {
             <FeatherIcon
               name="user"
               size={22}
-              color={focused ? theme.colors.secondary : theme.colors.btnText3}
+              color={focused ? theme.colors.primary : theme.colors.btnText3}
             />
           ),
         }}

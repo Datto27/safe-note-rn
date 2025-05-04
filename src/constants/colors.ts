@@ -1,13 +1,13 @@
 import { ThemeT } from '../../App';
 
 export const colorsDark: ThemeT['colors'] = {
-  primary: 'rgb(12, 29, 67)',
-  primary05: 'rgba(12, 29, 67, 0.5)',
-  primary02: 'rgba(12, 29, 67, 0.2)',
-  secondary: 'rgb(30, 70, 150)',
-  secondary05: 'rgba(30, 70, 150, 0.5)',
-  secondary04: 'rgba(30, 70, 150, 0.4)',
-  secondary02: 'rgba(30, 70, 150, 0.2)',
+  primary: 'rgb(30, 70, 150)',
+  primary05: 'rgba(30, 70, 150, 0.5)',
+  primary02: 'rgba(30, 70, 150, 0.2)',
+  secondary: 'rgb(12, 29, 67)',
+  secondary05: 'rgba(12, 29, 67, 0.5)',
+  secondary04: 'rgba(12, 29, 67, 0.4)',
+  secondary02: 'rgba(12, 29, 67, 0.2)',
   tertiary: '#08152C',
   background1: 'rgb(5, 8, 12)',
   background2: 'rgb(2, 4, 8)',
