@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Animated,
   FlatList,
+  LayoutAnimation,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -36,6 +37,7 @@ const HomeScreen = () => {
     animateScale();
   }, [isFocused]);
 
+  console.log('render');
   const fetchNotes = async () => {
     const key = await getData('key');
     getData('notes').then((res: { [key: string]: NoteI }) => {
@@ -207,27 +209,25 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </Animated.View>
       )}
-      {editorInfo.show && (
-        <NoteEditor
-          mode={editorInfo.mode}
-          item={editorInfo.item}
-          visible={editorInfo.show}
-          notes={notes}
-          setVisible={val =>
-            setEditorInfo(state => ({ ...state, show: val, item: undefined }))
-          }
-          cb={fetchNotes}
-          showDeleteModal={(id: string) => {
-            setEditorInfo(state => ({
-              ...state,
-              show: false,
-              item: undefined,
-            }));
-            setDeleteArr([id]);
-            setShowDeleteModal(true);
-          }}
-        />
-      )}
+      <NoteEditor
+        mode={editorInfo.mode}
+        item={editorInfo.item}
+        visible={editorInfo.show}
+        notes={notes}
+        setVisible={val =>
+          setEditorInfo(state => ({ ...state, show: val, item: undefined }))
+        }
+        cb={fetchNotes}
+        showDeleteModal={(id: string) => {
+          setEditorInfo(state => ({
+            ...state,
+            show: false,
+            item: undefined,
+          }));
+          setDeleteArr([id]);
+          setShowDeleteModal(true);
+        }}
+      />
       <DeleteModal
         visible={showDeleteModal}
         text="Do you want to delete this note?"

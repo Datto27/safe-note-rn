@@ -211,7 +211,11 @@ const NoteEditor = ({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+      onRequestClose={handleClose}>
       <SafeAreaView
         style={[
           styles.container,

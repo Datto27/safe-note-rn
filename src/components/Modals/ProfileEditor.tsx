@@ -66,7 +66,11 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={handleClose}>
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+      onRequestClose={handleClose}>
       <SafeAreaView
         style={[
           styles.container,
