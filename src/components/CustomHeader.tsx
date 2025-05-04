@@ -5,9 +5,11 @@ import { StackHeaderProps } from '@react-navigation/stack';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useGlobalState } from '../contexts/GlobaState';
 import TextButton from './Buttons/TextButton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CustomHeader = ({ route }: StackHeaderProps) => {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { theme } = useGlobalState();
 
   return (
@@ -17,6 +19,7 @@ const CustomHeader = ({ route }: StackHeaderProps) => {
         {
           backgroundColor: theme.colors.background2,
           borderBottomColor: theme.colors.modalBorder,
+          marginTop: insets.top,
         },
       ]}>
       <TextButton

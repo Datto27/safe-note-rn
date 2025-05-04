@@ -38,7 +38,7 @@ const AuthScreen = () => {
       <View
         style={[
           styles.inputsContainer,
-          { backgroundColor: theme.colors.primary05 },
+          { backgroundColor: theme.colors.modalBg },
         ]}>
         <Text style={[styles.title, { color: theme.colors.text1 }]}>
           Welcome back {profile?.username}!

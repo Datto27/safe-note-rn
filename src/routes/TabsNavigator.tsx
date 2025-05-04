@@ -4,10 +4,12 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import HomeScreen from '../screens/HomeScreen';
 import { useGlobalState } from '../contexts/GlobaState';
 import ProfileScreen from '../screens/ProfileScreen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tabs = createMaterialTopTabNavigator();
 
 const TabsNavigator = () => {
+  const insets = useSafeAreaInsets();
   const { theme } = useGlobalState();
 
   return (
@@ -21,6 +23,7 @@ const TabsNavigator = () => {
           paddingVertical: 4,
           borderBottomColor: theme.colors.modalBorder,
           borderBottomWidth: 1,
+          marginTop: insets.top,
         },
         tabBarIndicatorStyle: {
           backgroundColor: theme.colors.primary,
