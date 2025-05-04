@@ -2190,22 +2190,28 @@
     use-latest-callback "^0.2.1"
     use-sync-external-store "^1.2.2"
 
-"@react-navigation/drawer@^7.1.2":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-7.1.2.tgz#c098c0620f92a5da35a078104f263ea6ba108a4f"
-  integrity sha512-EIlS5PPzVQ9WJ4xQZytAUTXiVbZcUYfPFlkaAWZHIl7O/suoJIpu52yXwjbjG0XhNu6Vup23W35HJWHxpgKQEQ==
-  dependencies:
-    "@react-navigation/elements" "^2.2.6"
-    color "^4.2.3"
-    react-native-drawer-layout "^4.1.1"
-    use-latest-callback "^0.2.1"
-
 "@react-navigation/elements@^2.2.6":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.2.6.tgz#7f9bf87e9c48c4c47bb3b59650bc3a884a9998ae"
   integrity sha512-UPeaCcEDSDRaxjG+qEHbur6jmNW/f9QNCyPsUt6NMgPEdbB5Z8K8oSx2swIaiCnvUbs/K5G3MuWkqQxGj8QXXA==
   dependencies:
     color "^4.2.3"
+
+"@react-navigation/elements@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.4.0.tgz#dacb520ee87a9ededcd9aa175c1f2364a49557f1"
+  integrity sha512-3gTASi9fK+Nj17pu1w58nCLELMYqOZrziO8gmTKhlFFcq7ppF5pMu+IiVOOfSVnxO74UIYMZSIhlu+fK3EG/YA==
+  dependencies:
+    color "^4.2.3"
+
+"@react-navigation/material-top-tabs@^7.2.11":
+  version "7.2.11"
+  resolved "https://registry.yarnpkg.com/@react-navigation/material-top-tabs/-/material-top-tabs-7.2.11.tgz#0155c1edd335c292480e1c44087d233b57b7071d"
+  integrity sha512-MWNWsgUCsd+3Wb/LFXSZTOJwZQGXfKuhpfMZ4jUrrmk+zbZo6+PbsgC/dHqEUkvXHHviyaB+4BqmVDq724Vd5g==
+  dependencies:
+    "@react-navigation/elements" "^2.4.0"
+    color "^4.2.3"
+    react-native-tab-view "^4.0.11"
 
 "@react-navigation/native@^7.0.15":
   version "7.0.15"
@@ -6295,13 +6301,6 @@ react-native-bouncy-checkbox@^4.1.2:
   dependencies:
     "@freakycoder/react-native-bounceable" "^1.0.3"
 
-react-native-drawer-layout@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.1.1.tgz#7fce1b3d3ddd9fc5d781c73d13b814d022b90114"
-  integrity sha512-ob6O3ph7PZ3A2FpdlsSxHuMpHDXREZPR8A6S3q0dSxV7i6d+8Z6CPCTbegfN2QZyizSow9NLrKyXP93tlqZ3dA==
-  dependencies:
-    use-latest-callback "^0.2.1"
-
 react-native-gesture-handler@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.24.0.tgz#b6e1f13ec9bf8dfa5f4911854b6e0d73d882a81a"
@@ -6315,6 +6314,11 @@ react-native-is-edge-to-edge@1.1.6, react-native-is-edge-to-edge@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.6.tgz#69ec13f70d76e9245e275eed4140d0873a78f902"
   integrity sha512-1pHnFTlBahins6UAajXUqeCOHew9l9C2C8tErnpGC3IyLJzvxD+TpYAixnCbrVS52f7+NvMttbiSI290XfwN0w==
+
+react-native-pager-view@^6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.7.1.tgz#60d52dedbcc92ee7037a13287ebeed5f74e49df7"
+  integrity sha512-cBSr6xw4g5N7Kd3VGWcf+kmaH7iBWb0DXAf2bVo3bXkzBcBbTOmYSvc0LVLHhUPW8nEq5WjT9LCIYAzgF++EXw==
 
 react-native-reanimated@^3.17.1:
   version "3.17.1"
@@ -6346,6 +6350,13 @@ react-native-screens@^4.9.1:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-tab-view@^4.0.11:
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-4.0.11.tgz#37545a162b49d17f0a5cc65ee25dcd7c1e437a2f"
+  integrity sha512-BW+cr+citv/tVwbVnz8jTL5khc8nPc4u1Kpu10pCkdTzQG0pxWiw54iOpge5jMgDAAx81IMzE0ubEgnc0+Nbpg==
+  dependencies:
+    use-latest-callback "^0.2.3"
 
 react-native-vector-icons@^10.2.0:
   version "10.2.0"
@@ -7422,7 +7433,7 @@ update-browserslist-db@^1.1.1:
     escalade "^3.2.0"
     picocolors "^1.1.1"
 
-use-latest-callback@^0.2.1:
+use-latest-callback@^0.2.1, use-latest-callback@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.3.tgz#2d644d3063040b9bc2d4c55bb525a13ae3de9e16"
   integrity sha512-7vI3fBuyRcP91pazVboc4qu+6ZqM8izPWX9k7cRnT8hbD5svslcknsh3S9BUhaK11OmgTV4oWZZVSeQAiV53SQ==

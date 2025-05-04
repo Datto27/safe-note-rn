@@ -14,8 +14,6 @@ import {
   colorsYellow,
 } from '../constants/colors';
 import TextButton from '../components/Buttons/TextButton';
-import ProfileEditor from '../components/Modals/ProfileEditor';
-import { EditorInfoT } from '../interfaces/editor-info.type';
 import { getData, removeData, saveData } from '../utils/storage';
 import { ProfileI } from '../interfaces/profile';
 import DeleteModal from '../components/Modals/DeleteModal';
@@ -27,16 +25,14 @@ import DataReviewModal from '../components/Modals/DataReviewModal';
 import EncryptionModal from '../components/Modals/EncryptionModal';
 import SecondaryButton from '../components/Buttons/SecondaryButton';
 import { decryptData } from '../utils/encrypt.private';
+import ProfileCard from '../components/ProfileCard';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
+  const navigation = useNavigation();
   const { theme, setTheme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI | null>(null);
   const [ekey, setEkey] = useState<string | null>(null);
-  const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
-    show: false,
-    mode: 'create',
-  });
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modal, setModal] = useState<string | null>(null);
   const [validationOptions, setValidationOptions] = useState({
     text: '',
@@ -52,23 +48,6 @@ const ProfileScreen = () => {
   const fetchEKey = () => {
     setModal(null);
     getData('key').then(res => setEkey(res));
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, [editorInfo.show]);
-
-  const fetchProfile = () => {
-    getData('profile').then(res => {
-      setProfile(res);
-    });
-  };
-
-  const deleteProfile = () => {
-    removeData('profile').then(() => {
-      setShowDeleteModal(false);
-      fetchProfile();
-    });
   };
 
   const removeDataEncryption = () => {
@@ -96,76 +75,7 @@ const ProfileScreen = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
-      <View
-        style={[
-          styles.profileCard,
-          {
-            backgroundColor: theme.colors.modalBg,
-            shadowColor: theme.colors.shadowColor1,
-            borderColor: theme.colors.modalBorder,
-          },
-        ]}>
-        <View
-          style={[
-            styles.profileIconContainer,
-            { backgroundColor: theme.colors.background2 },
-          ]}>
-          <FeatherIcon name="user" color={theme.colors.text2} size={42} />
-        </View>
-        {profile ? (
-          <View style={styles.profile}>
-            <View>
-              <Text
-                style={[
-                  styles.profileName,
-                  theme.colors.shadowColor1 ? styles.textShadow : null,
-                  { color: theme.colors.text1 },
-                ]}>
-                {profile.username}
-              </Text>
-              <TextButton
-                text="Update Profile"
-                style={{ marginTop: 0, marginLeft: -4 }}
-                onPress={() => setEditorInfo({ mode: 'update', show: true })}
-              />
-            </View>
-            <TouchableOpacity onPress={() => setShowDeleteModal(true)}>
-              <FeatherIcon name="x-octagon" color="red" size={32} />
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.noProfile}>
-            <Text
-              style={[
-                styles.profileName,
-                styles.textShadow,
-                {
-                  color: theme.colors.text1,
-                  textShadowColor: theme.colors.textShadow,
-                },
-              ]}>
-              No Profile
-            </Text>
-            <TextButton
-              text="Create Profile"
-              style={{ alignSelf: 'center' }}
-              onPress={() => setEditorInfo({ mode: 'create', show: true })}
-            />
-          </View>
-        )}
-        <ProfileEditor
-          mode={editorInfo.mode}
-          visible={editorInfo.show}
-          setVisible={() => setEditorInfo({ mode: 'create', show: false })}
-          profile={profile}
-        />
-        <DeleteModal
-          visible={showDeleteModal}
-          text="Do you want to delete profile?"
-          deleteCb={() => deleteProfile()}
-          cancelCb={() => setShowDeleteModal(false)}
-        />
-      </View>
+      <ProfileCard profile={profile} setProfile={setProfile} />
       <View
         style={[
           styles.themesContainer,
@@ -337,6 +247,11 @@ const ProfileScreen = () => {
             }}
           />
         )}
+        <TextButton
+          text="Show Deleted Notes"
+          color="red"
+          onPress={() => navigation.navigate('Archive')}
+        />
       </View>
       <View
         style={{
@@ -348,7 +263,7 @@ const ProfileScreen = () => {
           style={[
             styles.dropdownBtn,
             {
-              backgroundColor: theme.colors.background2,
+              backgroundColor: theme.colors.btn1,
             },
           ]}
           onPress={() => {
@@ -357,8 +272,8 @@ const ProfileScreen = () => {
             );
             setShowDataOptions(!showDataOptions);
           }}>
-          <Text style={[styles.dropText, { color: theme.colors.text1 }]}>
-            Mange your Data
+          <Text style={[styles.dropText, { color: theme.colors.btnText1 }]}>
+            Manage your Data
           </Text>
           <FeatherIcon
             name={showDataOptions ? 'chevron-up' : 'chevron-down'}
@@ -368,7 +283,7 @@ const ProfileScreen = () => {
         </TouchableOpacity>
         <PrimaryButton
           text="Export Data"
-          containerStyle={{}}
+          containerStyle={{ backgroundColor: theme.colors.secondary }}
           style={{ fontSize: 16 }}
           onPress={() => {
             if (profile) {
@@ -385,7 +300,10 @@ const ProfileScreen = () => {
         />
         <PrimaryButton
           text="Import Data"
-          containerStyle={{ marginTop: 0 }}
+          containerStyle={{
+            marginTop: 0,
+            backgroundColor: theme.colors.secondary,
+          }}
           style={{ fontSize: 16 }}
           onPress={() => {
             if (profile) {
@@ -437,45 +355,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    padding: 20,
-    marginVertical: 20,
-    marginHorizontal: 10,
-    borderRadius: 20,
-    borderWidth: 1,
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
-    elevation: 13,
-  },
-  profileIconContainer: {
-    justifyContent: 'center',
-    padding: 10,
-    marginRight: 20,
-    borderRadius: 15,
-  },
-  profile: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  noProfile: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  profileName: {
-    fontFamily: 'JosefinSans-Bold',
-    flexWrap: 'wrap',
-    fontSize: 18,
-    padding: 5,
   },
   themesContainer: {
     flexDirection: 'row',

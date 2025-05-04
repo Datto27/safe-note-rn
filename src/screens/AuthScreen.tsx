@@ -26,7 +26,7 @@ const AuthScreen = () => {
     }
 
     if (password === profile?.password) {
-      navigation.dispatch(StackActions.replace('DrawerNav'));
+      navigation.dispatch(StackActions.replace('TabsNavigator'));
     } else {
       setError('Password Is Incorect!');
     }

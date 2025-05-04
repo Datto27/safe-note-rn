@@ -150,7 +150,10 @@ export const ArchivedNoteItem = ({
 
   return (
     <Animated.View
-      style={[styles.container, { opacity: fadeAnim, backgroundColor: 'red' }]}>
+      style={[
+        styles.container,
+        { opacity: fadeAnim, backgroundColor: theme.colors.primary05 },
+      ]}>
       <TouchableOpacity
         style={styles.deleteBtn}
         onPress={() => onDelete(item.id)}>

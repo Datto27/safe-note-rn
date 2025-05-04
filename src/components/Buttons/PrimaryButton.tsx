@@ -31,12 +31,12 @@ const PrimaryButton = ({
       style={[
         styles.container,
         globalStyles.shadow,
-        containerStyle,
         {
           backgroundColor: theme.colors.btn1,
           borderColor: theme.colors.primary,
           shadowColor: theme.colors.shadowColor2,
         },
+        containerStyle,
       ]}
       onPress={onPress}>
       {icon}

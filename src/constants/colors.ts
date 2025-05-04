@@ -9,7 +9,7 @@ export const colorsDark: ThemeT['colors'] = {
   secondary04: 'rgba(30, 70, 150, 0.4)',
   secondary02: 'rgba(30, 70, 150, 0.2)',
   tertiary: '#08152C',
-  background1: 'rgb(3, 5, 10)',
+  background1: 'rgb(5, 8, 12)',
   background2: 'rgb(2, 4, 8)',
   background2_09: 'rgba(3, 5, 10, 0.9)',
   text1: 'rgb(235, 240, 250)',
