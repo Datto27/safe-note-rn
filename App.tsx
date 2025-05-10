@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
 import {
   colorsDark,
@@ -146,7 +146,14 @@ function App(): React.JSX.Element {
           backgroundColor={theme.colors.background2}
           translucent
         />
-        <NavigationContainer>
+        <NavigationContainer
+          theme={{
+            ...DarkTheme,
+            colors: {
+              ...DarkTheme.colors,
+              background: theme.colors.background1,
+            },
+          }}>
           <MainStack />
         </NavigationContainer>
       </SafeAreaView>

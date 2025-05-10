@@ -4,9 +4,8 @@ import {
   TouchableOpacity,
   Animated,
   FlatList,
-  LayoutAnimation,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
@@ -15,7 +14,7 @@ import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { globalStyles } from '../constants/globalStyles';
 
 const HomeScreen = () => {
@@ -37,7 +36,6 @@ const HomeScreen = () => {
     animateScale();
   }, [isFocused]);
 
-  console.log('render');
   const fetchNotes = async () => {
     const key = await getData('key');
     getData('notes').then((res: { [key: string]: NoteI }) => {

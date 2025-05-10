@@ -20,10 +20,11 @@ const TabsNavigator = () => {
           elevation: 0,
           backgroundColor: theme.colors.background2,
           overflow: 'hidden',
-          paddingVertical: 4,
           borderBottomColor: theme.colors.modalBorder,
           borderBottomWidth: 1,
           marginTop: insets.top,
+          margin: 4,
+          borderRadius: 10,
         },
         tabBarIndicatorStyle: {
           backgroundColor: theme.colors.primary,
@@ -34,7 +35,7 @@ const TabsNavigator = () => {
         tabBarInactiveTintColor: theme.colors.btnText3,
         tabBarActiveTintColor: theme.colors.primary,
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontSize: 16,
           fontWeight: '500',
         },
       }}>

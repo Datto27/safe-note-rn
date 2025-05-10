@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     minHeight: 70,
     paddingVertical: 12,
     paddingHorizontal: 10,
-    margin: 3,
+    margin: 4,
     borderRadius: 20,
     zIndex: 99,
   },
