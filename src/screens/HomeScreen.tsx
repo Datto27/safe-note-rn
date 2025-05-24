@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Animated,
   FlatList,
+  ListRenderItemInfo,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -120,28 +121,30 @@ const HomeScreen = () => {
     });
   };
 
+  const _renderItem = useCallback(({ item, index }: ListRenderItemInfo<string>) => (
+    <NoteItem
+      key={index}
+      item={notes[item]}
+      animationDelay={(index + 1) * 150}
+      deleteMode={deleteMode}
+      handleCheckboxMark={markDeleteItem}
+      onPress={() => {
+        setEditorInfo({ show: true, mode: 'update', item: notes[item] });
+      }}
+      onLongPress={(id: string) => {
+        setDeleteMode(true);
+        setDeleteArr([id]);
+      }}
+    />
+  ), [notes])
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
       <FlatList
         contentContainerStyle={styles.flashlist}
         data={notes ? Object.keys(notes) : []}
-        renderItem={({ item, index }) => (
-          <NoteItem
-            key={index}
-            item={notes[item]}
-            animationDelay={(index + 1) * 200}
-            deleteMode={deleteMode}
-            handleCheckboxMark={markDeleteItem}
-            onPress={() => {
-              setEditorInfo({ show: true, mode: 'update', item: notes[item] });
-            }}
-            onLongPress={(id: string) => {
-              setDeleteMode(true);
-              setDeleteArr([id]);
-            }}
-          />
-        )}
+        renderItem={_renderItem}
       />
       {deleteMode ? (
         deleteArr.length > 0 ? (
