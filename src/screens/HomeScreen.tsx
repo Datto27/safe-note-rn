@@ -7,6 +7,8 @@ import {
   ListRenderItemInfo,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useIsFocused } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import NoteEditor from '../components/Modals/NoteEditor';
 import { NoteI } from '../interfaces/note';
@@ -15,10 +17,10 @@ import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { globalStyles } from '../constants/globalStyles';
 
 const HomeScreen = () => {
+  const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const { theme } = useGlobalState();
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});
@@ -121,26 +123,35 @@ const HomeScreen = () => {
     });
   };
 
-  const _renderItem = useCallback(({ item, index }: ListRenderItemInfo<string>) => (
-    <NoteItem
-      key={index}
-      item={notes[item]}
-      animationDelay={(index + 1) * 150}
-      deleteMode={deleteMode}
-      handleCheckboxMark={markDeleteItem}
-      onPress={() => {
-        setEditorInfo({ show: true, mode: 'update', item: notes[item] });
-      }}
-      onLongPress={(id: string) => {
-        setDeleteMode(true);
-        setDeleteArr([id]);
-      }}
-    />
-  ), [notes])
+  const _renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<string>) => (
+      <NoteItem
+        key={index}
+        item={notes[item]}
+        animationDelay={(index + 1) * 150}
+        deleteMode={deleteMode}
+        handleCheckboxMark={markDeleteItem}
+        onPress={() => {
+          setEditorInfo({ show: true, mode: 'update', item: notes[item] });
+        }}
+        onLongPress={(id: string) => {
+          setDeleteMode(true);
+          setDeleteArr([id]);
+        }}
+      />
+    ),
+    [notes],
+  );
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      style={[
+        styles.container,
+        {
+          paddingBottom: insets.bottom,
+          backgroundColor: theme.colors.background1,
+        },
+      ]}>
       <FlatList
         contentContainerStyle={styles.flashlist}
         data={notes ? Object.keys(notes) : []}
@@ -155,6 +166,7 @@ const HomeScreen = () => {
               {
                 transform: [{ scale: scaleAnim }],
                 shadowColor: theme.colors.shadowColor2,
+                bottom: insets.bottom + 15,
               },
             ]}>
             <TouchableOpacity
@@ -174,6 +186,7 @@ const HomeScreen = () => {
               {
                 transform: [{ scale: scaleAnim }],
                 shadowColor: theme.colors.shadowColor2,
+                bottom: insets.bottom + 15,
               },
             ]}>
             <TouchableOpacity
@@ -198,6 +211,7 @@ const HomeScreen = () => {
             {
               transform: [{ scale: scaleAnim }],
               shadowColor: theme.colors.shadowColor2,
+              bottom: insets.bottom + 15,
             },
           ]}>
           <TouchableOpacity
