@@ -5,6 +5,7 @@ import {
   Animated,
   FlatList,
   ListRenderItemInfo,
+  Text,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -32,7 +33,9 @@ const HomeScreen = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteArr, setDeleteArr] = useState<string[]>([]);
+  const [listType, setListType] = useState<'list' | 'grid'>('list');
   const scaleAnim = useRef(new Animated.Value(0)).current;
+  const btnBgAnim = useRef(new Animated.Value(10)).current;
 
   useEffect(() => {
     fetchNotes();
@@ -140,8 +143,26 @@ const HomeScreen = () => {
         }}
       />
     ),
-    [notes],
+    [notes, deleteMode],
   );
+
+  const handleListTypeUpdate = (type: "list" | "grid") => {
+    console.log(type)
+    setListType(type)
+    if (type === 'grid') {
+      Animated.timing(btnBgAnim, {
+        toValue: 10,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(btnBgAnim, {
+        toValue: 55,
+        duration: 150,
+        useNativeDriver: true,
+      }).start();
+    }
+  }
 
   return (
     <View
@@ -152,7 +173,27 @@ const HomeScreen = () => {
           backgroundColor: theme.colors.background1,
         },
       ]}>
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: theme.colors.text1 }]}>
+          List Type
+        </Text>
+        <View style={styles.headerBtns}>
+          <Animated.View
+            style={[
+              styles.activeOverlay,
+              { backgroundColor: theme.colors.btn1, transform: [{translateX: btnBgAnim}] },
+            ]}></Animated.View>
+          <TouchableOpacity style={styles.headerBtn} onPress={() => handleListTypeUpdate('grid')}>
+            <FeatherIcon name="grid" size={22} color={theme.colors.btnText3} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.headerBtn} onPress={() => handleListTypeUpdate('list')}>
+            <FeatherIcon name="list" size={24} color={theme.colors.btnText3} />
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
+        key={listType}
+        numColumns={listType === 'grid' ? 2 : 1}
         contentContainerStyle={styles.flashlist}
         data={notes ? Object.keys(notes) : []}
         renderItem={_renderItem}
@@ -258,7 +299,37 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    paddingVertical: 15,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'JosefinSans-Medium',
+  },
+  headerBtns: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 35,
+    width: 35,
+    marginLeft: 10,
+  },
+  activeOverlay: {
+    position: 'absolute',
+    height: 35,
+    width: 35,
+    borderRadius: 10,
+    transform: [{translateX: 10}]
   },
   flashlist: {
     paddingBottom: 80,

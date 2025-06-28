@@ -83,7 +83,7 @@ export const NoteItem = ({
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}>
         <View style={styles.containerLeft}>
-          <Text style={[styles.title, { color: theme.colors.text1 }]}>
+          <Text numberOfLines={1} style={[styles.title, { color: theme.colors.text1 }]}>
             {item.title}
           </Text>
           <Text
@@ -98,7 +98,7 @@ export const NoteItem = ({
               <BouncyCheckbox
                 size={32}
                 fillColor={theme.colors.secondary}
-                unfillColor={theme.colors.primary05}
+                unFillColor={theme.colors.primary05}
                 iconStyle={{ right: -10 }}
                 isChecked={isChecked}
                 onPress={() => {
@@ -180,11 +180,13 @@ export const ArchivedNoteItem = ({
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 70,
+    minWidth: '48%',
     paddingVertical: 12,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     margin: 4,
     borderRadius: 20,
     zIndex: 99,
@@ -195,6 +197,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'JosefinSans-Medium',
     fontSize: 16,
+    marginBottom: 5,
   },
   info: {
     fontFamily: 'JosefinSans-Light',

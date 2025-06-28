@@ -22,7 +22,7 @@ const TabsNavigator = () => {
           overflow: 'hidden',
           borderBottomColor: theme.colors.modalBorder,
           borderBottomWidth: 1,
-          marginTop: insets.top + 5,
+          marginTop: insets.top + 8,
           margin: 4,
           borderRadius: 10,
         },

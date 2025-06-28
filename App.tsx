@@ -138,12 +138,12 @@ function App(): React.JSX.Element {
   return (
     <AppContext.Provider value={{ theme, setTheme }}>
       <SafeAreaView
-        style={{ flex: 1, backgroundColor: theme.colors.background2 }}>
+        style={{ flex: 1, backgroundColor: theme.colors.background1 }}>
         <StatusBar
           barStyle={
             theme.type === ThemeEnum.LIGHT ? 'dark-content' : 'light-content'
           }
-          backgroundColor={theme.colors.background2}
+          backgroundColor={theme.colors.background1}
           translucent
         />
         <NavigationContainer
