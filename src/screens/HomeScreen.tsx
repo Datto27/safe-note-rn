@@ -48,6 +48,24 @@ const HomeScreen = () => {
       if (!res) {
         return;
       }
+      getData('listType').then(res => {
+        console.log({ res });
+        if (res === 'grid') {
+          setListType('grid');
+          Animated.timing(btnBgAnim, {
+            toValue: 10,
+            duration: 150,
+            useNativeDriver: true,
+          }).start();
+        } else {
+          setListType('list');
+          Animated.timing(btnBgAnim, {
+            toValue: 55,
+            duration: 150,
+            useNativeDriver: true,
+          }).start();
+        }
+      });
       const items = Object.values(res)
         .filter(obj => obj.deleted !== true)
         .sort(
@@ -146,23 +164,24 @@ const HomeScreen = () => {
     [notes, deleteMode],
   );
 
-  const handleListTypeUpdate = (type: "list" | "grid") => {
-    console.log(type)
-    setListType(type)
+  const handleListTypeUpdate = async (type: 'list' | 'grid') => {
+    setListType(type);
     if (type === 'grid') {
       Animated.timing(btnBgAnim, {
         toValue: 10,
         duration: 150,
         useNativeDriver: true,
       }).start();
+      await saveData('listType', 'grid');
     } else {
       Animated.timing(btnBgAnim, {
         toValue: 55,
         duration: 150,
         useNativeDriver: true,
       }).start();
+      await saveData('listType', 'list');
     }
-  }
+  };
 
   return (
     <View
@@ -181,12 +200,19 @@ const HomeScreen = () => {
           <Animated.View
             style={[
               styles.activeOverlay,
-              { backgroundColor: theme.colors.btn1, transform: [{translateX: btnBgAnim}] },
+              {
+                backgroundColor: theme.colors.btn1,
+                transform: [{ translateX: btnBgAnim }],
+              },
             ]}></Animated.View>
-          <TouchableOpacity style={styles.headerBtn} onPress={() => handleListTypeUpdate('grid')}>
+          <TouchableOpacity
+            style={styles.headerBtn}
+            onPress={() => handleListTypeUpdate('grid')}>
             <FeatherIcon name="grid" size={22} color={theme.colors.btnText3} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.headerBtn} onPress={() => handleListTypeUpdate('list')}>
+          <TouchableOpacity
+            style={styles.headerBtn}
+            onPress={() => handleListTypeUpdate('list')}>
             <FeatherIcon name="list" size={24} color={theme.colors.btnText3} />
           </TouchableOpacity>
         </View>
@@ -329,7 +355,7 @@ const styles = StyleSheet.create({
     height: 35,
     width: 35,
     borderRadius: 10,
-    transform: [{translateX: 10}]
+    transform: [{ translateX: 10 }],
   },
   flashlist: {
     paddingBottom: 80,

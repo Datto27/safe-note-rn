@@ -83,7 +83,9 @@ export const NoteItem = ({
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}>
         <View style={styles.containerLeft}>
-          <Text numberOfLines={1} style={[styles.title, { color: theme.colors.text1 }]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.title, { color: theme.colors.text1 }]}>
             {item.title}
           </Text>
           <Text
