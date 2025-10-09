@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -24,6 +25,8 @@ import { useGlobalState } from '../../contexts/GlobaState';
 import { globalStyles } from '../../constants/globalStyles';
 import { decryptData, encryptData } from '../../utils/encrypt.private';
 import PrimaryButton from '../Buttons/PrimaryButton';
+
+const { width, height } = Dimensions.get('window');
 
 type Props = {
   item?: NoteI;
@@ -238,36 +241,41 @@ const NoteEditor = ({
                     onPress={() => setShowDropdown(!showDropdown)}
                   />
                   {showDropdown && (
-                    <View
-                      style={[
-                        styles.dropdown,
-                        {
-                          backgroundColor: theme.colors.background2,
-                          borderColor: theme.colors.primary,
-                        },
-                      ]}>
-                      {noteType.current === 'list' ? (
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      style={styles.dropdownContainer}
+                      onPress={() => setShowDropdown(false)}>
+                      <View
+                        style={[
+                          styles.dropdown,
+                          {
+                            backgroundColor: theme.colors.background2,
+                            borderColor: theme.colors.primary,
+                          },
+                        ]}>
+                        {noteType.current === 'list' ? (
+                          <TextButton
+                            text="Convert To Text"
+                            color={theme.colors.btnText1}
+                            onPress={convertToNormal}
+                            style={styles.dropdownBtn}
+                          />
+                        ) : (
+                          <TextButton
+                            text="Add List Bullets   •"
+                            color={theme.colors.btnText1}
+                            onPress={() => convertToList()}
+                            style={styles.dropdownBtn}
+                          />
+                        )}
                         <TextButton
-                          text="Convert To Text"
-                          color={theme.colors.btnText1}
-                          onPress={convertToNormal}
+                          text="Delete"
+                          color="red"
+                          onPress={() => showDeleteModal(item.id)}
                           style={styles.dropdownBtn}
                         />
-                      ) : (
-                        <TextButton
-                          text="Add List Bullets   •"
-                          color={theme.colors.btnText1}
-                          onPress={() => convertToList()}
-                          style={styles.dropdownBtn}
-                        />
-                      )}
-                      <TextButton
-                        text="Delete"
-                        color="red"
-                        onPress={() => showDeleteModal(item.id)}
-                        style={styles.dropdownBtn}
-                      />
-                    </View>
+                      </View>
+                    </TouchableOpacity>
                   )}
                 </>
               )}
@@ -347,6 +355,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 15,
   },
+  dropdownContainer: {
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    height: height,
+    width: width,
+    zIndex: 9999,
+  },
   dropdown: {
     position: 'absolute',
     top: 60,
@@ -355,7 +371,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderWidth: 2,
     borderRadius: 20,
-    zIndex: 999,
   },
   dropdownBtn: {
     paddingVertical: 6,
