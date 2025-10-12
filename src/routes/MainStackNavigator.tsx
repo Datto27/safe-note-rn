@@ -8,8 +8,21 @@ import LoadingScreen from '../screens/LoadingScreen';
 import ArchiveScreen from '../screens/ArchiveScreen';
 import { useGlobalState } from '../contexts/GlobaState';
 import CustomHeader from '../components/CustomHeader';
+import NoteEditorScreen from '../screens/NoteEditorScreen';
+import { NoteI } from '../interfaces/note';
 
-const Stack = createStackNavigator();
+export type MainStackNavigatorParamList = {
+  Auth: undefined;
+  TabsNavigator: undefined;
+  NoteEditor: {
+    item: NoteI | undefined;
+    notes: { [key: string]: NoteI };
+    mode: 'create' | 'update';
+  };
+  Archive: undefined;
+};
+
+const Stack = createStackNavigator<MainStackNavigatorParamList>();
 
 const MainStack = () => {
   const { theme } = useGlobalState();
@@ -36,6 +49,14 @@ const MainStack = () => {
       screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Auth" component={AuthScreen} />
       <Stack.Screen name="TabsNavigator" component={TabsNavigatorigator} />
+      <Stack.Screen
+        name="NoteEditor"
+        component={NoteEditorScreen}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_bottom',
+        }}
+      />
       <Stack.Screen
         name="Archive"
         component={ArchiveScreen}

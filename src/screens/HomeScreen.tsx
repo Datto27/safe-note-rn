@@ -9,9 +9,13 @@ import {
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useIsFocused } from '@react-navigation/native';
+import {
+  ParamListBase,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import NoteEditor from '../components/Modals/NoteEditor';
+import NoteEditor from './NoteEditorScreen';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
 import { NoteItem } from '../components/NoteItem';
@@ -19,17 +23,16 @@ import DeleteModal from '../components/Modals/DeleteModal';
 import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
 import { globalStyles } from '../constants/globalStyles';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainStackNavigatorParamList } from '../routes/MainStackNavigator';
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
+  const navigation =
+    useNavigation<StackNavigationProp<MainStackNavigatorParamList>>();
   const { theme } = useGlobalState();
   const [notes, setNotes] = useState<{ [key: string]: NoteI }>({});
-  const [editorInfo, setEditorInfo] = useState<EditorInfoT>({
-    show: false,
-    mode: 'create',
-    item: undefined,
-  });
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteArr, setDeleteArr] = useState<string[]>([]);
@@ -49,7 +52,6 @@ const HomeScreen = () => {
         return;
       }
       getData('listType').then(res => {
-        console.log({ res });
         if (res === 'grid') {
           setListType('grid');
           Animated.timing(btnBgAnim, {
@@ -153,7 +155,11 @@ const HomeScreen = () => {
         deleteMode={deleteMode}
         handleCheckboxMark={markDeleteItem}
         onPress={() => {
-          setEditorInfo({ show: true, mode: 'update', item: notes[item] });
+          navigation.navigate('NoteEditor', {
+            item: notes[item],
+            mode: 'update',
+            notes,
+          });
         }}
         onLongPress={(id: string) => {
           setDeleteMode(true);
@@ -285,31 +291,16 @@ const HomeScreen = () => {
             style={[styles.floatingBtn, { backgroundColor: theme.colors.btn1 }]}
             onPress={() => {
               animateBounc();
-              setEditorInfo({ show: true, mode: 'create', item: undefined });
+              navigation.navigate('NoteEditor', {
+                item: undefined,
+                mode: 'create',
+                notes: notes,
+              });
             }}>
             <FeatherIcon name="plus" size={32} color={theme.colors.btnText1} />
           </TouchableOpacity>
         </Animated.View>
       )}
-      <NoteEditor
-        mode={editorInfo.mode}
-        item={editorInfo.item}
-        visible={editorInfo.show}
-        notes={notes}
-        setVisible={val =>
-          setEditorInfo(state => ({ ...state, show: val, item: undefined }))
-        }
-        cb={fetchNotes}
-        showDeleteModal={(id: string) => {
-          setEditorInfo(state => ({
-            ...state,
-            show: false,
-            item: undefined,
-          }));
-          setDeleteArr([id]);
-          setShowDeleteModal(true);
-        }}
-      />
       <DeleteModal
         visible={showDeleteModal}
         text="Do you want to delete this note?"
