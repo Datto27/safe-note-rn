@@ -33,18 +33,9 @@ import {
 } from '@react-navigation/native';
 import { MainStackNavigatorParamList } from '../routes/MainStackNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
+import SearchModal from '../components/Modals/SearchModal';
 
 const { width, height } = Dimensions.get('window');
-
-type Props = {
-  // item?: NoteI;
-  // mode: EditorModeT;
-  // visible: boolean;
-  // notes: { [key: string]: NoteI };
-  // setVisible: (val: boolean) => void;
-  // showDeleteModal: (id: string) => void;
-  // cb: () => void;
-};
 
 const NoteEditorScreen = () => {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -62,6 +53,7 @@ const NoteEditorScreen = () => {
   });
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [activateSearch, setActivateSearch] = useState(false);
   const idRef = useRef('');
   let titleAnim = useRef(new Animated.Value(0)).current;
   let infoAnim = useRef(new Animated.Value(0)).current;
@@ -207,7 +199,29 @@ const NoteEditorScreen = () => {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
           <View style={styles.header}>
-            <SecondaryButton text="Cancel" onPress={handleClose} />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <SecondaryButton text="Cancel" onPress={handleClose} />
+              <PrimaryButton
+                icon={
+                  <FeatherIcon
+                    name="search"
+                    color={theme.colors.btnText1}
+                    size={17}
+                  />
+                }
+                containerStyle={{
+                  paddingHorizontal: 10,
+                  marginVertical: 0,
+                }}
+                onPress={() => setActivateSearch(true)}
+              />
+            </View>
             {mode === 'update' && item && (
               <>
                 <PrimaryButton
@@ -316,6 +330,11 @@ const NoteEditorScreen = () => {
           </Animated.View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
+      <SearchModal
+        visible={activateSearch}
+        text={item?.info}
+        onClose={() => setActivateSearch(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -336,7 +355,7 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: 'absolute',
-    top: 10,
+    top: 0,
     left: 0,
     height: height,
     width: width,
