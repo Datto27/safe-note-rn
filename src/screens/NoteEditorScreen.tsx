@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  Modal,
   Platform,
   SafeAreaView,
   StyleSheet,
+  Text,
   View,
   TouchableOpacity,
   ActivityIndicator,
@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
   Dimensions,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import CustomTextInput from '../components/Inputs/CustomTextInput';
@@ -22,7 +22,7 @@ import { getData, saveData } from '../utils/storage';
 import { NoteI } from '../interfaces/note';
 import TextButton from '../components/Buttons/TextButton';
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+
 import { decryptData, encryptData } from '../utils/encrypt.private';
 import {
   ParamListBase,
@@ -54,15 +54,34 @@ const NoteEditorScreen = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
   const moreButtonRef = useRef<TouchableOpacity>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [activateSearch, setActivateSearch] = useState(false);
   const idRef = useRef('');
   let titleAnim = useRef(new Animated.Value(0)).current;
   let infoAnim = useRef(new Animated.Value(0)).current;
   let inputTimeout = useRef<NodeJS.Timeout>(undefined);
 
+  // ── Auto-save, undo & redo ──────────────────────────────────────────────────
+  type SaveStatus = 'idle' | 'saving' | 'saved';
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const autoSaveTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+  const savedStatusTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+  // Undo: snapshots taken just before each auto-save commits
+  const undoStack = useRef<Array<{ title: string; info: string }>>([]);
+  const [undoCount, setUndoCount] = useState(0);
+  // Redo: snapshots pushed when the user undoes; cleared on fresh edits
+  const redoStack = useRef<Array<{ title: string; info: string }>>([]);
+  const [redoCount, setRedoCount] = useState(0);
+  // Tracks the last persisted state to detect real changes
+  const lastSavedRef = useRef<{ title: string; info: string } | null>(null);
+  // ────────────────────────────────────────────────────────────────────────────
+
   useEffect(() => {
     idRef.current = item ? item.id : Math.random().toString(16).slice(2);
+    // Seed the undo baseline with the "create" empty state immediately
+    if (mode === 'create') {
+      lastSavedRef.current = { title: '', info: '' };
+    }
     getData('key').then(res => {
       setEkey(res);
     });
@@ -70,13 +89,16 @@ const NoteEditorScreen = () => {
 
   useEffect(() => {
     if (mode === 'update' && item) {
+      const decryptedInfo = ekey
+        ? decryptData(item.info, ekey) ?? item.info
+        : item.info;
       setTitle(item.title);
       noteType.current = item.type;
-      if (ekey) {
-        setInfo(decryptData(item.info, ekey) ?? item.info);
-      } else {
-        setInfo(item.info);
-      }
+      setInfo(decryptedInfo);
+      // Seed the undo baseline with the state as it was when the editor opened.
+      // This ensures the first auto-save can push this snapshot so the user
+      // can undo all the way back to the original note.
+      lastSavedRef.current = { title: item.title, info: decryptedInfo };
     }
   }, [item, ekey]);
 
@@ -109,16 +131,16 @@ const NoteEditorScreen = () => {
     navigation.pop();
   };
 
-  const saveNote = async () => {
-    if (!title) {
+  const saveNote = async (titleVal: string, infoVal: string) => {
+    if (!titleVal) {
       return { field: 'title', msg: '' };
     }
 
     if (mode === 'create') {
       const note: NoteI = {
         id: idRef.current,
-        title,
-        info: ekey ? encryptData(info, ekey) : info,
+        title: titleVal,
+        info: ekey ? encryptData(infoVal, ekey) : infoVal,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -136,21 +158,101 @@ const NoteEditorScreen = () => {
 
       const note: NoteI = {
         ...item,
-        title,
-        info: ekey ? encryptData(info, ekey) : info,
+        title: titleVal,
+        info: ekey ? encryptData(infoVal, ekey) : infoVal,
         type: noteType.current,
         updatedAt: new Date(),
       };
 
-      let notes = await getData('notes');
-      if (!notes || notes.length === 0) {
-        notes = {};
+      let allNotes = await getData('notes');
+      if (!allNotes || allNotes.length === 0) {
+        allNotes = {};
       }
 
-      notes[item.id] = note;
-      await saveData('notes', notes);
+      allNotes[item.id] = note;
+      await saveData('notes', allNotes);
     }
-    setIsLoading(false);
+  };
+
+  // Debounced auto-save: called whenever title or info changes
+  const triggerAutoSave = useCallback(
+    (newTitle: string, newInfo: string) => {
+      clearTimeout(autoSaveTimer.current);
+      clearTimeout(savedStatusTimer.current);
+
+      autoSaveTimer.current = setTimeout(async () => {
+        if (!newTitle) return; // don't save without a title
+
+        // Push the previous saved state to undo stack before overwriting
+        if (lastSavedRef.current !== null) {
+          const prev = lastSavedRef.current;
+          const isDifferent =
+            prev.title !== newTitle || prev.info !== newInfo;
+          if (isDifferent) {
+            undoStack.current = [...undoStack.current, prev];
+            setUndoCount(undoStack.current.length);
+            // A fresh edit invalidates redo history
+            redoStack.current = [];
+            setRedoCount(0);
+          }
+        }
+
+        setSaveStatus('saving');
+        await saveNote(newTitle, newInfo);
+        lastSavedRef.current = { title: newTitle, info: newInfo };
+        setSaveStatus('saved');
+
+        savedStatusTimer.current = setTimeout(() => {
+          setSaveStatus('idle');
+        }, 2000);
+      }, 1500);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ekey, mode, notes, item],
+  );
+
+  const handleUndo = () => {
+    if (undoStack.current.length === 0) return;
+    const current = lastSavedRef.current;
+    const previous = undoStack.current[undoStack.current.length - 1];
+    undoStack.current = undoStack.current.slice(0, -1);
+    setUndoCount(undoStack.current.length);
+    // Save current state onto redo stack so it can be re-applied
+    if (current) {
+      redoStack.current = [...redoStack.current, current];
+      setRedoCount(redoStack.current.length);
+    }
+    setTitle(previous.title);
+    setInfo(previous.info);
+    clearTimeout(autoSaveTimer.current);
+    setSaveStatus('saving');
+    saveNote(previous.title, previous.info).then(() => {
+      lastSavedRef.current = previous;
+      setSaveStatus('saved');
+      savedStatusTimer.current = setTimeout(() => setSaveStatus('idle'), 2000);
+    });
+  };
+
+  const handleRedo = () => {
+    if (redoStack.current.length === 0) return;
+    const current = lastSavedRef.current;
+    const next = redoStack.current[redoStack.current.length - 1];
+    redoStack.current = redoStack.current.slice(0, -1);
+    setRedoCount(redoStack.current.length);
+    // Push current state back onto undo stack
+    if (current) {
+      undoStack.current = [...undoStack.current, current];
+      setUndoCount(undoStack.current.length);
+    }
+    setTitle(next.title);
+    setInfo(next.info);
+    clearTimeout(autoSaveTimer.current);
+    setSaveStatus('saving');
+    saveNote(next.title, next.info).then(() => {
+      lastSavedRef.current = next;
+      setSaveStatus('saved');
+      savedStatusTimer.current = setTimeout(() => setSaveStatus('idle'), 2000);
+    });
   };
 
   const convertToList = (txt?: string) => {
@@ -193,6 +295,12 @@ const NoteEditorScreen = () => {
     } else {
       setInfo(txt);
     }
+    triggerAutoSave(title, txt);
+  };
+
+  const handleTitleUpdate = (txt: string) => {
+    setTitle(txt);
+    triggerAutoSave(txt, info);
   };
 
   return (
@@ -250,10 +358,57 @@ const NoteEditorScreen = () => {
               />
             </TouchableOpacity>
 
+            {/* Save status indicator */}
+            {saveStatus !== 'idle' && (
+              <View style={styles.saveStatus}>
+                {saveStatus === 'saving' ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={theme.colors.text1}
+                    style={{ marginRight: 4 }}
+                  />
+                ) : (
+                  <FeatherIcon
+                    name="check"
+                    size={13}
+                    color={theme.colors.text1}
+                    style={{ marginRight: 4 }}
+                  />
+                )}
+                <Text
+                  style={[styles.saveStatusText, { color: theme.colors.text1 }]}>
+                  {saveStatus === 'saving' ? 'Saving…' : 'Saved'}
+                </Text>
+              </View>
+            )}
+
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {/* Undo button */}
+              <TouchableOpacity
+                style={[styles.undoBtn, { opacity: undoCount > 0 ? 1 : 0.3 }]}
+                disabled={undoCount === 0}
+                onPress={handleUndo}>
+                <FeatherIcon
+                  name="corner-up-left"
+                  size={22}
+                  color={theme.colors.text1}
+                />
+              </TouchableOpacity>
+              {/* Redo button */}
+              <TouchableOpacity
+                style={[styles.undoBtn, { opacity: redoCount > 0 ? 1 : 0.3 }]}
+                disabled={redoCount === 0}
+                onPress={handleRedo}>
+                <FeatherIcon
+                  name="corner-up-right"
+                  size={22}
+                  color={theme.colors.text1}
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 style={{
                   padding: 8,
+                  marginLeft: 4,
                   marginRight: mode === 'update' && item ? 8 : 0,
                 }}
                 onPress={() => setActivateSearch(true)}>
@@ -292,7 +447,7 @@ const NoteEditorScreen = () => {
             <CustomTextInput
               placeholder="Title"
               value={title}
-              setValue={setTitle}
+              setValue={handleTitleUpdate}
               containerStyles={{ marginHorizontal: 5, borderWidth: 0 }}
               textStyles={{
                 fontSize: 24,
@@ -322,32 +477,6 @@ const NoteEditorScreen = () => {
               }}
               containerStyles={[styles.inputContainer, { borderWidth: 0 }]}
             />
-            <TouchableOpacity
-              style={[
-                styles.saveBtn,
-                globalStyles.shadow,
-                {
-                  backgroundColor: theme.colors.btn1,
-                },
-              ]}
-              onPress={async () => {
-                const res = await saveNote();
-                if (res?.field) {
-                  setError(res);
-                } else {
-                  handleClose();
-                }
-              }}>
-              {isLoading ? (
-                <ActivityIndicator size={32} color={theme.colors.btnText1} />
-              ) : (
-                <FeatherIcon
-                  name="save"
-                  color={theme.colors.btnText1}
-                  size={30}
-                />
-              )}
-            </TouchableOpacity>
           </Animated.View>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
@@ -408,14 +537,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 25,
   },
-  saveBtn: {
+  undoBtn: {
+    padding: 8,
+  },
+  saveStatus: {
     position: 'absolute',
-    bottom: 14,
-    right: 10,
-    height: 64,
-    width: 64,
-    borderRadius: 32,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    pointerEvents: 'none',
+  },
+  saveStatusText: {
+    fontSize: 12,
+    fontWeight: '500',
+    letterSpacing: 0.3,
+    opacity: 0.7,
   },
 });

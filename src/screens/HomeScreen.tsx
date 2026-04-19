@@ -15,12 +15,10 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import NoteEditor from './NoteEditorScreen';
 import { NoteI } from '../interfaces/note';
 import { getData, saveData } from '../utils/storage';
 import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
-import { EditorInfoT } from '../interfaces/editor-info.type';
 import { useGlobalState } from '../contexts/GlobaState';
 import { globalStyles } from '../constants/globalStyles';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -199,19 +197,29 @@ const HomeScreen = () => {
         },
       ]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.colors.text1 }]}>
-          Notes
-        </Text>
+        <Text style={[styles.title, { color: theme.colors.text1 }]}>Notes</Text>
         <View style={styles.headerBtns}>
           <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => handleListTypeUpdate('grid')}>
-            <FeatherIcon name="grid" size={22} color={listType === 'grid' ? theme.colors.primary : theme.colors.text3} />
+            <FeatherIcon
+              name="grid"
+              size={22}
+              color={
+                listType === 'grid' ? theme.colors.primary : theme.colors.text3
+              }
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => handleListTypeUpdate('list')}>
-            <FeatherIcon name="list" size={24} color={listType === 'list' ? theme.colors.primary : theme.colors.text3} />
+            <FeatherIcon
+              name="list"
+              size={24}
+              color={
+                listType === 'list' ? theme.colors.primary : theme.colors.text3
+              }
+            />
           </TouchableOpacity>
         </View>
       </View>
