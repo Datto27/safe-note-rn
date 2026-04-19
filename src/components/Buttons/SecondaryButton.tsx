@@ -30,12 +30,11 @@ const SecondaryButton = ({
     <TouchableOpacity
       style={[
         styles.container,
-        globalStyles.shadow,
         {
-          backgroundColor: theme.colors.btn2,
-          shadowColor: theme.colors.shadowColor1,
+          backgroundColor: 'transparent',
+          borderColor: theme.colors.primary,
+          borderWidth: 1,
         },
-        ,
         containerStyle,
       ]}
       onPress={onPress}>
@@ -53,14 +52,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginVertical: 10,
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    marginVertical: 8,
     marginHorizontal: 5,
-    borderRadius: 20,
+    borderRadius: 100,
   },
   text: {
-    // fontFamily: 'JosefinSans-Medium',
-    // marginTop: 3,
+    textAlign: 'center',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

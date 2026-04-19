@@ -1,13 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import React, { useEffect, useState } from 'react';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { ProfileI } from '../interfaces/profile';
 import { getData } from '../utils/storage';
 import CustomTextInput from '../components/Inputs/CustomTextInput';
 import PrimaryButton from '../components/Buttons/PrimaryButton';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGlobalState } from '../contexts/GlobaState';
 
 const AuthScreen = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const { theme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI>();
@@ -33,15 +36,22 @@ const AuthScreen = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
-      <View
-        style={[
-          styles.inputsContainer,
-          { backgroundColor: theme.colors.modalBg },
-        ]}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.background1,
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        },
+      ]}>
+      <View style={styles.inputsContainer}>
+        <View style={styles.iconContainer}>
+          <FeatherIcon name="lock" size={48} color={theme.colors.primary} />
+        </View>
         <Text style={[styles.title, { color: theme.colors.text1 }]}>
-          Welcome back {profile?.username}!
+          Welcome back, <Text style={{ color: theme.colors.primary }}>{profile?.username}</Text>!
         </Text>
         <CustomTextInput
           type="password"
@@ -49,6 +59,7 @@ const AuthScreen = () => {
           error={error}
           value={password}
           setValue={setPassword}
+          containerStyles={styles.inputMargin}
         />
         {profile?.hint && (
           <Text style={[styles.hint, { color: theme.colors.text2 }]}>
@@ -61,7 +72,7 @@ const AuthScreen = () => {
           containerStyle={styles.authBtn}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -73,30 +84,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  iconContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
   title: {
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 40,
   },
   inputsContainer: {
-    width: '90%',
-    paddingVertical: 30,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-    borderRadius: 20,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 2,
-    elevation: 1,
+    width: '100%',
+    paddingHorizontal: 32,
+  },
+  inputMargin: {
+    marginBottom: 16,
   },
   hint: {
-    fontSize: 12,
+    fontSize: 13,
     marginTop: 4,
     marginLeft: 8,
+    textAlign: 'center',
   },
   authBtn: {
-    alignSelf: 'center',
-    marginTop: 25,
+    alignSelf: 'stretch',
+    marginTop: 24,
     marginBottom: 0,
   },
 });

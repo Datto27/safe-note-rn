@@ -111,13 +111,10 @@ export const NoteItem = ({
             </View>
           ) : (
             <>
-              <Text style={[styles.date, { color: theme.colors.text2 }]}>
-                Updated At:
-              </Text>
-              <Text style={[styles.date, { color: theme.colors.text2 }]}>
+              <Text style={[styles.date, { color: theme.colors.text3 }]}>
                 {createdAt.toLocaleDateString('en-US')}
               </Text>
-              <Text style={[styles.date, { color: theme.colors.text2 }]}>
+              <Text style={[styles.date, { color: theme.colors.text3 }]}>
                 {parseTime(createdAt.getHours())}:
                 {parseTime(createdAt.getMinutes())}
               </Text>
@@ -187,34 +184,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     minHeight: 70,
     minWidth: '48%',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    margin: 4,
-    borderRadius: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    marginHorizontal: 8,
+    marginVertical: 4,
+    borderRadius: 24,
     zIndex: 99,
   },
   containerLeft: {
     flex: 1,
   },
   title: {
-    fontFamily: 'JosefinSans-Medium',
-    fontSize: 16,
-    marginBottom: 5,
+    fontWeight: '600',
+    fontSize: 15,
+    marginBottom: 4,
   },
   info: {
-    fontFamily: 'JosefinSans-Light',
+    fontSize: 13,
     color: 'white',
     flexWrap: 'wrap',
-    // marginTop: 2,
   },
   containerRight: {
     flexDirection: 'column',
     alignItems: 'flex-end',
   },
   date: {
-    fontFamily: 'JosefinSans-Medium',
-    fontSize: 12,
-    // marginTop: 1.5,
+    fontSize: 11,
+    fontWeight: '500',
   },
   checkboxContainer: {
     flex: 1,

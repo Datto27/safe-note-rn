@@ -200,26 +200,18 @@ const HomeScreen = () => {
       ]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.text1 }]}>
-          List Type
+          Notes
         </Text>
         <View style={styles.headerBtns}>
-          <Animated.View
-            style={[
-              styles.activeOverlay,
-              {
-                backgroundColor: theme.colors.btn1,
-                transform: [{ translateX: btnBgAnim }],
-              },
-            ]}></Animated.View>
           <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => handleListTypeUpdate('grid')}>
-            <FeatherIcon name="grid" size={22} color={theme.colors.btnText3} />
+            <FeatherIcon name="grid" size={22} color={listType === 'grid' ? theme.colors.primary : theme.colors.text3} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerBtn}
             onPress={() => handleListTypeUpdate('list')}>
-            <FeatherIcon name="list" size={24} color={theme.colors.btnText3} />
+            <FeatherIcon name="list" size={24} color={listType === 'list' ? theme.colors.primary : theme.colors.text3} />
           </TouchableOpacity>
         </View>
       </View>
@@ -325,9 +317,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    fontFamily: 'JosefinSans-Medium',
+    fontSize: 28,
+    fontWeight: '700',
   },
   headerBtns: {
     position: 'relative',
@@ -353,15 +344,15 @@ const styles = StyleSheet.create({
   },
   floatingBtnContainer: {
     position: 'absolute',
-    bottom: 15,
-    right: 15,
-    height: 60,
-    width: 60,
+    bottom: 24,
+    right: 24,
+    height: 64,
+    width: 64,
   },
   floatingBtn: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 50,
+    borderRadius: 32,
   },
 });

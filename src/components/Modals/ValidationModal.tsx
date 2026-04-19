@@ -1,5 +1,7 @@
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -52,26 +54,35 @@ const ValidationModal = ({
       <SafeAreaView
         style={[
           styles.container,
-          { backgroundColor: theme.colors.background2_09 },
+          { backgroundColor: 'rgba(0,0,0,0.5)' },
         ]}>
         <TouchableOpacity
           activeOpacity={1}
           style={styles.container}
           onPress={cancelCb}>
-          <View
-            style={[styles.form, { backgroundColor: theme.colors.primary05 }]}>
-            <Text style={[styles.title, { color: theme.colors.text1 }]}>
-              {text}
-            </Text>
-            <CustomTextInput
-              placeholder="Enter User Password"
-              containerStyles={{ marginBottom: 20 }}
-              error={error}
-              value={password}
-              setValue={setPassword}
-            />
-            <PrimaryButton text="Submit" onPress={validate} />
-          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}>
+            <View
+              style={[styles.form, { backgroundColor: theme.colors.modalBg, borderColor: theme.colors.modalBorder, borderWidth: 1 }]}>
+              <Text style={[styles.title, { color: theme.colors.text1 }]}>
+                {text}
+              </Text>
+              <CustomTextInput
+                placeholder="Enter password"
+                type="password"
+                containerStyles={{ marginBottom: 24 }}
+                error={error}
+                value={password}
+                setValue={setPassword}
+              />
+              <PrimaryButton 
+                text="Verify" 
+                onPress={validate} 
+                containerStyle={{ alignSelf: 'stretch' }}
+              />
+            </View>
+          </KeyboardAvoidingView>
         </TouchableOpacity>
       </SafeAreaView>
     </Modal>
@@ -88,15 +99,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   form: {
-    width: '96%',
+    width: '90%',
     alignItems: 'center',
-    padding: 20,
-    borderRadius: 20,
+    padding: 24,
+    borderRadius: 32,
   },
   title: {
-    fontFamily: 'JosefinSans-Bold',
-    fontSize: 24,
-    marginTop: 20,
-    marginBottom: 40,
+    fontSize: 22,
+    fontWeight: '700',
+    marginTop: 10,
+    marginBottom: 32,
+    textAlign: 'center',
   },
 });

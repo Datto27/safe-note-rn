@@ -20,12 +20,10 @@ const TextButton = ({ text, color, style, onPress }: Props) => {
       <Text
         style={[
           styles.text,
-          globalStyles.textShadow,
           color
-            ? { color, textShadowColor: theme.colors.textShadow }
+            ? { color }
             : {
-                color: theme.colors.btnText2,
-                textShadowColor: theme.colors.textShadow,
+                color: theme.colors.primary,
               },
         ]}>
         {text}
@@ -38,10 +36,11 @@ export default TextButton;
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

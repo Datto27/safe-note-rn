@@ -46,7 +46,6 @@ const ProfileCard = ({ profile, setProfile }: Props) => {
         styles.profileCard,
         {
           backgroundColor: theme.colors.modalBg,
-          shadowColor: theme.colors.shadowColor1,
           borderColor: theme.colors.modalBorder,
         },
       ]}>
@@ -63,7 +62,6 @@ const ProfileCard = ({ profile, setProfile }: Props) => {
             <Text
               style={[
                 styles.profileName,
-                theme.colors.shadowColor1 ? styles.textShadow : null,
                 { color: theme.colors.text1 },
               ]}>
               {profile.username}
@@ -83,11 +81,7 @@ const ProfileCard = ({ profile, setProfile }: Props) => {
           <Text
             style={[
               styles.profileName,
-              styles.textShadow,
-              {
-                color: theme.colors.text1,
-                textShadowColor: theme.colors.textShadow,
-              },
+              { color: theme.colors.text1 },
             ]}>
             No Profile
           </Text>
@@ -121,16 +115,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 20,
     marginVertical: 20,
-    marginHorizontal: 10,
-    borderRadius: 20,
+    marginHorizontal: 16,
+    borderRadius: 24,
     borderWidth: 1,
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
-    elevation: 13,
   },
   profileIconContainer: {
     justifyContent: 'center',
@@ -155,10 +142,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     fontSize: 18,
     padding: 5,
-  },
-  textShadow: {
-    textShadowColor: colorsNeon.textShadow,
-    textShadowRadius: 10,
-    textShadowOffset: { width: 0, height: 0 },
   },
 });

@@ -1,32 +1,32 @@
 import { ThemeT } from '../../App';
 
 export const colorsDark: ThemeT['colors'] = {
-  primary: 'rgb(30, 70, 150)',
-  primary05: 'rgba(30, 70, 150, 0.5)',
-  primary02: 'rgba(30, 70, 150, 0.2)',
-  secondary: 'rgb(12, 29, 67)',
-  secondary05: 'rgba(12, 29, 67, 0.5)',
-  secondary04: 'rgba(12, 29, 67, 0.4)',
-  secondary02: 'rgba(12, 29, 67, 0.2)',
-  tertiary: '#08152C',
-  background1: 'rgb(5, 8, 12)',
-  background2: 'rgb(2, 5, 10)',
-  background2_09: 'rgba(3, 5, 10, 0.9)',
-  text1: 'rgb(235, 240, 250)',
-  text2: 'rgb(160, 170, 190)',
-  text3: 'rgb(100, 110, 130)',
-  inputText: 'rgb(235, 240, 250)',
-  btn1: 'rgb(12, 29, 67)',
-  btn2: 'rgb(7, 16, 38)',
-  btnText1: 'rgb(235, 240, 250)',
-  btnText2: 'rgb(80, 140, 245)',
-  btnText3: 'rgb(145, 155, 175)',
-  textShadow: 'rgba(0, 0, 0, 0.4)',
-  shadowColor1: 'rgba(0, 0, 0, 0.3)',
+  primary: '#1e40af', // Navy Blue (Blue 800)
+  primary05: 'rgba(30, 64, 175, 0.5)',
+  primary02: 'rgba(30, 64, 175, 0.2)',
+  secondary: '#1e293b', // Slate 800
+  secondary05: 'rgba(30, 41, 59, 0.5)',
+  secondary04: 'rgba(30, 41, 59, 0.4)',
+  secondary02: 'rgba(30, 41, 59, 0.2)',
+  tertiary: '#0f172a',
+  background1: '#0f172a', // Slate 900
+  background2: '#1e293b', // Slate 800
+  background2_09: 'rgba(30, 41, 59, 0.9)',
+  text1: '#f8fafc',
+  text2: '#cbd5e1',
+  text3: '#64748b',
+  inputText: '#f8fafc',
+  btn1: '#1e40af',
+  btn2: 'transparent',
+  btnText1: '#ffffff',
+  btnText2: '#60a5fa',
+  btnText3: '#94a3b8',
+  textShadow: 'transparent',
+  shadowColor1: 'rgba(0, 0, 0, 0.1)',
   shadowColor2: 'rgba(0, 0, 0, 0.2)',
-  modalBg: 'rgba(9, 12, 23, 0.95)',
+  modalBg: 'rgba(30, 41, 59, 0.95)',
   modalShadow: 'rgba(0, 0, 0, 0.5)',
-  modalBorder: 'rgb(23, 24, 27)',
+  modalBorder: '#334155',
 };
 
 export const colorsLight: ThemeT['colors'] = {

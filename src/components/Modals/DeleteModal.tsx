@@ -66,7 +66,7 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={cancelCb}>
       <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
@@ -101,27 +101,29 @@ export default DeleteModal;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   modalContainer: {
     alignItems: 'center',
     paddingVertical: 40,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-    borderRadius: 40,
+    paddingHorizontal: 24,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     borderWidth: 1,
+    borderBottomWidth: 0,
   },
   title: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 24,
   },
   iconContainer: {
     alignSelf: 'stretch',
     alignItems: 'center',
-    paddingVertical: 20,
-    backgroundColor: 'rgba(244, 0, 0, 0.2)',
-    borderRadius: 10,
+    paddingVertical: 24,
+    backgroundColor: 'rgba(244, 0, 0, 0.05)',
+    borderRadius: 24,
+    marginBottom: 16,
   },
   actionBtns: {
     width: '100%',

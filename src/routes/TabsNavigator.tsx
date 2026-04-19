@@ -5,6 +5,7 @@ import HomeScreen from '../screens/HomeScreen';
 import { useGlobalState } from '../contexts/GlobaState';
 import ProfileScreen from '../screens/ProfileScreen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CustomTabBar } from '../components/Navigation/CustomTabBar';
 
 const Tabs = createMaterialTopTabNavigator();
 
@@ -15,55 +16,17 @@ const TabsNavigator = () => {
   return (
     <Tabs.Navigator
       initialRouteName="Home"
+      tabBar={props => <CustomTabBar {...props} />}
       screenOptions={{
-        tabBarStyle: {
-          elevation: 0,
-          backgroundColor: theme.colors.background2,
-          overflow: 'hidden',
-          borderBottomColor: theme.colors.modalBorder,
-          borderBottomWidth: 1,
-          marginTop: insets.top + 8,
-          margin: 4,
-          borderRadius: 10,
-        },
-        tabBarIndicatorStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        tabBarItemStyle: {
-          flexDirection: 'row',
-        },
-        tabBarInactiveTintColor: theme.colors.btnText3,
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarLabelStyle: {
-          fontSize: 16,
-          fontWeight: '500',
-        },
+        lazy: true,
       }}>
       <Tabs.Screen
         name="Home"
         component={HomeScreen}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <FeatherIcon
-              name="list"
-              size={22}
-              color={focused ? theme.colors.primary : theme.colors.btnText3}
-            />
-          ),
-        }}
       />
       <Tabs.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ focused, color }) => (
-            <FeatherIcon
-              name="user"
-              size={22}
-              color={focused ? theme.colors.primary : theme.colors.btnText3}
-            />
-          ),
-        }}
       />
     </Tabs.Navigator>
   );

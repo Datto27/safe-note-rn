@@ -17,16 +17,16 @@ const CustomHeader = ({ route }: StackHeaderProps) => {
       style={[
         styles.container,
         {
-          backgroundColor: theme.colors.background2,
+          backgroundColor: 'transparent',
           borderBottomColor: theme.colors.modalBorder,
           marginTop: insets.top,
         },
       ]}>
-      <TextButton
-        text="Go Back"
-        style={{ width: 80 }}
-        onPress={() => navigation.goBack()}
-      />
+      <TouchableOpacity
+        style={{ width: 80, padding: 10 }}
+        onPress={() => navigation.goBack()}>
+        <FeatherIcon name="chevron-left" size={28} color={theme.colors.text1} />
+      </TouchableOpacity>
       <Text style={[styles.title, { color: theme.colors.text1 }]}>
         {route.name}
       </Text>
@@ -47,14 +47,12 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    fontFamily: 'JosefinSans-Medium',
-    fontSize: 17,
-    fontWeight: '500',
+    fontSize: 18,
+    fontWeight: '600',
     alignItems: 'center',
     textAlign: 'center',
   },
   emptyView: {
     width: 80,
-    backgroundColor: 'red',
   },
 });

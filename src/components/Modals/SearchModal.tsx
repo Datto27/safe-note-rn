@@ -1,9 +1,12 @@
 import {
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -76,42 +79,42 @@ const SearchModal = ({ visible, text = '', onClose }: Props) => {
           styles.container,
           { backgroundColor: theme.colors.background1 },
         ]}>
-        <View style={styles.header}>
-          <CustomTextInput
-            placeholder="Search"
-            containerStyles={{
-              flex: 1,
-              marginRight: 5,
-              backgroundColor: 'red',
-            }}
-            value={phrase}
-            setValue={setPhrase}
-          />
-          <PrimaryButton
-            icon={
-              <FeatherIcon name="x" color={theme.colors.btnText1} size={20} />
-            }
-            containerStyle={{
-              marginVertical: 0,
-              marginHorizontal: 0,
-            }}
-            onPress={onClose}
-          />
-        </View>
-        <View
-          style={[
-            styles.textContainer,
-            {
-              backgroundColor: theme.colors.background2,
-              borderColor: theme.colors.primary05,
-            },
-          ]}>
-          <ScrollView style={styles.container}>
-            <Text style={{ fontSize: 16, lineHeight: 22 }}>
-              {highlightText(phrase)}
-            </Text>
-          </ScrollView>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}>
+          <View style={styles.header}>
+            <CustomTextInput
+              placeholder="Search in note..."
+              containerStyles={{
+                flex: 1,
+                marginRight: 12,
+              }}
+              value={phrase}
+              setValue={setPhrase}
+            />
+            <TouchableOpacity
+              style={[styles.closeBtn, { backgroundColor: theme.colors.background2, borderColor: theme.colors.modalBorder }]}
+              onPress={onClose}>
+              <FeatherIcon name="x" color={theme.colors.text1} size={24} />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={[
+              styles.textContainer,
+              {
+                backgroundColor: theme.colors.background1,
+              },
+            ]}>
+            <ScrollView 
+              style={styles.container}
+              contentContainerStyle={{ paddingBottom: 40 }}
+            >
+              <Text style={{ fontSize: 16, lineHeight: 28, color: theme.colors.text1 }}>
+                {highlightText(phrase)}
+              </Text>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );
@@ -125,25 +128,28 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    marginTop: 5,
-    paddingVertical: 10,
-    marginHorizontal: 15,
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.05)',
+  },
+  closeBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
     flex: 1,
-    marginHorizontal: 15,
-    borderRadius: 20,
-    borderWidth: 2,
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   text: {
-    flex: 1,
-    fontFamily: 'JosefinSans-Medium',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '500',
-    paddingVertical: 0,
     backgroundColor: 'transparent',
-    marginRight: 5,
-    marginVertical: 10,
   },
 });

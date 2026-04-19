@@ -1,7 +1,7 @@
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -97,18 +97,18 @@ const DataReviewModal = ({ visible, type, text, onClose }: Props) => {
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={onClose}>
       <SafeAreaView
         style={[
           styles.container,
-          { backgroundColor: theme.colors.background1 },
+          { backgroundColor: 'rgba(0,0,0,0.5)' },
         ]}>
         <KeyboardAvoidingView
-          behavior={'padding'}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={[
             styles.formContainer,
-            { backgroundColor: theme.colors.modalBg },
+            { backgroundColor: theme.colors.modalBg, borderColor: theme.colors.modalBorder, borderWidth: 1 },
           ]}>
           <ScrollView contentContainerStyle={[styles.dataScroll]}>
             {type === 'export' ? (
@@ -216,20 +216,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     maxHeight: 500,
-    paddingVertical: 30,
-    marginHorizontal: 15,
-    borderRadius: 30,
+    width: '90%',
+    paddingVertical: 32,
+    borderRadius: 32,
   },
   dataScroll: {
     flexGrow: 1,
-    width: '90%',
-    paddingHorizontal: 5,
+    width: '100%',
+    paddingHorizontal: 20,
     paddingVertical: 20,
   },
   btnsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
+    marginTop: 16,
   },
 });

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Modal,
+  Platform,
   SafeAreaView,
   StyleSheet,
   View,
@@ -14,17 +15,15 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import CustomTextInput from '../components/Inputs/CustomTextInput';
 import { getData, saveData } from '../utils/storage';
 import { NoteI } from '../interfaces/note';
 import TextButton from '../components/Buttons/TextButton';
-import { EditorModeT } from '../interfaces/editor-info.type';
-import SecondaryButton from '../components/Buttons/SecondaryButton';
 import { useGlobalState } from '../contexts/GlobaState';
 import { globalStyles } from '../constants/globalStyles';
 import { decryptData, encryptData } from '../utils/encrypt.private';
-import PrimaryButton from '../components/Buttons/PrimaryButton';
 import {
   ParamListBase,
   RouteProp,
@@ -38,6 +37,7 @@ import SearchModal from '../components/Modals/SearchModal';
 const { width, height } = Dimensions.get('window');
 
 const NoteEditorScreen = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
   const route =
     useRoute<RouteProp<MainStackNavigatorParamList, 'NoteEditor'>>();
@@ -52,6 +52,8 @@ const NoteEditorScreen = () => {
     msg: '',
   });
   const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+  const moreButtonRef = useRef<TouchableOpacity>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activateSearch, setActivateSearch] = useState(false);
   const idRef = useRef('');
@@ -196,91 +198,107 @@ const NoteEditorScreen = () => {
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={'padding'}>
-          <View style={styles.header}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <SecondaryButton text="Cancel" onPress={handleClose} />
-              <PrimaryButton
-                icon={
-                  <FeatherIcon
-                    name="search"
-                    color={theme.colors.btnText1}
-                    size={17}
-                  />
-                }
-                containerStyle={{
-                  paddingHorizontal: 10,
-                  marginVertical: 0,
-                }}
-                onPress={() => setActivateSearch(true)}
+      {showDropdown && (
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.dropdownContainer}
+          onPress={() => setShowDropdown(false)}>
+          <View
+            style={[
+              styles.dropdown,
+              {
+                top: dropdownPos.top,
+                right: dropdownPos.right,
+                backgroundColor: theme.colors.background2,
+                borderColor: theme.colors.modalBorder,
+              },
+            ]}>
+            {noteType.current === 'list' ? (
+              <TextButton
+                text="Convert To Text"
+                color={theme.colors.btnText1}
+                onPress={convertToNormal}
+                style={styles.dropdownBtn}
               />
-            </View>
-            {mode === 'update' && item && (
-              <>
-                <PrimaryButton
-                  icon={
+            ) : (
+              <TextButton
+                text="Add List Bullets   •"
+                color={theme.colors.btnText1}
+                onPress={() => convertToList()}
+                style={styles.dropdownBtn}
+              />
+            )}
+            <TextButton
+              text="Delete"
+              color="red"
+              onPress={() => navigation.pop()}
+              style={styles.dropdownBtn}
+            />
+          </View>
+        </TouchableOpacity>
+      )}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View style={[styles.header, { marginTop: insets.top + 10 }]}>
+            <TouchableOpacity style={{ padding: 8 }} onPress={handleClose}>
+              <FeatherIcon
+                name="chevron-left"
+                size={28}
+                color={theme.colors.text1}
+              />
+            </TouchableOpacity>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={{
+                  padding: 8,
+                  marginRight: mode === 'update' && item ? 8 : 0,
+                }}
+                onPress={() => setActivateSearch(true)}>
+                <FeatherIcon
+                  name="search"
+                  size={24}
+                  color={theme.colors.text1}
+                />
+              </TouchableOpacity>
+              {mode === 'update' && item && (
+                <>
+                  <TouchableOpacity
+                    ref={moreButtonRef}
+                    style={{ padding: 8 }}
+                    onPress={() => {
+                      moreButtonRef.current?.measure((_x, _y, w, h, px, py) => {
+                        setDropdownPos({
+                          top: py + h + 4,
+                          right: Dimensions.get('window').width - px - w,
+                        });
+                        setShowDropdown(!showDropdown);
+                      });
+                    }}>
                     <FeatherIcon
                       name="more-horizontal"
-                      size={17}
-                      color={theme.colors.btnText1}
+                      size={24}
+                      color={theme.colors.text1}
                     />
-                  }
-                  onPress={() => setShowDropdown(!showDropdown)}
-                />
-                {showDropdown && (
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    style={styles.dropdownContainer}
-                    onPress={() => setShowDropdown(false)}>
-                    <View
-                      style={[
-                        styles.dropdown,
-                        {
-                          backgroundColor: theme.colors.background2,
-                          borderColor: theme.colors.primary,
-                        },
-                      ]}>
-                      {noteType.current === 'list' ? (
-                        <TextButton
-                          text="Convert To Text"
-                          color={theme.colors.btnText1}
-                          onPress={convertToNormal}
-                          style={styles.dropdownBtn}
-                        />
-                      ) : (
-                        <TextButton
-                          text="Add List Bullets   •"
-                          color={theme.colors.btnText1}
-                          onPress={() => convertToList()}
-                          style={styles.dropdownBtn}
-                        />
-                      )}
-                      <TextButton
-                        text="Delete"
-                        color="red"
-                        onPress={() => navigation.pop()}
-                        style={styles.dropdownBtn}
-                      />
-                    </View>
                   </TouchableOpacity>
-                )}
-              </>
-            )}
+                </>
+              )}
+            </View>
           </View>
+
           <Animated.View style={{ opacity: titleAnim }}>
             <CustomTextInput
               placeholder="Title"
               value={title}
               setValue={setTitle}
-              containerStyles={{ marginHorizontal: 5 }}
-              textStyles={{ fontSize: 18, color: theme.colors.text1 }}
+              containerStyles={{ marginHorizontal: 5, borderWidth: 0 }}
+              textStyles={{
+                fontSize: 24,
+                fontWeight: '700',
+                color: theme.colors.text1,
+              }}
               error={error.field === 'title' ? error.msg : null}
             />
           </Animated.View>
@@ -297,8 +315,12 @@ const NoteEditorScreen = () => {
               numberOfLines={20}
               value={info}
               setValue={handleInputUpdate}
-              textStyles={{ color: theme.colors.text1 }}
-              containerStyles={styles.inputContainer}
+              textStyles={{
+                color: theme.colors.text1,
+                fontSize: 16,
+                lineHeight: 26,
+              }}
+              containerStyles={[styles.inputContainer, { borderWidth: 0 }]}
             />
             <TouchableOpacity
               style={[
@@ -306,7 +328,6 @@ const NoteEditorScreen = () => {
                 globalStyles.shadow,
                 {
                   backgroundColor: theme.colors.btn1,
-                  shadowColor: theme.colors.shadowColor2,
                 },
               ]}
               onPress={async () => {
@@ -344,14 +365,14 @@ export default NoteEditorScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 8,
   },
   header: {
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 5,
-    marginBottom: 15,
+    marginBottom: 8,
   },
   dropdownContainer: {
     position: 'absolute',
@@ -363,12 +384,15 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     position: 'absolute',
-    top: 60,
-    right: 5,
     width: 200,
-    paddingVertical: 5,
-    borderWidth: 2,
-    borderRadius: 20,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
   dropdownBtn: {
     paddingVertical: 6,
@@ -386,14 +410,12 @@ const styles = StyleSheet.create({
   },
   saveBtn: {
     position: 'absolute',
-    bottom: 7,
-    right: 5,
-    padding: 15,
-    borderRadius: 50,
-    borderWidth: 1,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
+    bottom: 14,
+    right: 10,
+    height: 64,
+    width: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

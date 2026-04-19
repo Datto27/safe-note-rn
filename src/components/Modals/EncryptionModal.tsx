@@ -1,7 +1,7 @@
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -79,20 +79,23 @@ const EncryptionModal = ({
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={cancelCb}>
       <SafeAreaView
         style={[
           styles.container,
-          { backgroundColor: theme.colors.background1 },
+          { backgroundColor: 'rgba(0,0,0,0.5)' },
         ]}>
-        <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+          style={styles.container}>
           <View
             style={[
               styles.form,
               {
                 backgroundColor: theme.colors.modalBg,
-                shadowColor: theme.colors.shadowColor1,
+                borderColor: theme.colors.modalBorder,
+                borderWidth: 1,
               },
             ]}>
             <Text style={[styles.title, { color: theme.colors.text1 }]}>
@@ -143,37 +146,30 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   form: {
-    width: '96%',
+    width: '90%',
     alignItems: 'center',
-    padding: 20,
-    marginHorizontal: 20,
-    borderRadius: 30,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
-    elevation: 10,
+    padding: 24,
+    borderRadius: 32,
   },
   title: {
-    fontFamily: 'JosefinSans-Medium',
     textAlign: 'center',
-    fontSize: 22,
-    marginTop: 20,
+    fontSize: 24,
+    fontWeight: '700',
+    marginTop: 10,
   },
   text: {
-    fontFamily: 'JosefinSans-Medium',
     textAlign: 'center',
     fontSize: 14,
-    marginTop: 20,
-    marginBottom: 50,
+    lineHeight: 20,
+    marginTop: 12,
+    marginBottom: 32,
+    opacity: 0.8,
   },
   btnsSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginTop: 40,
+    marginTop: 32,
   },
 });

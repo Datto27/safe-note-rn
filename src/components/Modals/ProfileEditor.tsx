@@ -1,9 +1,11 @@
 import {
   KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -69,78 +71,72 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
     <Modal
       transparent
       visible={visible}
-      animationType="fade"
+      animationType="slide"
       onRequestClose={handleClose}>
       <SafeAreaView
         style={[
           styles.container,
-          { backgroundColor: theme.colors.background1 },
+          { backgroundColor: 'rgba(0,0,0,0.5)' },
         ]}>
-        <KeyboardAvoidingView behavior={'padding'}>
-          <ScrollView contentContainerStyle={styles.scrollView}>
-            <View
-              style={[
-                styles.wrapper,
-                { shadowColor: theme.colors.modalShadow },
-              ]}>
-              <View
-                style={[
-                  styles.inputsContainer,
-                  {
-                    backgroundColor: theme.colors.modalBg,
-                    borderColor: theme.colors.modalBorder,
-                  },
-                ]}>
-                <CustomTextInput
-                  placeholder="Username"
-                  containerStyles={{ marginVertical: 7 }}
-                  error={error.field === 'username' ? error.msg : null}
-                  value={username}
-                  setValue={setUsername}
-                />
-                <CustomTextInput
-                  type="password"
-                  placeholder="Password"
-                  containerStyles={{ marginVertical: 10 }}
-                  error={error.field === 'password' ? error.msg : null}
-                  value={password}
-                  setValue={setPassword}
-                />
-                <CustomTextInput
-                  type="password"
-                  placeholder="Repeat Password"
-                  containerStyles={{ marginVertical: 10 }}
-                  error={error.field === 'rePassword' ? error.msg : null}
-                  value={rePassword}
-                  setValue={setRePassword}
-                />
-                <CustomTextInput
-                  placeholder="Hint for remember the password"
-                  containerStyles={{ marginVertical: 10 }}
-                  value={hint}
-                  setValue={setHint}
-                />
-                <View style={styles.actionBtns}>
-                  <SecondaryButton
-                    text="Cancel"
-                    onPress={() => handleClose()}
+        <TouchableWithoutFeedback onPress={handleClose}>
+          <View style={styles.flex1}>
+            <View style={styles.flex1} />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={{ width: '100%' }}>
+              <TouchableWithoutFeedback>
+                <View
+                  style={[
+                    styles.inputsContainer,
+                    {
+                      backgroundColor: theme.colors.modalBg,
+                      borderColor: theme.colors.modalBorder,
+                    },
+                  ]}>
+                  <CustomTextInput
+                    placeholder="Username"
+                    containerStyles={styles.input}
+                    error={error.field === 'username' ? error.msg : null}
+                    value={username}
+                    setValue={setUsername}
                   />
-                  {mode === 'create' ? (
+                  <CustomTextInput
+                    type="password"
+                    placeholder="Password"
+                    containerStyles={styles.input}
+                    error={error.field === 'password' ? error.msg : null}
+                    value={password}
+                    setValue={setPassword}
+                  />
+                  <CustomTextInput
+                    type="password"
+                    placeholder="Repeat Password"
+                    containerStyles={styles.input}
+                    error={error.field === 'rePassword' ? error.msg : null}
+                    value={rePassword}
+                    setValue={setRePassword}
+                  />
+                  <CustomTextInput
+                    placeholder="Hint for the password"
+                    containerStyles={styles.input}
+                    value={hint}
+                    setValue={setHint}
+                  />
+                  <View style={styles.actionBtns}>
+                    <SecondaryButton
+                      text="Cancel"
+                      onPress={() => handleClose()}
+                    />
                     <PrimaryButton
-                      text="Create"
+                      text={mode === 'create' ? 'Create' : 'Update'}
                       onPress={() => createProfile()}
                     />
-                  ) : (
-                    <PrimaryButton
-                      text="Update"
-                      onPress={() => createProfile()}
-                    />
-                  )}
+                  </View>
                 </View>
-              </View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+          </View>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
     </Modal>
   );
@@ -151,35 +147,29 @@ export default ProfileEditor;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 40,
   },
-  scrollView: {
-    flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wrapper: {
-    marginHorizontal: 5,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 20,
-    borderRadius: 20,
+  flex1: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'flex-end',
   },
   inputsContainer: {
-    width: '95%',
+    width: '100%',
     paddingTop: 40,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    borderRadius: 30,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     borderWidth: 1,
+    borderBottomWidth: 0,
+  },
+  input: {
+    marginVertical: 8,
   },
   actionBtns: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 15,
+    marginTop: 24,
   },
 });

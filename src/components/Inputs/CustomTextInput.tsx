@@ -44,12 +44,10 @@ const CustomTextInput = ({
       activeOpacity={1}
       style={[
         styles.container,
-        globalStyles.shadow,
         containerStyles,
         {
           backgroundColor: theme.colors.background2_09,
           borderColor: theme.colors.primary05,
-          shadowColor: theme.colors.shadowColor2,
         },
         error ? styles.error : {},
       ]}
@@ -103,11 +101,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    borderRadius: 25,
+    paddingHorizontal: 16,
+    borderRadius: 24,
     borderWidth: 1,
-    borderLeftWidth: 3,
-    borderRightWidth: 3,
   },
   error: {
     borderColor: 'red',

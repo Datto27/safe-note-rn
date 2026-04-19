@@ -1,11 +1,13 @@
 import {
   LayoutAnimation,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import {
   colorsDark,
@@ -29,6 +31,7 @@ import ProfileCard from '../components/ProfileCard';
 import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const { theme, setTheme } = useGlobalState();
   const [profile, setProfile] = useState<ProfileI | null>(null);
@@ -74,128 +77,72 @@ const ProfileScreen = () => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background1 }]}>
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.colors.background1,
+          paddingBottom: insets.bottom + 20,
+        },
+      ]}>
       <ProfileCard profile={profile} setProfile={setProfile} />
+      <View style={styles.sectionHeader}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text1 }]}>
+          Theme
+        </Text>
+      </View>
       <View
         style={[
           styles.themesContainer,
-          { backgroundColor: theme.colors.background2_09 },
+          { backgroundColor: theme.colors.background2 },
         ]}>
-        <TouchableOpacity
-          style={[
-            styles.theme,
-            {
-              backgroundColor:
-                theme.type === ThemeEnum.DARK
-                  ? 'white'
-                  : theme.colors.secondary05,
-            },
-          ]}
-          onPress={() =>
-            setTheme({ type: ThemeEnum.DARK, colors: colorsDark })
-          }>
-          <View style={styles.themeFrame}>
+        {[
+          { type: ThemeEnum.DARK, colors: colorsDark, label: 'Dark' },
+          { type: ThemeEnum.LIGHT, colors: colorsLight, label: 'Light' },
+          { type: ThemeEnum.YELLOW, colors: colorsYellow, label: 'Gold' },
+          { type: ThemeEnum.NEON, colors: colorsNeon, label: 'Neon' },
+        ].map(item => (
+          <TouchableOpacity
+            key={item.type}
+            style={[
+              styles.themePill,
+              theme.type === item.type && {
+                backgroundColor: theme.colors.primary,
+              },
+            ]}
+            onPress={() => setTheme({ type: item.type, colors: item.colors })}>
             <View
               style={[
-                styles.themeColor,
-                { backgroundColor: colorsDark.primary },
+                styles.themeDot,
+                { backgroundColor: item.colors.primary },
+                theme.type === item.type && {
+                  borderColor: 'white',
+                  borderWidth: 2,
+                },
               ]}
             />
-            <View
+            <Text
               style={[
-                styles.themeColor,
-                { backgroundColor: colorsDark.secondary },
-              ]}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.theme,
-            {
-              backgroundColor:
-                theme.type === ThemeEnum.LIGHT
-                  ? 'white'
-                  : theme.colors.secondary05,
-            },
-          ]}
-          onPress={() =>
-            setTheme({ type: ThemeEnum.LIGHT, colors: colorsLight })
-          }>
-          <View style={styles.themeFrame}>
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsLight.primary },
-              ]}
-            />
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsLight.secondary },
-              ]}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.theme,
-            {
-              backgroundColor:
-                theme.type === ThemeEnum.YELLOW
-                  ? 'white'
-                  : theme.colors.secondary05,
-            },
-          ]}
-          onPress={() =>
-            setTheme({ type: ThemeEnum.YELLOW, colors: colorsYellow })
-          }>
-          <View style={styles.themeFrame}>
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsYellow.primary },
-              ]}
-            />
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsYellow.secondary },
-              ]}
-            />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.theme,
-            styles.shadow,
-            {
-              backgroundColor:
-                theme.type === ThemeEnum.NEON
-                  ? 'white'
-                  : theme.colors.secondary05,
-            },
-          ]}
-          onPress={() =>
-            setTheme({ type: ThemeEnum.NEON, colors: colorsNeon })
-          }>
-          <View style={styles.themeFrame}>
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsNeon.primary },
-              ]}
-            />
-            <View
-              style={[
-                styles.themeColor,
-                { backgroundColor: colorsNeon.secondary },
-              ]}
-            />
-          </View>
-        </TouchableOpacity>
+                styles.themeLabel,
+                {
+                  color:
+                    theme.type === item.type ? 'white' : theme.colors.text2,
+                },
+              ]}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
-      <View style={[styles.encryptionSection]}>
+      <View style={styles.sectionHeader}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text1 }]}>
+          Security & Archive
+        </Text>
+      </View>
+      <View
+        style={[
+          styles.encryptionSection,
+          { backgroundColor: theme.colors.background2 },
+        ]}>
         {ekey ? (
           <View style={styles.encryptionBtns}>
             <TextButton
@@ -213,9 +160,7 @@ const ProfileScreen = () => {
                 }
               }}
             />
-            <SecondaryButton
-              text="Remove"
-              style={{ color: 'red' }}
+            <TouchableOpacity
               onPress={() => {
                 if (profile) {
                   setModal('validate');
@@ -228,7 +173,9 @@ const ProfileScreen = () => {
                   setModal('remove-encrypt');
                 }
               }}
-            />
+              style={{ padding: 10 }}>
+              <FeatherIcon name="trash-2" size={20} color="red" />
+            </TouchableOpacity>
           </View>
         ) : (
           <TextButton
@@ -247,6 +194,7 @@ const ProfileScreen = () => {
             }}
           />
         )}
+        <View style={styles.divider} />
         <TextButton
           text="Show Deleted Notes"
           color="red"
@@ -255,7 +203,7 @@ const ProfileScreen = () => {
       </View>
       <View
         style={{
-          height: showDataOptions ? 190 : 50,
+          height: showDataOptions ? 190 : 80,
           overflow: 'hidden',
           marginHorizontal: 10,
         }}>
@@ -356,60 +304,69 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  sectionHeader: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    opacity: 0.6,
+  },
   themesContainer: {
     flexDirection: 'row',
-    marginHorizontal: 10,
-    padding: 8,
-    borderRadius: 20,
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    padding: 12,
+    borderRadius: 24,
   },
-  theme: {
-    padding: 6,
-    marginHorizontal: 8,
-    borderRadius: 50,
-  },
-  themeFrame: {
+  themePill: {
     flexDirection: 'row',
-    borderRadius: 50,
-    overflow: 'hidden',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 16,
   },
-  shadow: {
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 1,
-    shadowRadius: 10,
-    // elevation: 5,
+  themeDot: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    marginRight: 8,
   },
-  textShadow: {
-    textShadowColor: colorsNeon.textShadow,
-    textShadowRadius: 10,
-    textShadowOffset: { width: 0, height: 0 },
-  },
-  themeColor: {
-    height: 30,
-    width: 15,
+  themeLabel: {
+    fontSize: 13,
+    fontWeight: '600',
   },
   encryptionSection: {
-    alignItems: 'flex-start',
-    padding: 0,
-    marginVertical: 15,
-    marginHorizontal: 5,
-    borderRadius: 20,
+    marginHorizontal: 16,
+    borderRadius: 24,
+    padding: 8,
   },
   encryptionBtns: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
+    paddingRight: 10,
   },
   dropdownBtn: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 24,
+    marginTop: 20,
   },
   dropText: {
-    fontSize: 18,
-    fontFamily: 'JosefinSans-Medium',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    marginHorizontal: 16,
   },
 });
