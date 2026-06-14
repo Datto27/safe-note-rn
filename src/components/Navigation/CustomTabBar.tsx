@@ -96,11 +96,18 @@ export const CustomTabBar = ({
 
           // Get icon from options or default
           const renderIcon = () => {
+            const color = isFocused ? '#ffffff' : theme.colors.text3;
             if (route.name === 'Home') {
-              return <FeatherIcon name="list" size={20} color={isFocused ? '#ffffff' : theme.colors.text3} />;
+              return <FeatherIcon name="list" size={18} color={color} />;
+            }
+            if (route.name === 'Todo') {
+              return <FeatherIcon name="check-square" size={18} color={color} />;
+            }
+            if (route.name === 'Reminders') {
+              return <FeatherIcon name="bell" size={18} color={color} />;
             }
             if (route.name === 'Profile') {
-              return <FeatherIcon name="user" size={20} color={isFocused ? '#ffffff' : theme.colors.text3} />;
+              return <FeatherIcon name="user" size={18} color={color} />;
             }
             return null;
           };
@@ -158,14 +165,14 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
   },
   label: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginTop: 2,
+    fontSize: 11,
     fontWeight: '600',
   },
 });

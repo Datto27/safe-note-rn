@@ -9,6 +9,11 @@ import React, {
 import { SafeAreaView, StatusBar } from 'react-native';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import BootSplash from 'react-native-bootsplash';
+import notifee from '@notifee/react-native';
+import {
+  ensureReminderChannel,
+  requestNotificationPermission,
+} from './src/utils/notifications';
 import {
   colorsDark,
   colorsLight,
@@ -96,6 +101,16 @@ function App(): React.JSX.Element {
     type: ThemeEnum.DARK,
     colors: colorsDark,
   });
+
+  useEffect(() => {
+    // Set up reminder notifications: request permission, create the channel,
+    // and handle taps while the app is in the foreground.
+    requestNotificationPermission()
+      .then(() => ensureReminderChannel())
+      .catch(() => {});
+    const unsubscribe = notifee.onForegroundEvent(() => {});
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     const init = async () => {};
