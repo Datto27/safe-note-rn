@@ -1,6 +1,7 @@
 import {
   Animated,
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   ListRenderItemInfo,
   Platform,
@@ -41,7 +42,10 @@ const TodoScreen = () => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteArr, setDeleteArr] = useState<string[]>([]);
+  const [showInput, setShowInput] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
+  const inputAnim = useRef(new Animated.Value(0)).current;
+  const quickAddInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     fetchTasks();
@@ -73,6 +77,27 @@ const TodoScreen = () => {
     setTasks(items);
   };
 
+  const expandInput = () => {
+    setShowInput(true);
+    Animated.timing(inputAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => quickAddInputRef.current?.focus());
+  };
+
+  const collapseInput = () => {
+    Keyboard.dismiss();
+    Animated.timing(inputAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowInput(false);
+      setQuickAdd('');
+    });
+  };
+
   const handleQuickAdd = async () => {
     const title = quickAdd.trim();
     if (!title) return;
@@ -87,8 +112,20 @@ const TodoScreen = () => {
       updatedAt: new Date(),
     };
     await saveData('tasks', all);
-    setQuickAdd('');
     fetchTasks();
+    collapseInput();
+  };
+
+  const handleMainBtnPress = () => {
+    if (showInput) {
+      if (quickAdd.trim()) {
+        handleQuickAdd();
+      } else {
+        collapseInput();
+      }
+    } else {
+      expandInput();
+    }
   };
 
   const handleToggleComplete = async (id: string) => {
@@ -269,24 +306,61 @@ const TodoScreen = () => {
         style={[
           styles.quickAddRow,
           {
-            backgroundColor: theme.colors.background2,
-            borderColor: theme.colors.modalBorder,
             paddingBottom: insets.bottom + 10,
           },
         ]}>
-        <TextInput
-          style={[styles.quickAddInput, { color: theme.colors.inputText }]}
-          placeholder="Add a task…"
-          placeholderTextColor={theme.colors.text3}
-          value={quickAdd}
-          onChangeText={setQuickAdd}
-          onSubmitEditing={handleQuickAdd}
-          returnKeyType="done"
-        />
+        {showInput ? (
+          <Animated.View
+            style={[
+              styles.quickAddInputWrap,
+              {
+                opacity: inputAnim,
+                transform: [
+                  {
+                    translateX: inputAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [24, 0],
+                    }),
+                  },
+                ],
+              },
+            ]}>
+            <TextInput
+              ref={quickAddInputRef}
+              style={[styles.quickAddInput, {
+                color: theme.colors.inputText,
+                backgroundColor: theme.colors.background2,
+                borderColor: theme.colors.modalBorder,
+              }]}
+              placeholder="Add a task…"
+              placeholderTextColor={theme.colors.text3}
+              value={quickAdd}
+              onChangeText={setQuickAdd}
+              onSubmitEditing={handleQuickAdd}
+              returnKeyType="done"
+            />
+          </Animated.View>
+        ) : null}
         <TouchableOpacity
           style={[styles.quickAddBtn, { backgroundColor: theme.colors.btn1 }]}
-          onPress={handleQuickAdd}>
-          <FeatherIcon name="plus" size={26} color={theme.colors.btnText1} />
+          onPress={handleMainBtnPress}>
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  scale: inputAnim.interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [1, 0.7, 1],
+                  }),
+                },
+              ],
+            }}>
+            <FeatherIcon
+              name={showInput ? 'check' : 'plus'}
+              size={32}
+              color={theme.colors.btnText1}
+            />
+          </Animated.View>
         </TouchableOpacity>
       </View>
 
@@ -365,21 +439,26 @@ const styles = StyleSheet.create({
   quickAddRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingHorizontal: 16,
     paddingTop: 10,
-    borderTopWidth: 1,
+  },
+  quickAddInputWrap: {
+    flex: 1,
+    marginRight: 12,
   },
   quickAddInput: {
-    flex: 1,
     fontSize: 16,
     fontFamily: 'JosefinSans-Medium',
     paddingVertical: 10,
-    marginRight: 12,
+    borderRadius: 50,
+    borderWidth: 1,
+    paddingHorizontal: 15,
   },
   quickAddBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -2,12 +2,13 @@ import {
   Animated,
   Easing,
   Modal,
-  SafeAreaView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, { useEffect, useRef } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import TextButton from '../Buttons/TextButton';
@@ -22,6 +23,8 @@ type Props = {
 
 const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
   const { theme } = useGlobalState();
+  const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   const animateBin = rotateAnim.interpolate({
@@ -68,12 +71,16 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
       visible={visible}
       animationType="slide"
       onRequestClose={cancelCb}>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
+      <View
+        style={[
+          styles.container,
+          { width, height, backgroundColor: theme.colors.modalBg },
+        ]}>
         <View
           style={[
             styles.modalContainer,
             {
+              paddingBottom: styles.modalContainer.paddingVertical + insets.bottom,
               backgroundColor: theme.colors.background2,
               borderColor: theme.colors.text3,
             },
@@ -91,7 +98,7 @@ const DeleteModal = ({ text, visible, deleteCb, cancelCb }: Props) => {
             <TextButton text="Delete" color="red" onPress={() => deleteCb()} />
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 };

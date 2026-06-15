@@ -1,13 +1,14 @@
 import {
   Modal,
   Platform,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -60,6 +61,8 @@ const TaskEditorModal = ({
   onDelete,
 }: Props) => {
   const { theme } = useGlobalState();
+  const insets = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [priority, setPriority] = useState<TaskDraft['priority']>('low');
@@ -91,12 +94,16 @@ const TaskEditorModal = ({
       visible={visible}
       animationType="slide"
       onRequestClose={onClose}>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: theme.colors.modalBg }]}>
+      <View
+        style={[
+          styles.container,
+          { width, height, backgroundColor: theme.colors.modalBg },
+        ]}>
         <View
           style={[
             styles.sheet,
             {
+              paddingBottom: styles.sheet.paddingBottom + insets.bottom,
               backgroundColor: theme.colors.background2,
               borderColor: theme.colors.modalBorder,
             },
@@ -213,7 +220,7 @@ const TaskEditorModal = ({
             />
           </View>
         </View>
-      </SafeAreaView>
+      </View>
     </Modal>
   );
 };
