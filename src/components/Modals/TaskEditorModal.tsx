@@ -1,14 +1,11 @@
 import {
-  Modal,
   Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
-  useWindowDimensions,
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -16,6 +13,8 @@ import PrimaryButton from '../Buttons/PrimaryButton';
 import SecondaryButton from '../Buttons/SecondaryButton';
 import { useGlobalState } from '../../contexts/GlobaState';
 import { TaskI } from '../../interfaces/task';
+import ModalCard from './ModalCard';
+import { dangerColor } from '../../constants/colors';
 
 export type TaskDraft = {
   title: string;
@@ -61,8 +60,6 @@ const TaskEditorModal = ({
   onDelete,
 }: Props) => {
   const { theme } = useGlobalState();
-  const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [priority, setPriority] = useState<TaskDraft['priority']>('low');
@@ -89,168 +86,127 @@ const TaskEditorModal = ({
   };
 
   return (
-    <Modal
-      transparent
+    <ModalCard
       visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}>
-      <View
-        style={[
-          styles.container,
-          { width, height, backgroundColor: theme.colors.modalBg },
-        ]}>
-        <View
-          style={[
-            styles.sheet,
-            {
-              paddingBottom: styles.sheet.paddingBottom + insets.bottom,
-              backgroundColor: theme.colors.background2,
-              borderColor: theme.colors.modalBorder,
-            },
-          ]}>
-          <View style={styles.headerRow}>
-            <Text style={[styles.heading, { color: theme.colors.text1 }]}>
-              {mode === 'create' ? 'New task' : 'Edit task'}
-            </Text>
-            {mode === 'update' && onDelete ? (
-              <TouchableOpacity onPress={onDelete}>
-                <FeatherIcon name="trash-2" size={22} color="red" />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-
-          <CustomTextInput
-            placeholder="Task title"
-            value={title}
-            setValue={txt => {
-              setTitle(txt);
-              if (error) setError(false);
-            }}
-            error={error ? 'Title is required' : null}
-            containerStyles={{ marginBottom: 16 }}
+      onClose={onClose}
+      icon="check-square"
+      title={mode === 'create' ? 'New Task' : 'Edit Task'}
+      subtitle="Set a priority and an optional due date"
+      headerAction={
+        mode === 'update' && onDelete ? (
+          <TouchableOpacity
+            onPress={onDelete}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <FeatherIcon name="trash-2" size={20} color={dangerColor} />
+          </TouchableOpacity>
+        ) : undefined
+      }
+      footer={
+        <>
+          <SecondaryButton text="Cancel" onPress={onClose} />
+          <PrimaryButton
+            text={mode === 'create' ? 'Add' : 'Save'}
+            onPress={handleSave}
           />
+        </>
+      }>
+      <CustomTextInput
+        placeholder="Task title"
+        value={title}
+        setValue={txt => {
+          setTitle(txt);
+          if (error) setError(false);
+        }}
+        error={error ? 'Title is required' : null}
+        containerStyles={{ marginBottom: 16 }}
+      />
 
-          <CustomTextInput
-            placeholder="Notes (optional)"
-            multiline
-            numberOfLines={4}
-            value={note}
-            setValue={setNote}
-            containerStyles={{ marginBottom: 16, minHeight: 90 }}
-          />
+      <CustomTextInput
+        placeholder="Notes (optional)"
+        multiline
+        numberOfLines={4}
+        value={note}
+        setValue={setNote}
+        containerStyles={{ marginBottom: 16, minHeight: 90 }}
+      />
 
-          <Text style={[styles.label, { color: theme.colors.text2 }]}>
-            Priority
-          </Text>
-          <View style={styles.priorityRow}>
-            {PRIORITIES.map(p => {
-              const active = priority === p;
-              const color = priorityColor(p, theme.colors.text3);
-              return (
-                <TouchableOpacity
-                  key={p}
-                  style={[
-                    styles.priorityChip,
-                    {
-                      borderColor: color,
-                      backgroundColor: active ? color : 'transparent',
-                    },
-                  ]}
-                  onPress={() => setPriority(p)}>
-                  <Text
-                    style={[
-                      styles.priorityText,
-                      { color: active ? '#ffffff' : color },
-                    ]}>
-                    {p}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          <Text style={[styles.label, { color: theme.colors.text2 }]}>
-            Due date
-          </Text>
-          <View style={styles.dueRow}>
+      <Text style={[styles.label, { color: theme.colors.text2 }]}>
+        Priority
+      </Text>
+      <View style={styles.priorityRow}>
+        {PRIORITIES.map(p => {
+          const active = priority === p;
+          const color = priorityColor(p, theme.colors.text3);
+          return (
             <TouchableOpacity
+              key={p}
               style={[
-                styles.dueBtn,
-                { borderColor: theme.colors.primary05 },
+                styles.priorityChip,
+                {
+                  borderColor: color,
+                  backgroundColor: active ? color : 'transparent',
+                },
               ]}
-              onPress={() => setShowPicker(true)}>
-              <FeatherIcon
-                name="calendar"
-                size={18}
-                color={theme.colors.text2}
-              />
-              <Text style={[styles.dueText, { color: theme.colors.text1 }]}>
-                {dueDate
-                  ? new Date(dueDate).toLocaleDateString('en-US')
-                  : 'No due date'}
+              onPress={() => setPriority(p)}>
+              <Text
+                style={[
+                  styles.priorityText,
+                  { color: active ? '#ffffff' : color },
+                ]}>
+                {p}
               </Text>
             </TouchableOpacity>
-            {dueDate ? (
-              <TouchableOpacity onPress={() => setDueDate(undefined)}>
-                <FeatherIcon name="x" size={20} color={theme.colors.text3} />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-
-          {showPicker && (
-            <DateTimePicker
-              value={dueDate ? new Date(dueDate) : new Date()}
-              mode="date"
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
-              onChange={(event, date) => {
-                setShowPicker(Platform.OS === 'ios');
-                if (event.type === 'set' && date) {
-                  setDueDate(date.toISOString());
-                }
-              }}
-            />
-          )}
-
-          <View style={styles.actions}>
-            <SecondaryButton text="Cancel" onPress={onClose} />
-            <PrimaryButton
-              text={mode === 'create' ? 'Add' : 'Save'}
-              onPress={handleSave}
-              containerStyle={styles.saveBtn}
-            />
-          </View>
-        </View>
+          );
+        })}
       </View>
-    </Modal>
+
+      <Text style={[styles.label, { color: theme.colors.text2 }]}>
+        Due date
+      </Text>
+      <View style={styles.dueRow}>
+        <TouchableOpacity
+          style={[
+            styles.dueBtn,
+            {
+              backgroundColor: theme.colors.inputBg,
+              borderColor: theme.colors.inputBorder,
+            },
+          ]}
+          onPress={() => setShowPicker(true)}>
+          <FeatherIcon name="calendar" size={18} color={theme.colors.text2} />
+          <Text style={[styles.dueText, { color: theme.colors.text1 }]}>
+            {dueDate
+              ? new Date(dueDate).toLocaleDateString('en-US')
+              : 'No due date'}
+          </Text>
+        </TouchableOpacity>
+        {dueDate ? (
+          <TouchableOpacity onPress={() => setDueDate(undefined)}>
+            <FeatherIcon name="x" size={20} color={theme.colors.text3} />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      {showPicker && (
+        <DateTimePicker
+          value={dueDate ? new Date(dueDate) : new Date()}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'inline' : 'default'}
+          onChange={(event, date) => {
+            setShowPicker(Platform.OS === 'ios');
+            if (event.type === 'set' && date) {
+              setDueDate(date.toISOString());
+            }
+          }}
+        />
+      )}
+    </ModalCard>
   );
 };
 
 export default TaskEditorModal;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 32,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    borderWidth: 1,
-    borderBottomWidth: 0,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  heading: {
-    fontSize: 20,
-    fontWeight: '700',
-  },
   label: {
     fontSize: 13,
     fontWeight: '600',
@@ -292,15 +248,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     marginLeft: 10,
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  saveBtn: {
-    flex: 1,
-    marginLeft: 8,
-    justifyContent: 'center',
   },
 });

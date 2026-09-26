@@ -1,19 +1,10 @@
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useGlobalState } from '../../contexts/GlobaState';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import PrimaryButton from '../Buttons/PrimaryButton';
 import SecondaryButton from '../Buttons/SecondaryButton';
+import ModalCard from './ModalCard';
 import { getData, saveData } from '../../utils/storage';
 import { decryptData, encryptData } from '../../utils/encrypt.private';
 
@@ -80,112 +71,42 @@ const EncryptionModal = ({
   };
 
   return (
-    <Modal
-      transparent
+    <ModalCard
       visible={visible}
-      animationType="slide"
-      onRequestClose={cancelCb}>
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.container}>
-          <View
-            style={[
-              styles.form,
-              {
-                backgroundColor: theme.colors.modalBg,
-                borderColor: theme.colors.modalBorder,
-                borderWidth: 1,
-              },
-            ]}>
-            <View
-              style={[
-                styles.iconWrap,
-                { backgroundColor: theme.colors.primary02 },
-              ]}>
-              <FeatherIcon name="lock" size={26} color={theme.colors.primary} />
-            </View>
-            <Text style={[styles.title, { color: theme.colors.text1 }]}>
-              {title}
-            </Text>
-            <Text style={[styles.text, { color: theme.colors.text2 }]}>
-              {text}
-            </Text>
-            <CustomTextInput
-              placeholder="Encryption Key"
-              error={error}
-              value={key}
-              setValue={val => {
-                setKey(val.toLowerCase());
-                setError(null);
-              }}
-            />
-            <View style={styles.btnsSection}>
-              <SecondaryButton text="Cancel" onPress={handleCancel} />
-              <PrimaryButton
-                text="Submit"
-                onPress={encrypt}
-                icon={
-                  isLoading && (
-                    <ActivityIndicator
-                      size={'small'}
-                      color={theme.colors.btnText1}
-                      style={{ marginRight: 4 }}
-                    />
-                  )
-                }
-              />
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </Modal>
+      onClose={handleCancel}
+      icon="lock"
+      title={title}
+      subtitle={text}
+      footer={
+        <>
+          <SecondaryButton text="Cancel" onPress={handleCancel} />
+          <PrimaryButton
+            text="Submit"
+            onPress={encrypt}
+            icon={
+              isLoading && (
+                <ActivityIndicator
+                  size={'small'}
+                  color={theme.colors.btnText1}
+                  style={{ marginRight: 4 }}
+                />
+              )
+            }
+          />
+        </>
+      }>
+      <CustomTextInput
+        placeholder="Encryption Key"
+        error={error}
+        containerStyles={{ marginBottom: 24 }}
+        value={key}
+        setValue={val => {
+          setKey(val.toLowerCase());
+          setError(null);
+        }}
+      />
+    </ModalCard>
   );
 };
 
 export default EncryptionModal;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  form: {
-    width: '90%',
-    alignItems: 'center',
-    padding: 24,
-    borderRadius: 32,
-  },
-  iconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
-  },
-  title: {
-    textAlign: 'center',
-    fontSize: 24,
-    fontWeight: '700',
-    marginTop: 16,
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: 12,
-    marginBottom: 32,
-    opacity: 0.8,
-  },
-  btnsSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 32,
-  },
-});

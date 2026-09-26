@@ -1,17 +1,8 @@
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import React, { useState } from 'react';
-import { useGlobalState } from '../../contexts/GlobaState';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import PrimaryButton from '../Buttons/PrimaryButton';
+import SecondaryButton from '../Buttons/SecondaryButton';
+import ModalCard from './ModalCard';
 import { ProfileI } from '../../interfaces/profile';
 
 type Props = {
@@ -29,7 +20,6 @@ const ValidationModal = ({
   cancelCb,
   successCb,
 }: Props) => {
-  const { theme } = useGlobalState();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -46,69 +36,28 @@ const ValidationModal = ({
   };
 
   return (
-    <Modal
-      transparent
+    <ModalCard
       visible={visible}
-      animationType="fade"
-      onRequestClose={cancelCb}>
-      <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: 'rgba(0,0,0,0.5)' },
-        ]}>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.container}
-          onPress={cancelCb}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}>
-            <View
-              style={[styles.form, { backgroundColor: theme.colors.modalBg, borderColor: theme.colors.modalBorder, borderWidth: 1 }]}>
-              <Text style={[styles.title, { color: theme.colors.text1 }]}>
-                {text}
-              </Text>
-              <CustomTextInput
-                placeholder="Enter password"
-                type="password"
-                containerStyles={{ marginBottom: 24 }}
-                error={error}
-                value={password}
-                setValue={setPassword}
-              />
-              <PrimaryButton 
-                text="Verify" 
-                onPress={validate} 
-                containerStyle={{ alignSelf: 'stretch' }}
-              />
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableOpacity>
-      </SafeAreaView>
-    </Modal>
+      onClose={cancelCb}
+      icon="shield"
+      title={text}
+      subtitle="Enter your password to continue"
+      footer={
+        <>
+          <SecondaryButton text="Cancel" onPress={cancelCb} />
+          <PrimaryButton text="Verify" onPress={validate} />
+        </>
+      }>
+      <CustomTextInput
+        placeholder="Enter password"
+        type="password"
+        containerStyles={{ marginBottom: 24 }}
+        error={error}
+        value={password}
+        setValue={setPassword}
+      />
+    </ModalCard>
   );
 };
 
 export default ValidationModal;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  form: {
-    width: '90%',
-    alignItems: 'center',
-    padding: 24,
-    borderRadius: 32,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    marginTop: 10,
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-});

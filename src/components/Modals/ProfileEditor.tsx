@@ -1,13 +1,4 @@
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ProfileI } from '../../interfaces/profile';
 import CustomTextInput from '../Inputs/CustomTextInput';
@@ -15,7 +6,7 @@ import SecondaryButton from '../Buttons/SecondaryButton';
 import PrimaryButton from '../Buttons/PrimaryButton';
 import { saveData } from '../../utils/storage';
 import { EditorModeT } from '../../interfaces/editor-info.type';
-import { useGlobalState } from '../../contexts/GlobaState';
+import ModalCard from './ModalCard';
 
 type Props = {
   profile?: ProfileI | null;
@@ -25,7 +16,6 @@ type Props = {
 };
 
 const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
-  const { theme } = useGlobalState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
@@ -68,108 +58,59 @@ const ProfileEditor = ({ profile, mode, visible, setVisible }: Props) => {
   };
 
   return (
-    <Modal
-      transparent
+    <ModalCard
       visible={visible}
-      animationType="slide"
-      onRequestClose={handleClose}>
-      <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: 'rgba(0,0,0,0.5)' },
-        ]}>
-        <TouchableWithoutFeedback onPress={handleClose}>
-          <View style={styles.flex1}>
-            <View style={styles.flex1} />
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{ width: '100%' }}>
-              <TouchableWithoutFeedback>
-                <View
-                  style={[
-                    styles.inputsContainer,
-                    {
-                      backgroundColor: theme.colors.modalBg,
-                      borderColor: theme.colors.modalBorder,
-                    },
-                  ]}>
-                  <CustomTextInput
-                    placeholder="Username"
-                    containerStyles={styles.input}
-                    error={error.field === 'username' ? error.msg : null}
-                    value={username}
-                    setValue={setUsername}
-                  />
-                  <CustomTextInput
-                    type="password"
-                    placeholder="Password"
-                    containerStyles={styles.input}
-                    error={error.field === 'password' ? error.msg : null}
-                    value={password}
-                    setValue={setPassword}
-                  />
-                  <CustomTextInput
-                    type="password"
-                    placeholder="Repeat Password"
-                    containerStyles={styles.input}
-                    error={error.field === 'rePassword' ? error.msg : null}
-                    value={rePassword}
-                    setValue={setRePassword}
-                  />
-                  <CustomTextInput
-                    placeholder="Hint for the password"
-                    containerStyles={styles.input}
-                    value={hint}
-                    setValue={setHint}
-                  />
-                  <View style={styles.actionBtns}>
-                    <SecondaryButton
-                      text="Cancel"
-                      onPress={() => handleClose()}
-                    />
-                    <PrimaryButton
-                      text={mode === 'create' ? 'Create' : 'Update'}
-                      onPress={() => createProfile()}
-                    />
-                  </View>
-                </View>
-              </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
-      </SafeAreaView>
-    </Modal>
+      onClose={handleClose}
+      icon="user"
+      title={mode === 'create' ? 'Create Profile' : 'Edit Profile'}
+      subtitle="Your password locks the app and protects your data"
+      footer={
+        <>
+          <SecondaryButton text="Cancel" onPress={() => handleClose()} />
+          <PrimaryButton
+            text={mode === 'create' ? 'Create' : 'Update'}
+            onPress={() => createProfile()}
+          />
+        </>
+      }>
+      <CustomTextInput
+        placeholder="Username"
+        containerStyles={styles.input}
+        error={error.field === 'username' ? error.msg : null}
+        value={username}
+        setValue={setUsername}
+      />
+      <CustomTextInput
+        type="password"
+        placeholder="Password"
+        containerStyles={styles.input}
+        error={error.field === 'password' ? error.msg : null}
+        value={password}
+        setValue={setPassword}
+      />
+      <CustomTextInput
+        type="password"
+        placeholder="Repeat Password"
+        containerStyles={styles.input}
+        error={error.field === 'rePassword' ? error.msg : null}
+        value={rePassword}
+        setValue={setRePassword}
+      />
+      <CustomTextInput
+        placeholder="Hint for the password"
+        containerStyles={styles.input}
+        value={hint}
+        setValue={setHint}
+      />
+    </ModalCard>
   );
 };
 
 export default ProfileEditor;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  flex1: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-end',
-  },
-  inputsContainer: {
-    width: '100%',
-    paddingTop: 40,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    borderWidth: 1,
-    borderBottomWidth: 0,
-  },
+  // Room below each field for its error label
   input: {
-    marginVertical: 8,
-  },
-  actionBtns: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
+    marginBottom: 24,
   },
 });

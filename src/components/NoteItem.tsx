@@ -13,7 +13,11 @@ import { NoteI } from '../interfaces/note';
 import { parseTime } from '../utils/time';
 
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+import {
+  globalStyles,
+  isFlatTheme,
+  SCREEN_PADDING,
+} from '../constants/globalStyles';
 
 type Props = {
   item: NoteI;
@@ -68,7 +72,7 @@ export const NoteItem = ({
       <TouchableOpacity
         style={[
           styles.container,
-          globalStyles.shadow,
+          !isFlatTheme(theme.type) && globalStyles.shadow,
           pressed && { transform: [{ scale: 0.98 }] },
           {
             backgroundColor: theme.colors.secondary05,
@@ -171,7 +175,7 @@ export const ArchivedNoteItem = ({
       <TouchableOpacity
         style={styles.recoverBtn}
         onPress={() => onRecover(item.id)}>
-        <FeatherIcon name="repeat" size={32} color={theme.colors.btnText1} />
+        <FeatherIcon name="repeat" size={32} color={theme.colors.text1} />
       </TouchableOpacity>
     </Animated.View>
   );
@@ -186,7 +190,8 @@ const styles = StyleSheet.create({
     minWidth: '48%',
     paddingVertical: 16,
     paddingHorizontal: 16,
-    marginHorizontal: 8,
+    // list adds the other half, so grid columns keep a full gap between them
+    marginHorizontal: SCREEN_PADDING / 2,
     marginVertical: 4,
     borderRadius: 24,
     zIndex: 99,

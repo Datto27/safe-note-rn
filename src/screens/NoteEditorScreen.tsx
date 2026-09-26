@@ -9,15 +9,14 @@ import {
   ActivityIndicator,
   Animated,
   Easing,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
+  TextInput,
+  ScrollView,
   Dimensions,
 } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import CustomTextInput from '../components/Inputs/CustomTextInput';
 import { getData, saveData } from '../utils/storage';
 import { NoteI } from '../interfaces/note';
 import TextButton from '../components/Buttons/TextButton';
@@ -33,8 +32,36 @@ import {
 import { MainStackNavigatorParamList } from '../routes/MainStackNavigator';
 import { StackNavigationProp } from '@react-navigation/stack';
 import SearchModal from '../components/Modals/SearchModal';
+import { isFlatTheme, SCREEN_PADDING } from '../constants/globalStyles';
 
 const { width, height } = Dimensions.get('window');
+
+const BODY_FONT_SIZE = 17;
+// Shared by the text and the notebook rules, so every line is written on one
+const BODY_LINE_HEIGHT = 36;
+const BODY_PADDING_TOP = 12;
+
+// Roughly one dot every 10px; the row is clipped, so a few extra are harmless
+const LINE_DOTS = '.'.repeat(Math.ceil(width / 10));
+
+// Dotted notebook rules drawn behind the note body, one per line of text.
+// Each rule is a row of periods set in the body's own font, size and line
+// height, so the dots land on the same baseline as the letters above them.
+// (A dotted border can't be used: Android spaces its dots by the border
+// width, which can't be widened.)
+const NotebookLines = ({ count, color }: { count: number; color: string }) => (
+  <View pointerEvents="none" style={styles.lines}>
+    {Array.from({ length: count }, (_, i) => (
+      <Text
+        key={i}
+        numberOfLines={1}
+        ellipsizeMode="clip"
+        style={[styles.lineDots, { color }]}>
+        {LINE_DOTS}
+      </Text>
+    ))}
+  </View>
+);
 
 const NoteEditorScreen = () => {
   const insets = useSafeAreaInsets();
@@ -47,15 +74,14 @@ const NoteEditorScreen = () => {
   const [title, setTitle] = useState('');
   const [info, setInfo] = useState('');
   const noteType = useRef<'list' | 'normal' | undefined>(undefined);
-  const [error, setError] = useState({
-    field: '',
-    msg: '',
-  });
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
   const moreButtonRef = useRef<TouchableOpacity>(null);
 
   const [activateSearch, setActivateSearch] = useState(false);
+  const [bodyViewportHeight, setBodyViewportHeight] = useState(0);
+  const [bodyHeight, setBodyHeight] = useState(0);
+  const [showLines, setShowLines] = useState(true);
   const idRef = useRef('');
   let titleAnim = useRef(new Animated.Value(0)).current;
   let infoAnim = useRef(new Animated.Value(0)).current;
@@ -85,7 +111,18 @@ const NoteEditorScreen = () => {
     getData('key').then(res => {
       setEkey(res);
     });
+    getData('notebookLines').then(res => {
+      if (res === false) setShowLines(false);
+    });
   }, []);
+
+  // Editor-wide preference, so it sticks across notes and restarts
+  const toggleLines = () => {
+    const next = !showLines;
+    setShowLines(next);
+    saveData('notebookLines', next);
+    setShowDropdown(false);
+  };
 
   useEffect(() => {
     if (mode === 'update' && item) {
@@ -127,7 +164,6 @@ const NoteEditorScreen = () => {
   const handleClose = () => {
     setTitle('');
     setInfo('');
-    setError({ field: '', msg: '' });
     navigation.pop();
   };
 
@@ -186,8 +222,7 @@ const NoteEditorScreen = () => {
         // Push the previous saved state to undo stack before overwriting
         if (lastSavedRef.current !== null) {
           const prev = lastSavedRef.current;
-          const isDifferent =
-            prev.title !== newTitle || prev.info !== newInfo;
+          const isDifferent = prev.title !== newTitle || prev.info !== newInfo;
           if (isDifferent) {
             undoStack.current = [...undoStack.current, prev];
             setUndoCount(undoStack.current.length);
@@ -298,6 +333,12 @@ const NoteEditorScreen = () => {
     triggerAutoSave(title, txt);
   };
 
+  const wordCount = info.trim() ? info.trim().split(/\s+/).length : 0;
+  const lineCount = Math.ceil(
+    (Math.max(bodyHeight, bodyViewportHeight) - BODY_PADDING_TOP) /
+      BODY_LINE_HEIGHT,
+  );
+
   const handleTitleUpdate = (txt: string) => {
     setTitle(txt);
     triggerAutoSave(txt, info);
@@ -314,6 +355,7 @@ const NoteEditorScreen = () => {
           <View
             style={[
               styles.dropdown,
+              !isFlatTheme(theme.type) && styles.dropdownShadow,
               {
                 top: dropdownPos.top,
                 right: dropdownPos.right,
@@ -321,165 +363,191 @@ const NoteEditorScreen = () => {
                 borderColor: theme.colors.modalBorder,
               },
             ]}>
-            {noteType.current === 'list' ? (
-              <TextButton
-                text="Convert To Text"
-                color={theme.colors.btnText1}
-                onPress={convertToNormal}
-                style={styles.dropdownBtn}
-              />
-            ) : (
-              <TextButton
-                text="Add List Bullets   •"
-                color={theme.colors.btnText1}
-                onPress={() => convertToList()}
-                style={styles.dropdownBtn}
-              />
-            )}
             <TextButton
-              text="Delete"
-              color="red"
-              onPress={() => navigation.pop()}
+              text={showLines ? 'Hide Lines' : 'Show Lines'}
+              color={theme.colors.text1}
+              onPress={toggleLines}
               style={styles.dropdownBtn}
             />
+            {mode === 'update' && item && (
+              <>
+                {noteType.current === 'list' ? (
+                  <TextButton
+                    text="Convert To Text"
+                    color={theme.colors.text1}
+                    onPress={convertToNormal}
+                    style={styles.dropdownBtn}
+                  />
+                ) : (
+                  <TextButton
+                    text="Add List Bullets   •"
+                    color={theme.colors.text1}
+                    onPress={() => convertToList()}
+                    style={styles.dropdownBtn}
+                  />
+                )}
+                <TextButton
+                  text="Delete"
+                  color="red"
+                  onPress={() => navigation.pop()}
+                  style={styles.dropdownBtn}
+                />
+              </>
+            )}
           </View>
         </TouchableOpacity>
       )}
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <View style={[styles.header, { marginTop: insets.top + 10 }]}>
-            <TouchableOpacity style={{ padding: 8 }} onPress={handleClose}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={[styles.header, { marginTop: insets.top + 10 }]}>
+          <TouchableOpacity style={{ padding: 8 }} onPress={handleClose}>
+            <FeatherIcon
+              name="chevron-left"
+              size={28}
+              color={theme.colors.text1}
+            />
+          </TouchableOpacity>
+
+          {/* Save status indicator */}
+          {saveStatus !== 'idle' && (
+            <View style={styles.saveStatus}>
+              {saveStatus === 'saving' ? (
+                <ActivityIndicator
+                  size="small"
+                  color={theme.colors.text1}
+                  style={{ marginRight: 4 }}
+                />
+              ) : (
+                <FeatherIcon
+                  name="check"
+                  size={13}
+                  color={theme.colors.text1}
+                  style={{ marginRight: 4 }}
+                />
+              )}
+              <Text
+                style={[styles.saveStatusText, { color: theme.colors.text1 }]}>
+                {saveStatus === 'saving' ? 'Saving…' : 'Saved'}
+              </Text>
+            </View>
+          )}
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {/* Undo button */}
+            <TouchableOpacity
+              style={[styles.undoBtn, { opacity: undoCount > 0 ? 1 : 0.3 }]}
+              disabled={undoCount === 0}
+              onPress={handleUndo}>
               <FeatherIcon
-                name="chevron-left"
-                size={28}
+                name="corner-up-left"
+                size={22}
                 color={theme.colors.text1}
               />
             </TouchableOpacity>
-
-            {/* Save status indicator */}
-            {saveStatus !== 'idle' && (
-              <View style={styles.saveStatus}>
-                {saveStatus === 'saving' ? (
-                  <ActivityIndicator
-                    size="small"
-                    color={theme.colors.text1}
-                    style={{ marginRight: 4 }}
-                  />
-                ) : (
-                  <FeatherIcon
-                    name="check"
-                    size={13}
-                    color={theme.colors.text1}
-                    style={{ marginRight: 4 }}
-                  />
-                )}
-                <Text
-                  style={[styles.saveStatusText, { color: theme.colors.text1 }]}>
-                  {saveStatus === 'saving' ? 'Saving…' : 'Saved'}
-                </Text>
-              </View>
-            )}
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {/* Undo button */}
-              <TouchableOpacity
-                style={[styles.undoBtn, { opacity: undoCount > 0 ? 1 : 0.3 }]}
-                disabled={undoCount === 0}
-                onPress={handleUndo}>
-                <FeatherIcon
-                  name="corner-up-left"
-                  size={22}
-                  color={theme.colors.text1}
-                />
-              </TouchableOpacity>
-              {/* Redo button */}
-              <TouchableOpacity
-                style={[styles.undoBtn, { opacity: redoCount > 0 ? 1 : 0.3 }]}
-                disabled={redoCount === 0}
-                onPress={handleRedo}>
-                <FeatherIcon
-                  name="corner-up-right"
-                  size={22}
-                  color={theme.colors.text1}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  padding: 8,
-                  marginLeft: 4,
-                  marginRight: mode === 'update' && item ? 8 : 0,
-                }}
-                onPress={() => setActivateSearch(true)}>
-                <FeatherIcon
-                  name="search"
-                  size={24}
-                  color={theme.colors.text1}
-                />
-              </TouchableOpacity>
-              {mode === 'update' && item && (
-                <>
-                  <TouchableOpacity
-                    ref={moreButtonRef}
-                    style={{ padding: 8 }}
-                    onPress={() => {
-                      moreButtonRef.current?.measure((_x, _y, w, h, px, py) => {
-                        setDropdownPos({
-                          top: py + h + 4,
-                          right: Dimensions.get('window').width - px - w,
-                        });
-                        setShowDropdown(!showDropdown);
-                      });
-                    }}>
-                    <FeatherIcon
-                      name="more-horizontal"
-                      size={24}
-                      color={theme.colors.text1}
-                    />
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
+            {/* Redo button */}
+            <TouchableOpacity
+              style={[styles.undoBtn, { opacity: redoCount > 0 ? 1 : 0.3 }]}
+              disabled={redoCount === 0}
+              onPress={handleRedo}>
+              <FeatherIcon
+                name="corner-up-right"
+                size={22}
+                color={theme.colors.text1}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                padding: 8,
+                marginLeft: 4,
+                marginRight: 8,
+              }}
+              onPress={() => setActivateSearch(true)}>
+              <FeatherIcon name="search" size={24} color={theme.colors.text1} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              ref={moreButtonRef}
+              style={{ padding: 8 }}
+              onPress={() => {
+                moreButtonRef.current?.measure((_x, _y, w, h, px, py) => {
+                  setDropdownPos({
+                    top: py + h + 4,
+                    right: Dimensions.get('window').width - px - w,
+                  });
+                  setShowDropdown(!showDropdown);
+                });
+              }}>
+              <FeatherIcon
+                name="more-horizontal"
+                size={24}
+                color={theme.colors.text1}
+              />
+            </TouchableOpacity>
           </View>
+        </View>
 
-          <Animated.View style={{ opacity: titleAnim }}>
-            <CustomTextInput
-              placeholder="Title"
-              value={title}
-              setValue={handleTitleUpdate}
-              containerStyles={{ marginHorizontal: 5, borderWidth: 0 }}
-              textStyles={{
-                fontSize: 24,
-                fontWeight: '700',
-                color: theme.colors.text1,
-              }}
-              error={error.field === 'title' ? error.msg : null}
-            />
-          </Animated.View>
-          <Animated.View
+        <Animated.View style={{ opacity: titleAnim }}>
+          <TextInput
+            placeholder="Title"
+            placeholderTextColor={theme.colors.text3}
+            value={title}
+            onChangeText={handleTitleUpdate}
+            style={[styles.titleInput, { color: theme.colors.inputText }]}
+          />
+          <Text style={[styles.meta, { color: theme.colors.text3 }]}>
+            {item
+              ? `Edited ${new Date(item.updatedAt).toLocaleDateString(
+                  'en-US',
+                )} · `
+              : ''}
+            {wordCount} {wordCount === 1 ? 'word' : 'words'}
+          </Text>
+          <View
             style={[
-              styles.inputWrapper,
-              {
-                opacity: infoAnim,
-              },
-            ]}>
-            <CustomTextInput
+              styles.divider,
+              { backgroundColor: theme.colors.modalBorder },
+            ]}
+          />
+        </Animated.View>
+        <Animated.View style={[styles.inputWrapper, { opacity: infoAnim }]}>
+          {/* The input grows with its text and the ScrollView scrolls it, so
+              the notebook lines behind it move together with the text */}
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            onLayout={e => setBodyViewportHeight(e.nativeEvent.layout.height)}>
+            {showLines && (
+              <NotebookLines
+                count={Math.max(lineCount, 0)}
+                color={theme.colors.text3}
+              />
+            )}
+            <TextInput
               placeholder="What's in your mind?"
+              placeholderTextColor={theme.colors.text3}
               multiline
-              numberOfLines={20}
-              value={info}
-              setValue={handleInputUpdate}
-              textStyles={{
-                color: theme.colors.text1,
-                fontSize: 16,
-                lineHeight: 26,
-              }}
-              containerStyles={[styles.inputContainer, { borderWidth: 0 }]}
-            />
-          </Animated.View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+              scrollEnabled={false}
+              onChangeText={handleInputUpdate}
+              onLayout={e => setBodyHeight(e.nativeEvent.layout.height)}
+              style={[
+                styles.bodyInput,
+                styles.bodyText,
+                {
+                  color: theme.colors.inputText,
+                  minHeight: bodyViewportHeight,
+                  paddingBottom: insets.bottom + 24,
+                },
+              ]}>
+              {/* Passed as a styled child rather than `value`: Android drops
+                  lineHeight from text loaded through `value` (it only applies
+                  to newly typed text), which pulls the lines off the rules */}
+              <Text
+                style={[styles.bodyText, { color: theme.colors.inputText }]}>
+                {info}
+              </Text>
+            </TextInput>
+          </ScrollView>
+        </Animated.View>
+      </KeyboardAvoidingView>
       <SearchModal
         visible={activateSearch}
         text={item?.info}
@@ -517,6 +585,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderWidth: 1,
     borderRadius: 24,
+  },
+  dropdownShadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -527,15 +597,56 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 15,
   },
+  // Editor fields sit directly on the page; the container already adds 8px
+  titleInput: {
+    fontFamily: 'JosefinSans-Medium',
+    fontSize: 28,
+    fontWeight: '700',
+    paddingHorizontal: SCREEN_PADDING - 8,
+    paddingVertical: 4,
+  },
+  meta: {
+    fontSize: 12,
+    fontWeight: '500',
+    paddingHorizontal: SCREEN_PADDING - 8,
+    marginTop: 2,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: SCREEN_PADDING - 8,
+    marginTop: 12,
+  },
   inputWrapper: {
     flex: 1,
-    position: 'relative',
   },
-  inputContainer: {
-    flex: 1,
-    marginHorizontal: 5,
-    marginVertical: 10,
-    borderRadius: 25,
+  bodyText: {
+    fontFamily: 'JosefinSans-Medium',
+    fontSize: BODY_FONT_SIZE,
+    lineHeight: BODY_LINE_HEIGHT,
+    // Android's extra font padding would push the text off the rules
+    includeFontPadding: false,
+  },
+  bodyInput: {
+    textAlignVertical: 'top',
+    paddingHorizontal: SCREEN_PADDING - 8,
+    paddingTop: BODY_PADDING_TOP,
+  },
+  lines: {
+    position: 'absolute',
+    top: BODY_PADDING_TOP,
+    left: SCREEN_PADDING - 8,
+    right: SCREEN_PADDING - 8,
+    opacity: 0.5,
+  },
+  // Must match bodyInput's font metrics to stay on the text's baseline
+  lineDots: {
+    fontFamily: 'JosefinSans-Medium',
+    fontSize: BODY_FONT_SIZE,
+    lineHeight: BODY_LINE_HEIGHT,
+    letterSpacing: 7,
+    includeFontPadding: false,
+    // Sit just under the letters instead of touching them
+    transform: [{ translateY: 3 }],
   },
   undoBtn: {
     padding: 8,

@@ -1,5 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { colorsNeon } from './colors';
+import { ThemeEnum } from '../enums/theme';
+
+// Horizontal gap between the screen edge and every top-level component
+export const SCREEN_PADDING = 16;
+
+// Flat themes draw no shadows or elevation at all
+export const isFlatTheme = (type: ThemeEnum) => type === ThemeEnum.LIGHT;
 
 export const globalStyles = StyleSheet.create({
   shadow: {

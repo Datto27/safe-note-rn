@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -11,12 +10,82 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { isFlatTheme, SCREEN_PADDING } from '../../constants/globalStyles';
 
-const TAB_BAR_MARGIN = 16;
+const TAB_BAR_MARGIN = SCREEN_PADDING;
+const TAB_BAR_PADDING = 4;
+const ICON_SIZE = 22;
+const SPRING = { damping: 20, stiffness: 90 };
+
+const TAB_ICONS: Record<string, string> = {
+  Home: 'list',
+  Todo: 'check-square',
+  Reminders: 'bell',
+  Profile: 'user',
+};
+
+type TabItemProps = {
+  label: string;
+  icon?: string;
+  isFocused: boolean;
+  width: number;
+  inactiveColor: string;
+  accessibilityLabel?: string;
+  onPress: () => void;
+  onLongPress: () => void;
+};
+
+// Inactive tabs show only the icon; the focused tab widens to fit its label
+const TabItem = ({
+  label,
+  icon,
+  isFocused,
+  width,
+  inactiveColor,
+  accessibilityLabel,
+  onPress,
+  onLongPress,
+}: TabItemProps) => {
+  const animatedWidth = useAnimatedStyle(() => ({
+    width: withSpring(width, SPRING),
+  }));
+  // Opacity only: a layout (entering) animation would pin the label to the
+  // position it had while the tab was still narrow, on top of the icon
+  const labelOpacity = useSharedValue(isFocused ? 1 : 0);
+  useEffect(() => {
+    labelOpacity.value = withTiming(isFocused ? 1 : 0, { duration: 200 });
+  }, [isFocused, labelOpacity]);
+  const animatedLabel = useAnimatedStyle(() => ({
+    opacity: labelOpacity.value,
+  }));
+  const color = isFocused ? '#ffffff' : inactiveColor;
+
+  return (
+    <Animated.View style={animatedWidth}>
+      <TouchableOpacity
+        accessibilityRole="button"
+        accessibilityState={isFocused ? { selected: true } : {}}
+        accessibilityLabel={accessibilityLabel ?? label}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        style={styles.tabItem}>
+        {icon && <FeatherIcon name={icon} size={ICON_SIZE} color={color} />}
+        {isFocused && (
+          <Animated.Text
+            numberOfLines={1}
+            style={[styles.label, animatedLabel, { color }]}>
+            {label}
+          </Animated.Text>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
 
 export const CustomTabBar = ({
   state,
@@ -29,16 +98,17 @@ export const CustomTabBar = ({
   const TAB_BAR_WIDTH = width - TAB_BAR_MARGIN * 2;
   const translateX = useSharedValue(0);
 
-  const tabWidth = TAB_BAR_WIDTH / state.routes.length;
-  // Bake in the 4px left padding so translateX(0) === first tab position
-  const INDICATOR_PADDING = 4;
+  // The focused tab takes two shares of the width, every other tab one
+  const innerWidth = TAB_BAR_WIDTH - TAB_BAR_PADDING * 2;
+  const inactiveWidth = innerWidth / (state.routes.length + 1);
+  const activeWidth = inactiveWidth * 2;
 
   useEffect(() => {
     translateX.value = withSpring(
-      INDICATOR_PADDING + state.index * tabWidth,
-      { damping: 20, stiffness: 90 },
+      TAB_BAR_PADDING + state.index * inactiveWidth,
+      SPRING,
     );
-  }, [state.index, tabWidth, translateX, INDICATOR_PADDING]);
+  }, [state.index, inactiveWidth, translateX]);
 
   const animatedIndicatorStyle = useAnimatedStyle(() => {
     return {
@@ -55,13 +125,14 @@ export const CustomTabBar = ({
       <View
         style={[
           styles.tabBarContainer,
+          !isFlatTheme(theme.type) && styles.tabBarShadow,
           { backgroundColor: theme.colors.background2, width: TAB_BAR_WIDTH },
         ]}>
         <Animated.View
           style={[
             styles.indicator,
             animatedIndicatorStyle,
-            { width: tabWidth - INDICATOR_PADDING * 2, backgroundColor: theme.colors.primary },
+            { width: activeWidth, backgroundColor: theme.colors.primary },
           ]}
         />
         {state.routes.map((route, index) => {
@@ -94,43 +165,18 @@ export const CustomTabBar = ({
             });
           };
 
-          // Get icon from options or default
-          const renderIcon = () => {
-            const color = isFocused ? '#ffffff' : theme.colors.text3;
-            if (route.name === 'Home') {
-              return <FeatherIcon name="list" size={18} color={color} />;
-            }
-            if (route.name === 'Todo') {
-              return <FeatherIcon name="check-square" size={18} color={color} />;
-            }
-            if (route.name === 'Reminders') {
-              return <FeatherIcon name="bell" size={18} color={color} />;
-            }
-            if (route.name === 'Profile') {
-              return <FeatherIcon name="user" size={18} color={color} />;
-            }
-            return null;
-          };
-
           return (
-            <TouchableOpacity
+            <TabItem
               key={route.key}
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
+              label={label as string}
+              icon={TAB_ICONS[route.name]}
+              isFocused={isFocused}
+              width={isFocused ? activeWidth : inactiveWidth}
+              inactiveColor={theme.colors.text3}
               accessibilityLabel={options.tabBarAccessibilityLabel}
-              testID={options.tabBarTestID}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={styles.tabItem}>
-              {renderIcon()}
-              <Text
-                style={[
-                  styles.label,
-                  { color: isFocused ? '#ffffff' : theme.colors.text3 },
-                ]}>
-                {label as string}
-              </Text>
-            </TouchableOpacity>
+            />
           );
         })}
       </View>
@@ -149,7 +195,9 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     alignItems: 'center',
     position: 'relative',
-    padding: 4,
+    padding: TAB_BAR_PADDING,
+  },
+  tabBarShadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -159,20 +207,23 @@ const styles = StyleSheet.create({
   indicator: {
     position: 'absolute',
     height: 46, // 54 - 4*2
-    top: 4,
+    top: TAB_BAR_PADDING,
     left: 0,
     borderRadius: 23,
   },
   tabItem: {
-    flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    height: 46,
+    paddingHorizontal: 12,
+    overflow: 'hidden',
   },
   label: {
-    marginTop: 2,
-    fontSize: 11,
+    // Shrink with the tab while it springs open instead of overlapping
+    flexShrink: 1,
+    marginLeft: 6,
+    fontSize: 14,
     fontWeight: '600',
   },
 });

@@ -28,6 +28,7 @@ import SecondaryButton from '../components/Buttons/SecondaryButton';
 import { decryptData } from '../utils/encrypt.private';
 import ProfileCard from '../components/ProfileCard';
 import { useNavigation } from '@react-navigation/native';
+import { SCREEN_PADDING } from '../constants/globalStyles';
 
 const ProfileScreen = () => {
   const insets = useSafeAreaInsets();
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionHeader: {
-    marginHorizontal: 20,
+    marginHorizontal: SCREEN_PADDING,
     marginTop: 20,
     marginBottom: 10,
   },
@@ -379,7 +380,7 @@ const styles = StyleSheet.create({
   themesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 16,
+    marginHorizontal: SCREEN_PADDING,
     padding: 12,
     borderRadius: 24,
   },
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   encryptionSection: {
-    marginHorizontal: 16,
+    marginHorizontal: SCREEN_PADDING,
     borderRadius: 24,
     padding: 8,
   },
@@ -412,7 +413,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   dataSection: {
-    marginHorizontal: 16,
+    marginHorizontal: SCREEN_PADDING,
     borderRadius: 24,
     padding: 8,
   },

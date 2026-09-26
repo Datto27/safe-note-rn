@@ -4,7 +4,11 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TaskI } from '../interfaces/task';
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+import {
+  globalStyles,
+  isFlatTheme,
+  SCREEN_PADDING,
+} from '../constants/globalStyles';
 import { priorityColor } from './Modals/TaskEditorModal';
 
 type Props = {
@@ -59,7 +63,7 @@ export const TaskItem = ({
       <TouchableOpacity
         style={[
           styles.container,
-          globalStyles.shadow,
+          !isFlatTheme(theme.type) && globalStyles.shadow,
           pressed && { transform: [{ scale: 0.98 }] },
           {
             backgroundColor: theme.colors.secondary05,
@@ -156,7 +160,7 @@ const styles = StyleSheet.create({
     minHeight: 64,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    marginHorizontal: 8,
+    marginHorizontal: SCREEN_PADDING,
     marginVertical: 4,
     borderRadius: 24,
   },

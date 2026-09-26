@@ -1,61 +1,72 @@
 import { ThemeT } from '../../App';
 
+// Destructive actions look the same in every theme
+export const dangerColor = '#ef4444';
+export const dangerTint = 'rgba(239, 68, 68, 0.12)';
+
 export const colorsDark: ThemeT['colors'] = {
-  primary: '#1e40af', // Navy Blue (Blue 800)
-  primary05: 'rgba(30, 64, 175, 0.5)',
-  primary02: 'rgba(30, 64, 175, 0.2)',
-  secondary: '#1e293b', // Slate 800
-  secondary05: 'rgba(30, 41, 59, 0.5)',
-  secondary04: 'rgba(30, 41, 59, 0.4)',
-  secondary02: 'rgba(30, 41, 59, 0.2)',
-  tertiary: '#0f172a',
-  background1: '#0f172a', // Slate 900
-  background2: '#1e293b', // Slate 800
-  background2_09: 'rgba(30, 41, 59, 0.9)',
+  primary: '#01497c', // Deep Ocean Blue
+  primary05: 'rgba(1, 73, 124, 0.5)',
+  primary02: 'rgba(1, 73, 124, 0.2)',
+  secondary: '#0d1b2a', // Deep Navy
+  secondary05: 'rgba(13, 27, 42, 0.5)',
+  secondary04: 'rgba(13, 27, 42, 0.4)',
+  secondary02: 'rgba(13, 27, 42, 0.2)',
+  tertiary: '#060e17',
+  background1: '#060e17', // Abyss
+  background2: '#0d1b2a', // Deep Navy
+  background2_09: 'rgba(13, 27, 42, 0.9)',
   text1: '#f8fafc',
-  text2: '#cbd5e1',
+  text2: '#a9d6e5',
   text3: '#64748b',
   inputText: '#f8fafc',
-  btn1: '#1e40af',
+  btn1: '#01497c',
   btn2: 'transparent',
   btnText1: '#ffffff',
-  btnText2: '#60a5fa',
+  btnText2: '#48cae4', // Aqua
   btnText3: '#94a3b8',
   textShadow: 'transparent',
   shadowColor1: 'rgba(0, 0, 0, 0.1)',
   shadowColor2: 'rgba(0, 0, 0, 0.2)',
-  modalBg: 'rgba(30, 41, 59, 0.95)',
+  modalBg: '#10243a',
   modalShadow: 'rgba(0, 0, 0, 0.5)',
-  modalBorder: '#334155',
+  modalBorder: '#1b3a4b',
+  inputBg: '#060e17',
+  inputBorder: '#1b3a4b',
+  inputFocus: '#48cae4',
 };
 
 export const colorsLight: ThemeT['colors'] = {
-  primary: 'rgba(37, 55, 69, 1)',
-  primary05: 'rgba(37, 55, 69, 0.5)',
-  primary02: 'rgba(37, 55, 69, 1, 0.2)',
-  secondary: 'rgba(74, 92, 106, 1)',
-  secondary05: 'rgba(74, 92, 106, 0.5)',
-  secondary04: 'rgba(74, 92, 106, 0.4)',
-  secondary02: 'rgba(74, 92, 106, 0.2)',
-  tertiary: 'rgb(210, 220, 235)',
-  background1: 'rgba(204, 208, 207, 1)',
-  background2: 'rgba(155, 168, 171, 1)',
-  background2_09: 'transparent',
-  text1: 'rgba(6, 20, 27, 1)',
-  text2: 'rgba(17, 33, 45, 1)',
-  text3: 'rgb(38, 46, 53)',
-  inputText: 'rgba(6, 20, 27, 1)',
-  btn1: 'rgb(51, 71, 86)',
-  btn2: 'rgb(83, 101, 114)',
-  btnText1: 'rgb(11, 20, 24)',
-  btnText2: 'rgba(17, 33, 45, 1)',
-  btnText3: 'rgb(38, 46, 53)',
+  // Flat design: surfaces are separated by tone, never by shadow
+  primary: '#1b263b', // Navy
+  primary05: 'rgba(27, 38, 59, 0.5)',
+  primary02: 'rgba(27, 38, 59, 0.1)',
+  secondary: '#415a77', // Slate Blue
+  secondary05: '#f4f5f2', // card surface
+  secondary04: 'rgba(65, 90, 119, 0.4)',
+  secondary02: 'rgba(65, 90, 119, 0.2)',
+  tertiary: '#e0e1dd',
+  background1: '#e0e1dd', // Platinum
+  background2: '#f4f5f2',
+  background2_09: 'rgba(244, 245, 242, 0.9)',
+  text1: '#0d1b2a',
+  text2: '#415a77',
+  text3: '#6b7280', // Gray
+  inputText: '#0d1b2a',
+  btn1: '#1b263b',
+  btn2: '#d3d5d0',
+  btnText1: '#ffffff',
+  btnText2: '#415a77',
+  btnText3: '#6b7280',
   textShadow: 'transparent',
   shadowColor1: 'transparent',
   shadowColor2: 'transparent',
-  modalBg: 'rrgba(155, 168, 171, 1)',
+  modalBg: '#f4f5f2',
   modalShadow: 'transparent',
-  modalBorder: 'transparent',
+  modalBorder: '#c9cbc5',
+  inputBg: '#ffffff',
+  inputBorder: '#c9cbc5',
+  inputFocus: '#415a77',
 };
 
 export const colorsYellow: ThemeT['colors'] = {
@@ -82,9 +93,12 @@ export const colorsYellow: ThemeT['colors'] = {
   textShadow: 'transparent',
   shadowColor1: 'transparent',
   shadowColor2: 'transparent',
-  modalBg: 'rgba(5, 5, 5, 1)',
+  modalBg: 'rgba(20, 20, 20, 1)',
   modalShadow: 'transparent',
   modalBorder: 'transparent',
+  inputBg: 'rgba(8, 8, 8, 1)',
+  inputBorder: 'rgba(255, 185, 4, 0.25)',
+  inputFocus: 'rgba(255, 200, 4, 1)',
 };
 
 export const colorsNeon: ThemeT['colors'] = {
@@ -111,7 +125,10 @@ export const colorsNeon: ThemeT['colors'] = {
   textShadow: 'rgba(255, 0, 50, 0.7)',
   shadowColor1: 'rgba(255, 0, 50, 0.7)',
   shadowColor2: 'rgba(200, 0, 150, 0.7)',
-  modalBg: 'rgba(0, 0, 8, 0.8)',
+  modalBg: 'rgba(0, 0, 20, 0.95)',
   modalShadow: 'rgba(255, 0, 0, 0.9)',
   modalBorder: 'transparent',
+  inputBg: 'rgb(0, 0, 8)',
+  inputBorder: 'rgba(255, 0, 100, 0.35)',
+  inputFocus: 'rgb(255, 0, 100)',
 };

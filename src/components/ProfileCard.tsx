@@ -9,6 +9,7 @@ import TextButton from './Buttons/TextButton';
 import ProfileEditor from './Modals/ProfileEditor';
 import DeleteModal from './Modals/DeleteModal';
 import { colorsNeon } from '../constants/colors';
+import { SCREEN_PADDING } from '../constants/globalStyles';
 
 type Props = {
   profile: ProfileI | null;
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 20,
     marginVertical: 20,
-    marginHorizontal: 16,
+    marginHorizontal: SCREEN_PADDING,
     borderRadius: 24,
     borderWidth: 1,
   },

@@ -23,7 +23,11 @@ import ReminderEditorModal, {
   ReminderDraft,
 } from '../components/Modals/ReminderEditorModal';
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+import {
+  globalStyles,
+  isFlatTheme,
+  SCREEN_PADDING,
+} from '../constants/globalStyles';
 import { parseTime } from '../utils/time';
 
 const newId = () => Math.random().toString(16).slice(2);
@@ -192,7 +196,7 @@ const RemindersScreen = () => {
       <TouchableOpacity
         style={[
           styles.reminderRow,
-          globalStyles.shadow,
+          !isFlatTheme(theme.type) && globalStyles.shadow,
           {
             backgroundColor: theme.colors.secondary05,
             shadowColor: theme.colors.shadowColor1,
@@ -306,7 +310,7 @@ const RemindersScreen = () => {
       <Animated.View
         style={[
           styles.floatingBtnContainer,
-          globalStyles.shadow,
+          !isFlatTheme(theme.type) && globalStyles.shadow,
           {
             transform: [{ scale: scaleAnim }],
             shadowColor: theme.colors.shadowColor2,
@@ -346,7 +350,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    marginHorizontal: 20,
+    marginHorizontal: SCREEN_PADDING,
     paddingVertical: 15,
   },
   title: {
@@ -364,7 +368,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 16,
     marginBottom: 4,
-    marginHorizontal: 16,
+    marginHorizontal: SCREEN_PADDING,
   },
   reminderRow: {
     flexDirection: 'row',
@@ -372,7 +376,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    marginHorizontal: 8,
+    marginHorizontal: SCREEN_PADDING,
     marginVertical: 4,
     borderRadius: 20,
   },

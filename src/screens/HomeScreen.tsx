@@ -20,7 +20,11 @@ import { getData, saveData } from '../utils/storage';
 import { NoteItem } from '../components/NoteItem';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+import {
+  globalStyles,
+  isFlatTheme,
+  SCREEN_PADDING,
+} from '../constants/globalStyles';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackNavigatorParamList } from '../routes/MainStackNavigator';
 
@@ -235,7 +239,7 @@ const HomeScreen = () => {
           <Animated.View
             style={[
               styles.floatingBtnContainer,
-              globalStyles.shadow,
+              !isFlatTheme(theme.type) && globalStyles.shadow,
               {
                 transform: [{ scale: scaleAnim }],
                 shadowColor: theme.colors.shadowColor2,
@@ -255,7 +259,7 @@ const HomeScreen = () => {
           <Animated.View
             style={[
               styles.floatingBtnContainer,
-              globalStyles.shadow,
+              !isFlatTheme(theme.type) && globalStyles.shadow,
               {
                 transform: [{ scale: scaleAnim }],
                 shadowColor: theme.colors.shadowColor2,
@@ -280,7 +284,7 @@ const HomeScreen = () => {
         <Animated.View
           style={[
             styles.floatingBtnContainer,
-            globalStyles.shadow,
+            !isFlatTheme(theme.type) && globalStyles.shadow,
             {
               transform: [{ scale: scaleAnim }],
               shadowColor: theme.colors.shadowColor2,
@@ -321,7 +325,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: SCREEN_PADDING + 8,
     paddingVertical: 15,
   },
   title: {
@@ -348,6 +352,7 @@ const styles = StyleSheet.create({
     transform: [{ translateX: 10 }],
   },
   flashlist: {
+    paddingHorizontal: SCREEN_PADDING / 2,
     paddingBottom: 80,
   },
   floatingBtnContainer: {

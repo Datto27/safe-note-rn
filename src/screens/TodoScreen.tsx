@@ -22,7 +22,11 @@ import { TaskItem } from '../components/TaskItem';
 import TaskEditorModal, { TaskDraft } from '../components/Modals/TaskEditorModal';
 import DeleteModal from '../components/Modals/DeleteModal';
 import { useGlobalState } from '../contexts/GlobaState';
-import { globalStyles } from '../constants/globalStyles';
+import {
+  globalStyles,
+  isFlatTheme,
+  SCREEN_PADDING,
+} from '../constants/globalStyles';
 
 const newId = () => Math.random().toString(16).slice(2);
 
@@ -287,7 +291,7 @@ const TodoScreen = () => {
         <Animated.View
           style={[
             styles.floatingBtnContainer,
-            globalStyles.shadow,
+            !isFlatTheme(theme.type) && globalStyles.shadow,
             {
               transform: [{ scale: scaleAnim }],
               shadowColor: theme.colors.shadowColor2,
@@ -401,7 +405,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: SCREEN_PADDING,
     paddingVertical: 15,
   },
   title: {
@@ -440,7 +444,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    paddingHorizontal: 16,
+    paddingHorizontal: SCREEN_PADDING,
     paddingTop: 10,
   },
   quickAddInputWrap: {

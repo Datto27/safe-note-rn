@@ -53,6 +53,9 @@ export type ThemeT = {
     modalBg: string;
     modalShadow: string;
     modalBorder: string;
+    inputBg: string;
+    inputBorder: string;
+    inputFocus: string;
   };
 };
 
@@ -89,6 +92,9 @@ export const AppContext = createContext<{
       modalBg: '',
       modalShadow: '',
       modalBorder: '',
+      inputBg: '',
+      inputBorder: '',
+      inputFocus: '',
     },
   },
   setTheme: function (value: React.SetStateAction<ThemeT>): void {

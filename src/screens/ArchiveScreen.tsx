@@ -8,6 +8,7 @@ import { getData, saveData } from '../utils/storage';
 import { NoteI } from '../interfaces/note';
 import { ArchivedNoteItem } from '../components/NoteItem';
 import { useIsFocused } from '@react-navigation/native';
+import { SCREEN_PADDING } from '../constants/globalStyles';
 
 const ArchiveScreen = () => {
   const insets = useSafeAreaInsets();
@@ -57,6 +58,7 @@ const ArchiveScreen = () => {
         },
       ]}>
       <FlatList
+        contentContainerStyle={styles.list}
         data={
           notes ? Object.values(notes).filter(obj => obj.deleted === true) : []
         }
@@ -87,6 +89,9 @@ export default ArchiveScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  list: {
+    paddingHorizontal: SCREEN_PADDING / 2,
   },
   emptyContainer: {
     flex: 1,

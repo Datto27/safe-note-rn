@@ -6,11 +6,12 @@ import {
   TextStyle,
   TouchableOpacity,
   Text,
+  View,
 } from 'react-native';
 import React, { Dispatch, useRef, useState } from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useGlobalState } from '../../contexts/GlobaState';
-import { globalStyles } from '../../constants/globalStyles';
+import { dangerColor } from '../../constants/colors';
 
 type Props = {
   placeholder: string;
@@ -43,20 +44,27 @@ const CustomTextInput = ({
   const inputRef = useRef<TextInput | null>(null);
   const { theme } = useGlobalState();
   const [showEntry, setShowEntry] = useState(type === 'password');
+  const [focused, setFocused] = useState(false);
 
-  return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={[
-        styles.container,
-        containerStyles,
-        {
-          backgroundColor: theme.colors.background2_09,
-          borderColor: theme.colors.primary05,
-        },
-        error ? styles.error : {},
-      ]}
-      onPress={() => inputRef.current?.focus()}>
+  const containerStyle = [
+    styles.container,
+    containerStyles,
+    {
+      backgroundColor: theme.colors.inputBg,
+      borderColor: error
+        ? dangerColor
+        : focused
+        ? theme.colors.inputFocus
+        : theme.colors.inputBorder,
+    },
+  ];
+  const focusProps = {
+    onFocus: () => setFocused(true),
+    onBlur: () => setFocused(false),
+  };
+
+  const content = (
+    <>
       {multiline ? (
         <TextInput
           ref={inputRef}
@@ -71,6 +79,7 @@ const CustomTextInput = ({
           placeholderTextColor={theme.colors.text3}
           value={value}
           onChangeText={setValue}
+          {...focusProps}
         />
       ) : (
         <TextInput
@@ -81,20 +90,36 @@ const CustomTextInput = ({
           placeholderTextColor={theme.colors.text3}
           value={value}
           onChangeText={setValue}
+          {...focusProps}
         />
       )}
       {type === 'password' ? (
         showEntry ? (
           <TouchableOpacity onPress={() => setShowEntry(false)}>
-            <FeatherIcon name="eye" color={theme.colors.text2} size={20} />
+            <FeatherIcon name="eye" color={theme.colors.text3} size={20} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setShowEntry(true)}>
-            <FeatherIcon name="eye-off" color={theme.colors.text2} size={20} />
+            <FeatherIcon name="eye-off" color={theme.colors.text3} size={20} />
           </TouchableOpacity>
         )
       ) : null}
       {!hideErrorMessage && <Text style={styles.errorMsg}>{error}</Text>}
+    </>
+  );
+
+  // A touchable wrapper would swallow the scroll gesture of a multiline input;
+  // the textarea stretches to fill its box, so it takes the taps itself
+  if (multiline) {
+    return <View style={containerStyle}>{content}</View>;
+  }
+
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      style={containerStyle}
+      onPress={() => inputRef.current?.focus()}>
+      {content}
     </TouchableOpacity>
   );
 };
@@ -107,15 +132,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    borderRadius: 24,
+    borderRadius: 16,
     borderWidth: 1,
-  },
-  error: {
-    borderColor: 'red',
   },
   textarea: {
     flex: 1,
-    alignSelf: 'flex-start',
+    alignSelf: 'stretch',
     textAlignVertical: 'top',
     fontFamily: 'JosefinSans-Medium',
     fontSize: 17,
@@ -130,12 +152,13 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     backgroundColor: 'transparent',
     marginRight: 5,
-    marginVertical: 10,
+    marginVertical: 12,
   },
   errorMsg: {
     position: 'absolute',
     bottom: -19,
-    right: 0,
-    color: 'red',
+    right: 4,
+    fontSize: 12,
+    color: dangerColor,
   },
 });

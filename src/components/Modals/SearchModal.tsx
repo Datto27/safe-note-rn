@@ -14,6 +14,10 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import PrimaryButton from '../Buttons/PrimaryButton';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import { useGlobalState } from '../../contexts/GlobaState';
+import { SCREEN_PADDING } from '../../constants/globalStyles';
+
+// Marker-style highlight that reads on both dark and light themes
+const HIGHLIGHT = 'rgba(250, 204, 21, 0.45)';
 
 type Props = {
   visible: boolean;
@@ -54,7 +58,7 @@ const SearchModal = ({ visible, text = '', onClose }: Props) => {
           style={[
             styles.text,
             {
-              backgroundColor: theme.colors.primary,
+              backgroundColor: HIGHLIGHT,
               color: theme.colors.inputText,
             },
           ]}>
@@ -82,18 +86,23 @@ const SearchModal = ({ visible, text = '', onClose }: Props) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
-          <View style={styles.header}>
+          <View
+            style={[
+              styles.header,
+              { borderBottomColor: theme.colors.modalBorder },
+            ]}>
             <CustomTextInput
               placeholder="Search in note..."
               containerStyles={{
                 flex: 1,
-                marginRight: 12,
+                marginRight: 8,
               }}
               value={phrase}
               setValue={setPhrase}
             />
             <TouchableOpacity
-              style={[styles.closeBtn, { backgroundColor: theme.colors.background2, borderColor: theme.colors.modalBorder }]}
+              style={styles.closeBtn}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               onPress={onClose}>
               <FeatherIcon name="x" color={theme.colors.text1} size={24} />
             </TouchableOpacity>
@@ -105,11 +114,15 @@ const SearchModal = ({ visible, text = '', onClose }: Props) => {
                 backgroundColor: theme.colors.background1,
               },
             ]}>
-            <ScrollView 
+            <ScrollView
               style={styles.container}
-              contentContainerStyle={{ paddingBottom: 40 }}
-            >
-              <Text style={{ fontSize: 16, lineHeight: 28, color: theme.colors.text1 }}>
+              contentContainerStyle={{ paddingBottom: 40 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  lineHeight: 28,
+                  color: theme.colors.text1,
+                }}>
                 {highlightText(phrase)}
               </Text>
             </ScrollView>
@@ -129,23 +142,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
+    paddingVertical: 12,
+    paddingHorizontal: SCREEN_PADDING,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   closeBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 8,
   },
   textContainer: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: SCREEN_PADDING,
+    paddingTop: 16,
   },
   text: {
     fontSize: 16,
