@@ -22,7 +22,6 @@ import DeleteModal from '../components/Modals/DeleteModal';
 import { useGlobalState } from '../contexts/GlobaState';
 import { ThemeEnum } from '../enums/theme';
 import ValidationModal from '../components/Modals/ValidationModal';
-import PrimaryButton from '../components/Buttons/PrimaryButton';
 import DataReviewModal from '../components/Modals/DataReviewModal';
 import EncryptionModal from '../components/Modals/EncryptionModal';
 import SecondaryButton from '../components/Buttons/SecondaryButton';
@@ -201,76 +200,137 @@ const ProfileScreen = () => {
           onPress={() => navigation.navigate('Archive')}
         />
       </View>
+      <View style={styles.sectionHeader}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text1 }]}>
+          Data Management
+        </Text>
+      </View>
       <View
-        style={{
-          height: showDataOptions ? 190 : 80,
-          overflow: 'hidden',
-          marginHorizontal: 10,
-        }}>
+        style={[
+          styles.dataSection,
+          { backgroundColor: theme.colors.background2 },
+        ]}>
         <TouchableOpacity
-          style={[
-            styles.dropdownBtn,
-            {
-              backgroundColor: theme.colors.btn1,
-            },
-          ]}
+          style={styles.dataToggle}
+          activeOpacity={0.7}
           onPress={() => {
             LayoutAnimation.configureNext(
               LayoutAnimation.Presets.easeInEaseOut,
             );
             setShowDataOptions(!showDataOptions);
           }}>
-          <Text style={[styles.dropText, { color: theme.colors.btnText1 }]}>
-            Manage your Data
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[styles.dataToggleTitle, { color: theme.colors.text1 }]}>
+              Backup & Restore
+            </Text>
+            <Text
+              style={[
+                styles.dataToggleSubtitle,
+                { color: theme.colors.text2 },
+              ]}>
+              Notes, tasks & reminders
+            </Text>
+          </View>
           <FeatherIcon
             name={showDataOptions ? 'chevron-up' : 'chevron-down'}
-            size={24}
+            size={22}
             color={theme.colors.text1}
           />
         </TouchableOpacity>
-        <PrimaryButton
-          text="Export Data"
-          containerStyle={{ backgroundColor: theme.colors.secondary }}
-          style={{ fontSize: 16 }}
-          onPress={() => {
-            if (profile) {
-              setModal('validate');
-              setValidationOptions({
-                text: 'Enter Your Password',
-                cancelCb: () => setModal(null),
-                successCb: () => setModal('export'),
-              });
-            } else {
-              setModal('export');
-            }
-          }}
-        />
-        <PrimaryButton
-          text="Import Data"
-          containerStyle={{
-            marginTop: 0,
-            backgroundColor: theme.colors.secondary,
-          }}
-          style={{ fontSize: 16 }}
-          onPress={() => {
-            if (profile) {
-              setModal('validate');
-              setValidationOptions({
-                text: 'Enter Your Password',
-                cancelCb: () => setModal(null),
-                successCb: () => setModal('import'),
-              });
-            } else {
-              setModal('import');
-            }
-          }}
-        />
+        {showDataOptions && (
+          <>
+            <View style={styles.divider} />
+            <TouchableOpacity
+              style={styles.dataRow}
+              activeOpacity={0.7}
+              onPress={() => {
+                if (profile) {
+                  setModal('validate');
+                  setValidationOptions({
+                    text: 'Enter Your Password',
+                    cancelCb: () => setModal(null),
+                    successCb: () => setModal('export'),
+                  });
+                } else {
+                  setModal('export');
+                }
+              }}>
+              <View
+                style={[
+                  styles.dataIconWrap,
+                  { backgroundColor: theme.colors.primary02 },
+                ]}>
+                <FeatherIcon
+                  name="download"
+                  size={18}
+                  color={theme.colors.primary}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[styles.dataRowTitle, { color: theme.colors.text1 }]}>
+                  Export Data
+                </Text>
+                <Text
+                  style={[styles.dataRowText, { color: theme.colors.text2 }]}>
+                  Copy a backup to your clipboard
+                </Text>
+              </View>
+              <FeatherIcon
+                name="chevron-right"
+                size={18}
+                color={theme.colors.text3}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.dataRow}
+              activeOpacity={0.7}
+              onPress={() => {
+                if (profile) {
+                  setModal('validate');
+                  setValidationOptions({
+                    text: 'Enter Your Password',
+                    cancelCb: () => setModal(null),
+                    successCb: () => setModal('import'),
+                  });
+                } else {
+                  setModal('import');
+                }
+              }}>
+              <View
+                style={[
+                  styles.dataIconWrap,
+                  { backgroundColor: theme.colors.primary02 },
+                ]}>
+                <FeatherIcon
+                  name="upload"
+                  size={18}
+                  color={theme.colors.primary}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={[styles.dataRowTitle, { color: theme.colors.text1 }]}>
+                  Import Data
+                </Text>
+                <Text
+                  style={[styles.dataRowText, { color: theme.colors.text2 }]}>
+                  Merge a backup into this device
+                </Text>
+              </View>
+              <FeatherIcon
+                name="chevron-right"
+                size={18}
+                color={theme.colors.text3}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
       <DataReviewModal
         visible={modal === 'export' || modal === 'import'}
         type={modal}
-        text=""
         onClose={() => setModal(null)}
       />
       <ValidationModal
@@ -351,18 +411,48 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingRight: 10,
   },
-  dropdownBtn: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
+  dataSection: {
+    marginHorizontal: 16,
     borderRadius: 24,
-    marginTop: 20,
+    padding: 8,
   },
-  dropText: {
+  dataToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+  },
+  dataToggleTitle: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  dataToggleSubtitle: {
+    fontSize: 12,
+    marginTop: 2,
+    opacity: 0.8,
+  },
+  dataRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  dataIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  dataRowTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  dataRowText: {
+    fontSize: 12,
+    marginTop: 2,
+    opacity: 0.8,
   },
   divider: {
     height: 1,

@@ -22,6 +22,10 @@ type Props = {
   containerStyles?: StyleProp<ViewStyle>;
   textStyles?: StyleProp<TextStyle>;
   error?: string | null;
+  // The corner label below is sized for short validation strings ("Key is
+  // empty!"). A caller with a longer message (e.g. a raw error) still gets
+  // the red border, but renders that message itself where it can wrap.
+  hideErrorMessage?: boolean;
 };
 
 const CustomTextInput = ({
@@ -34,6 +38,7 @@ const CustomTextInput = ({
   containerStyles,
   textStyles,
   error,
+  hideErrorMessage,
 }: Props) => {
   const inputRef = useRef<TextInput | null>(null);
   const { theme } = useGlobalState();
@@ -89,7 +94,7 @@ const CustomTextInput = ({
           </TouchableOpacity>
         )
       ) : null}
-      <Text style={styles.errorMsg}>{error}</Text>
+      {!hideErrorMessage && <Text style={styles.errorMsg}>{error}</Text>}
     </TouchableOpacity>
   );
 };

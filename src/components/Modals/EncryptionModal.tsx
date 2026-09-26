@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -8,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, { useState } from 'react';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import { useGlobalState } from '../../contexts/GlobaState';
 import CustomTextInput from '../Inputs/CustomTextInput';
 import PrimaryButton from '../Buttons/PrimaryButton';
@@ -57,7 +59,9 @@ const EncryptionModal = ({
         Object.keys(notes).forEach(k => {
           notes[k] = {
             ...notes[k],
-            info: decryptData(notes[k].info, oldKey),
+            // Keep the original on failure - re-encrypting a null would
+            // destroy the note body.
+            info: decryptData(notes[k].info, oldKey) ?? notes[k].info,
           };
         });
       }
@@ -82,12 +86,9 @@ const EncryptionModal = ({
       animationType="slide"
       onRequestClose={cancelCb}>
       <SafeAreaView
-        style={[
-          styles.container,
-          { backgroundColor: 'rgba(0,0,0,0.5)' },
-        ]}>
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={[styles.container, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.container}>
           <View
             style={[
@@ -98,6 +99,13 @@ const EncryptionModal = ({
                 borderWidth: 1,
               },
             ]}>
+            <View
+              style={[
+                styles.iconWrap,
+                { backgroundColor: theme.colors.primary02 },
+              ]}>
+              <FeatherIcon name="lock" size={26} color={theme.colors.primary} />
+            </View>
             <Text style={[styles.title, { color: theme.colors.text1 }]}>
               {title}
             </Text>
@@ -122,7 +130,7 @@ const EncryptionModal = ({
                   isLoading && (
                     <ActivityIndicator
                       size={'small'}
-                      color={theme.colors.text1}
+                      color={theme.colors.btnText1}
                       style={{ marginRight: 4 }}
                     />
                   )
@@ -151,11 +159,19 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 32,
   },
+  iconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
   title: {
     textAlign: 'center',
     fontSize: 24,
     fontWeight: '700',
-    marginTop: 10,
+    marginTop: 16,
   },
   text: {
     textAlign: 'center',
